@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import Navbar from '../components/Navbar'
 import '../App.css'
 
 function Profile() {
@@ -9,14 +10,7 @@ function Profile() {
     if (!user) {
         return (
             <div className="app">
-                <nav className="navbar navbar-detail">
-                    <div className="nav-container">
-                        <Link to="/" className="nav-logo">
-                            <span className="logo-icon">📚</span>
-                            <span className="logo-text">Salahuddin Library</span>
-                        </Link>
-                    </div>
-                </nav>
+                <Navbar />
                 <div className="auth-page">
                     <div className="auth-container">
                         <div className="auth-card">
@@ -47,17 +41,7 @@ function Profile() {
 
     return (
         <div className="app">
-            <nav className="navbar navbar-detail">
-                <div className="nav-container">
-                    <Link to="/" className="nav-logo">
-                        <span className="logo-icon">📚</span>
-                        <span className="logo-text">Salahuddin Library</span>
-                    </Link>
-                    <Link to="/" className="back-link">
-                        ← Kembali ke Beranda
-                    </Link>
-                </div>
-            </nav>
+            <Navbar />
 
             <div className="profile-page">
                 <div className="profile-container">

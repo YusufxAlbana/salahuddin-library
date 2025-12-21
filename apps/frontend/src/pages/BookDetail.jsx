@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 import '../App.css'
 
 // Dummy books data (same as Books.jsx - in production this would be fetched)
@@ -220,14 +221,7 @@ function BookDetail() {
     if (!book) {
         return (
             <div className="app">
-                <nav className="navbar navbar-detail">
-                    <div className="nav-container">
-                        <Link to="/" className="nav-logo">
-                            <span className="logo-icon">📚</span>
-                            <span className="logo-text">Salahuddin Library</span>
-                        </Link>
-                    </div>
-                </nav>
+                <Navbar />
                 <div className="book-not-found">
                     <span>📭</span>
                     <h1>Buku tidak ditemukan</h1>
@@ -240,17 +234,7 @@ function BookDetail() {
     return (
         <div className="app">
             {/* Navigation */}
-            <nav className="navbar navbar-detail">
-                <div className="nav-container">
-                    <Link to="/" className="nav-logo">
-                        <span className="logo-icon">📚</span>
-                        <span className="logo-text">Salahuddin Library</span>
-                    </Link>
-                    <Link to="/books" className="back-link">
-                        ← Kembali ke Katalog
-                    </Link>
-                </div>
-            </nav>
+            <Navbar />
 
             {/* Book Detail Content */}
             <div className="book-detail-page">

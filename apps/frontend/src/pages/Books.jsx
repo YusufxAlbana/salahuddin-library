@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 import '../App.css'
 
 // Book categories
@@ -52,17 +53,7 @@ function Books() {
     return (
         <div className="app">
             {/* Navigation */}
-            <nav className="navbar navbar-detail">
-                <div className="nav-container">
-                    <Link to="/" className="nav-logo">
-                        <span className="logo-icon">📚</span>
-                        <span className="logo-text">Salahuddin Library</span>
-                    </Link>
-                    <Link to="/" className="back-link">
-                        ← Kembali ke Beranda
-                    </Link>
-                </div>
-            </nav>
+            <Navbar />
 
             {/* Books Hero */}
             <section className="books-hero">

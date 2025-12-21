@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import Navbar from '../components/Navbar'
 import '../App.css'
 
 function Login() {
@@ -33,14 +34,7 @@ function Login() {
 
     return (
         <div className="app">
-            <nav className="navbar navbar-detail">
-                <div className="nav-container">
-                    <Link to="/" className="nav-logo">
-                        <span className="logo-icon">📚</span>
-                        <span className="logo-text">Salahuddin Library</span>
-                    </Link>
-                </div>
-            </nav>
+            <Navbar />
 
             <div className="auth-page">
                 <div className="auth-container">

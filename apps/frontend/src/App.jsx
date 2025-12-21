@@ -1,7 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuth } from './context/AuthContext'
 import './App.css'
+import Navbar from './components/Navbar'
 
 // Program data
 const programs = [
@@ -40,51 +38,10 @@ const programs = [
 ]
 
 function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { user } = useAuth()
-
-  const scrollToSection = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-    setIsMenuOpen(false)
-  }
-
   return (
     <div className="app">
       {/* Navigation */}
-      <nav className="navbar">
-        <div className="nav-container">
-          <div className="nav-logo">
-            <span className="logo-icon">📚</span>
-            <span className="logo-text">Salahuddin Library</span>
-          </div>
-          <button className="menu-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-          <ul className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-            <li><a onClick={() => scrollToSection('welcome')}>Beranda</a></li>
-            <li><a onClick={() => scrollToSection('filosofi')}>Filosofi</a></li>
-            <li><a onClick={() => scrollToSection('program')}>Program</a></li>
-            <li><Link to="/books">Buku</Link></li>
-            <li><a onClick={() => scrollToSection('donasi')}>Donasi</a></li>
-            <li><a onClick={() => scrollToSection('contact')}>Kontak</a></li>
-            <li className="nav-auth">
-              {user ? (
-                <Link to="/profile" className="nav-profile-btn">
-                  <span className="nav-avatar">{user.name.charAt(0)}</span>
-                  {user.name.split(' ')[0]}
-                </Link>
-              ) : (
-                <div className="nav-auth-buttons">
-                  <Link to="/login" className="nav-login-btn">Masuk</Link>
-                  <Link to="/register" className="nav-register-btn">Daftar</Link>
-                </div>
-              )}
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Welcome Section */}
       <section id="welcome" className="welcome-section">
