@@ -1,27 +1,10 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const { user } = useAuth()
-    const location = useLocation()
-
-    // Check if we're on the home page
-    const isHomePage = location.pathname === '/'
-
-    const scrollToSection = (sectionId) => {
-        if (!isHomePage) {
-            // If not on home page, navigate to home first
-            window.location.href = `/#${sectionId}`
-            return
-        }
-        const element = document.getElementById(sectionId)
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' })
-            setIsMenuOpen(false)
-        }
-    }
 
     return (
         <nav className="navbar">
@@ -36,12 +19,8 @@ function Navbar() {
                     <span></span>
                 </button>
                 <ul className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-                    <li><a onClick={() => scrollToSection('welcome')}>Beranda</a></li>
-                    <li><a onClick={() => scrollToSection('filosofi')}>Filosofi</a></li>
-                    <li><a onClick={() => scrollToSection('program')}>Program</a></li>
+                    <li><Link to="/">Beranda</Link></li>
                     <li><Link to="/books">Buku</Link></li>
-                    <li><a onClick={() => scrollToSection('donasi')}>Donasi</a></li>
-                    <li><a onClick={() => scrollToSection('contact')}>Kontak</a></li>
                     <li className="nav-auth">
                         {user ? (
                             <Link to="/profile" className="nav-profile-btn">
