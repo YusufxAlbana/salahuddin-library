@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { db, storage } from '../config/firebase'
-import { collection, addDoc, getDocs, doc, writeBatch, updateDoc } from 'firebase/firestore'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { supabase } from '../config/supabase'
 import { initialBooks } from '../data/initialBooks'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -20,6 +18,7 @@ function AdminDashboard() {
     const [imageFile, setImageFile] = useState(null)
     const [uploading, setUploading] = useState(false)
     const [editingId, setEditingId] = useState(null)
+    const fileInputRef = useRef(null)
 
     // Form State
     const [newBook, setNewBook] = useState({
@@ -66,22 +65,18 @@ function AdminDashboard() {
 
     const fetchStats = async () => {
         try {
-            const booksSnap = await getDocs(collection(db, 'books'))
-            const usersSnap = await getDocs(collection(db, 'users'))
-            // const loansSnap = await getDocs(collection(db, 'loans'))
+            const { count: booksCount } = await supabase.from('books').select('*', { count: 'exact', head: true })
+            const { count: usersCount } = await supabase.from('users').select('*', { count: 'exact', head: true })
 
             // Extract unique categories from books
-            const categories = new Set()
-            booksSnap.forEach(doc => {
-                const data = doc.data()
-                if (data.category) categories.add(data.category)
-            })
+            const { data: booksData } = await supabase.from('books').select('category')
+            const categories = new Set(booksData?.map(b => b.category).filter(Boolean))
             setExistingCategories(Array.from(categories).sort())
 
             setStats({
-                books: booksSnap.size,
-                users: usersSnap.size,
-                loans: 0 // loansSnap.size
+                books: booksCount || 0,
+                users: usersCount || 0,
+                loans: 0
             })
         } catch (error) {
             console.error("Error fetching stats:", error)
@@ -91,19 +86,20 @@ function AdminDashboard() {
     }
 
     const handleSeedDatabase = async () => {
-        if (!confirm('Apakah Anda yakin ingin mengisi database dengan data buku awal? Ini mungkin membuat duplikasi jika sudah ada data.')) return
+        if (!confirm('Apakah Anda yakin ingin mengisi database dengan data buku awal?')) return
 
         setIsSeeding(true)
         try {
-            const batch = writeBatch(db)
-            const booksRef = collection(db, 'books')
+            // Prepare data for Supabase (remove IDs if any, let DB handle it)
+            const booksToInsert = initialBooks.map(book => ({
+                ...book,
+                created_at: new Date()
+            }))
 
-            initialBooks.forEach(book => {
-                const docRef = doc(booksRef) // Auto ID
-                batch.set(docRef, { ...book, createdAt: new Date() })
-            })
+            const { error } = await supabase.from('books').insert(booksToInsert)
 
-            await batch.commit()
+            if (error) throw error
+
             alert('Database berhasil diisi dengan ' + initialBooks.length + ' buku!')
             fetchStats()
         } catch (error) {
@@ -124,32 +120,58 @@ function AdminDashboard() {
 
             // 1. Upload Image if exists
             if (imageFile) {
-                const storageRef = ref(storage, `book_covers/${Date.now()}_${imageFile.name}`)
-                const snapshot = await uploadBytes(storageRef, imageFile)
-                coverUrl = await getDownloadURL(snapshot.ref)
+                try {
+                    const fileExt = imageFile.name.split('.').pop()
+                    const fileName = `${Date.now()}_${Math.random()}.${fileExt}`
+                    const filePath = `covers/${fileName}`
+
+                    const { error: uploadError } = await supabase.storage
+                        .from('book_covers')
+                        .upload(filePath, imageFile)
+
+                    if (uploadError) throw uploadError
+
+                    // Get Public URL
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('book_covers')
+                        .getPublicUrl(filePath)
+
+                    coverUrl = publicUrl
+                } catch (uploadError) {
+                    console.error("Upload failed:", uploadError)
+                    throw new Error(`Gagal upload gambar: ${uploadError.message}`)
+                }
             }
-
-
 
             if (editingId) {
                 // Update Existing Document
-                await updateDoc(doc(db, 'books', editingId), {
-                    ...newBook,
-                    cover: coverUrl
-                })
+                const { error } = await supabase
+                    .from('books')
+                    .update({
+                        ...newBook,
+                        cover: coverUrl
+                    })
+                    .eq('id', editingId)
+
+                if (error) throw error
                 alert('Buku berhasil diperbarui!')
             } else {
                 // Add Document
-                await addDoc(collection(db, 'books'), {
-                    ...newBook,
-                    cover: coverUrl,
-                    createdAt: new Date()
-                })
+                const { error } = await supabase
+                    .from('books')
+                    .insert([{
+                        ...newBook,
+                        cover: coverUrl,
+                        created_at: new Date()
+                    }])
+
+                if (error) throw error
                 alert('Buku berhasil ditambahkan!')
             }
 
             setShowAddBook(false)
             setImageFile(null)
+            if (fileInputRef.current) fileInputRef.current.value = ''
             setEditingId(null)
             setNewBook({
                 title: '',
@@ -161,8 +183,8 @@ function AdminDashboard() {
             })
             fetchStats()
         } catch (error) {
-            console.error("Error adding book:", error)
-            alert('Gagal menambahkan buku: ' + error.message)
+            console.error("Error submitting book:", error)
+            alert(error.message)
         } finally {
             setLoading(false)
             setUploading(false)
@@ -184,13 +206,12 @@ function AdminDashboard() {
 
                 <nav className="sidebar-menu">
                     <Link to="/admin" className="sidebar-link active">
-                        <span>📊</span> Dashboard
-                    </Link>
-                    <Link to="/" className="sidebar-link">
-                        <span>🏠</span> Lihat Website
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        Dashboard
                     </Link>
                     <Link to="/books" className="sidebar-link">
-                        <span>📚</span> Katalog Buku
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        Buku
                     </Link>
                 </nav>
 
@@ -350,6 +371,7 @@ function AdminDashboard() {
                                             <input
                                                 type="file"
                                                 accept="image/*"
+                                                ref={fileInputRef}
                                                 onChange={(e) => {
                                                     if (e.target.files[0]) setImageFile(e.target.files[0])
                                                 }}

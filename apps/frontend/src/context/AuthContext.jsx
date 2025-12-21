@@ -1,13 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import {
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
-    updateProfile
-} from 'firebase/auth'
-import { doc, setDoc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore'
-import { auth, db } from '../config/firebase'
+import { supabase } from '../config/supabase'
 
 const AuthContext = createContext(null)
 
@@ -17,97 +9,120 @@ export function AuthProvider({ children }) {
 
     // Listen for auth state changes
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-            if (firebaseUser) {
-                // Get additional user data from Firestore
-                const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid))
-                const userData = userDoc.data()
-
-            setUser({
-                    id: firebaseUser.uid,
-                    name: firebaseUser.displayName || userData?.name || 'User',
-                    email: firebaseUser.email,
-                    role: userData?.role || 'member', // Default to member
-                    isAdmin: userData?.role === 'admin',
-                    joinDate: userData?.joinDate || new Date().toLocaleDateString('id-ID'),
-                    donatedBooks: userData?.donatedBooks || 0,
-                    programsJoined: userData?.programsJoined || []
-                })
+        // Check active session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                fetchUserProfile(session.user)
             } else {
                 setUser(null)
+                setLoading(false)
             }
-            setLoading(false)
         })
 
-        return () => unsubscribe()
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+            if (session) {
+                fetchUserProfile(session.user)
+            } else {
+                setUser(null)
+                setLoading(false)
+            }
+        })
+
+        return () => subscription.unsubscribe()
     }, [])
+
+    const fetchUserProfile = async (authUser) => {
+        try {
+            const { data: userData, error } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', authUser.id)
+                .single()
+
+            if (error && error.code !== 'PGRST116') {
+                console.error('Error fetching profile:', error)
+            }
+
+            setUser({
+                id: authUser.id,
+                email: authUser.email,
+                name: userData?.name || authUser.user_metadata?.name || 'User',
+                role: userData?.role || 'member',
+                isAdmin: userData?.role === 'admin',
+                joinDate: userData?.join_date || new Date().toLocaleDateString('id-ID'),
+                donatedBooks: userData?.donated_books || 0,
+                programsJoined: userData?.programs_joined || []
+            })
+        } catch (err) {
+            console.error('Fetch profile catch:', err)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const register = async (name, email, password) => {
         try {
-            // Create user in Firebase Auth
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-            const firebaseUser = userCredential.user
-
-            // Update display name
-            await updateProfile(firebaseUser, { displayName: name })
-
-            // Create user document in Firestore
-            await setDoc(doc(db, 'users', firebaseUser.uid), {
-                name: name,
-                email: email,
-                role: 'member', // Default role
-                joinDate: new Date().toLocaleDateString('id-ID'),
-                donatedBooks: 0,
-                programsJoined: [],
-                createdAt: serverTimestamp()
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: { name }
+                }
             })
+
+            if (error) throw error
+
+            if (data.user) {
+                // Manually create user profile in 'users' table
+                const { error: dbError } = await supabase
+                    .from('users')
+                    .insert([
+                        {
+                            id: data.user.id,
+                            name: name,
+                            email: email,
+                            role: 'member',
+                            join_date: new Date().toLocaleDateString('id-ID'),
+                            donated_books: 0,
+                            programs_joined: []
+                            // created_at is auto-handled by Supabase
+                        }
+                    ])
+
+                if (dbError) console.error('Error creating user profile:', dbError)
+            }
 
             return { success: true }
         } catch (error) {
             console.error('Register error:', error)
-            let message = 'Terjadi kesalahan saat mendaftar'
-
-            if (error.code === 'auth/configuration-not-found') {
-                message = 'Firebase Auth belum diaktifkan. Aktifkan Email/Password di Firebase Console.'
-            } else if (error.code === 'auth/email-already-in-use') {
-                message = 'Email sudah terdaftar'
-            } else if (error.code === 'auth/weak-password') {
-                message = 'Password terlalu lemah (min. 6 karakter)'
-            } else if (error.code === 'auth/invalid-email') {
-                message = 'Format email tidak valid'
-            }
-
-            return { success: false, error: message }
+            return { success: false, error: error.message }
         }
     }
 
     const login = async (email, password) => {
         try {
-            await signInWithEmailAndPassword(auth, email, password)
+            const { error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            })
+
+            if (error) {
+                if (error.message.includes('Invalid login')) {
+                    return { success: false, error: 'Email atau password salah' }
+                }
+                throw error
+            }
+
             return { success: true }
         } catch (error) {
             console.error('Login error:', error)
-            let message = 'Email atau password salah'
-
-            if (error.code === 'auth/configuration-not-found') {
-                message = 'Firebase Auth belum diaktifkan. Aktifkan Email/Password di Firebase Console.'
-            } else if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-                message = 'Email atau password salah'
-            } else if (error.code === 'auth/wrong-password') {
-                message = 'Password salah'
-            } else if (error.code === 'auth/invalid-email') {
-                message = 'Format email tidak valid'
-            } else if (error.code === 'auth/too-many-requests') {
-                message = 'Terlalu banyak percobaan. Coba lagi nanti'
-            }
-
-            return { success: false, error: message }
+            return { success: false, error: error.message }
         }
     }
 
     const logout = async () => {
         try {
-            await signOut(auth)
+            await supabase.auth.signOut()
         } catch (error) {
             console.error('Logout error:', error)
         }
@@ -117,8 +132,15 @@ export function AuthProvider({ children }) {
         if (!user) return
 
         try {
-            await updateDoc(doc(db, 'users', user.id), updates)
-            setUser(prev => ({ ...prev, ...updates }))
+            // Map camelCase to snake_case if needed, assuming simple update for now
+            const { error } = await supabase
+                .from('users')
+                .update(updates)
+                .eq('id', user.id)
+
+            if (!error) {
+                setUser(prev => ({ ...prev, ...updates }))
+            }
         } catch (error) {
             console.error('Update profile error:', error)
         }

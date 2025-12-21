@@ -44,7 +44,6 @@
 .app {
   width: 100%;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
 * {
@@ -713,80 +712,60 @@ body {
 }
 
 /* ===============================
-   Donasi Section
-================================== */
-/* ===============================
-   Donasi Section
+   DONASI SECTION - REBUILT FROM SCRATCH
 ================================== */
 .donasi-section {
-  padding: 0;
-  background: linear-gradient(to right, var(--white) 50%, var(--dark) 50%);
   position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  min-height: 100vh;
+  padding: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
   overflow: hidden;
 }
 
+/* Two-column container using flexbox */
 .donasi-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: row;
   width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
+/* LEFT COLUMN - Image Background */
 .donasi-info {
-  padding: 6rem 10% 6rem 10%;
+  flex: 1 1 50%;
+  width: 50%;
+  min-height: 100vh;
+  padding: 4rem 3rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  box-sizing: border-box;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+    url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.donasi-info h3 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  margin-bottom: 2rem;
-  color: var(--dark);
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.donasi-benefits {
-  list-style: none;
-  margin-bottom: 3rem;
-}
-
-.donasi-benefits li {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  padding: 1rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  color: var(--gray);
-  font-size: 1.1rem;
-  font-weight: 500;
-}
-
-.donasi-benefits li span {
-  width: 48px;
-  height: 48px;
-  background: var(--light);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: var(--primary);
-  flex-shrink: 0;
-}
-
+/* RIGHT COLUMN - Emerald Green */
 .donasi-card {
-  background: transparent;
-  padding: 6rem 10% 6rem 10%;
-  border-radius: 0;
-  box-shadow: none;
-  border: none;
+  flex: 1 1 50%;
+  width: 50%;
+  min-height: 100vh;
+  background-color: #064e3b;
+  /* var(--dark) fallback */
+  background: var(--dark);
+  padding: 4rem 3rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
+  box-sizing: border-box;
 }
 
 .donasi-card h3 {
@@ -3197,15 +3176,25 @@ body {
   justify-content: center;
 }
 
-.benefit-icon svg {
+.sidebar-link svg {
   width: 20px;
   height: 20px;
+  color: var(--gray);
+  transition: color 0.3s;
 }
 
-.donasi-benefits span {
+.sidebar-link.active svg,
+.sidebar-link:hover svg {
+  color: var(--primary);
+}
+
+
+
+.donasi-benefits li span {
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--dark);
   font-size: 1.05rem;
+  line-height: 1.4;
 }
 
 .donasi-note-box {
@@ -3217,7 +3206,7 @@ body {
 }
 
 .donasi-note-box h4 {
-  color: var(--text-primary);
+  color: var(--dark);
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -3235,7 +3224,7 @@ body {
 .donasi-note-box ul li {
   position: relative;
   padding-left: 1.5rem;
-  color: var(--text-secondary);
+  color: var(--gray);
 }
 
 .donasi-note-box ul li::before {

@@ -146,113 +146,109 @@ function App() {
 
       {/* Donasi Buku Section */}
       <section id="donasi" className="donasi-section">
-        <div className="section-container">
-          <div className="donasi-content">
-            <div className="donasi-info">
-              <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '0.5rem' }}>Donasi Buku</h2>
-              <p className="section-subtitle" style={{ textAlign: 'left', marginBottom: '2rem', maxWidth: '100%', margin: '0 0 2rem 0' }}>Berbagi ilmu melalui buku untuk generasi penerus bangsa</p>
+        <div className="donasi-content">
+          <div className="donasi-info">
+            <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '0.5rem' }}>Donasi Buku</h2>
+            <p className="section-subtitle" style={{ textAlign: 'left', marginBottom: '2rem', maxWidth: '100%', margin: '0 0 2rem 0' }}>Berbagi ilmu melalui buku untuk generasi penerus bangsa</p>
 
-              <h3>Mengapa Donasi Buku?</h3>
-              <ul className="donasi-benefits">
-                <li>
-                  <div className="benefit-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                  </div>
-                  <span>Buku Anda akan dibaca oleh puluhan anak-anak</span>
-                </li>
-                <li>
-                  <div className="benefit-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 22h20"></path><path d="M12 2v6"></path><path d="M12 18v4"></path><path d="M4.93 19.07l4.24-7.35a6.002 6.002 0 0 1 5.66 0l4.24 7.35"></path></svg>
-                  </div>
-                  <span>Menumbuhkan minat baca sejak dini</span>
-                </li>
-                <li>
-                  <div className="benefit-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M12 2A7 7 0 0 0 5 9c0 4.155 3 7 7 7s7-2.845 7-7a7 7 0 0 0-7-7z"></path></svg>
-                  </div>
-                  <span>Membuka wawasan dan pengetahuan baru</span>
-                </li>
-                <li>
-                  <div className="benefit-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"></path></svg>
-                  </div>
-                  <span>Berbagi kebahagiaan melalui literasi</span>
-                </li>
+
+            <ul className="donasi-benefits">
+              <li>
+                <div className="benefit-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </div>
+                <span>Buku Anda akan dibaca oleh puluhan anak-anak</span>
+              </li>
+              <li>
+                <div className="benefit-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 22h20"></path><path d="M12 2v6"></path><path d="M12 18v4"></path><path d="M4.93 19.07l4.24-7.35a6.002 6.002 0 0 1 5.66 0l4.24 7.35"></path></svg>
+                </div>
+                <span>Menumbuhkan minat baca sejak dini</span>
+              </li>
+              <li>
+                <div className="benefit-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M12 2A7 7 0 0 0 5 9c0 4.155 3 7 7 7s7-2.845 7-7a7 7 0 0 0-7-7z"></path></svg>
+                </div>
+                <span>Membuka wawasan dan pengetahuan baru</span>
+              </li>
+              <li>
+                <div className="benefit-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"></path></svg>
+                </div>
+                <span>Berbagi kebahagiaan melalui literasi</span>
+              </li>
+            </ul>
+
+            <div className="donasi-note-box">
+              <h4>📋 Jenis Buku yang Diterima:</h4>
+              <ul>
+                <li>Buku cerita anak</li>
+                <li>Buku pelajaran (SD - SMA)</li>
+                <li>Buku pengetahuan umum</li>
+                <li>Novel & fiksi (layak baca)</li>
+                <li>Buku keterampilan</li>
               </ul>
-
-              <div className="donasi-note-box">
-                <h4>📋 Jenis Buku yang Diterima:</h4>
-                <ul>
-                  <li>Buku cerita anak</li>
-                  <li>Buku pelajaran (SD - SMA)</li>
-                  <li>Buku pengetahuan umum</li>
-                  <li>Novel & fiksi (layak baca)</li>
-                  <li>Buku keterampilan</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="donasi-card">
-              <h3>
-                <span className="section-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                </span>
-                Form Donasi Buku
-              </h3>
-              <form className="donasi-form">
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>
-                      <span className="label-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                      </span>
-                      Nama Lengkap
-                    </label>
-                    <input type="text" placeholder="Nama Anda" required />
-                  </div>
-                  <div className="form-group">
-                    <label>
-                      <span className="label-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                      </span>
-                      Nomor WhatsApp
-                    </label>
-                    <input type="tel" placeholder="08xxxxxxxxxx" required />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label>
-                    <span className="label-icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                    </span>
-                    Jumlah Buku
-                  </label>
-                  <input type="number" placeholder="Jumlah buku yang didonasikan" min="1" required />
-                </div>
-                <div className="form-group">
-                  <label>
-                    <span className="label-icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    </span>
-                    Daftar Judul Buku
-                  </label>
-                  <textarea
-                    placeholder="Tulis judul buku (pisahkan dengan enter):&#10;1. Laskar Pelangi&#10;2. Matematika Kelas 5&#10;3. Ensiklopedia Anak"
-                    required
-                  ></textarea>
-                </div>
-                <button type="submit" className="btn btn-donate">
-                  <span className="btn-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                  </span>
-                  Kirim Form Donasi
-                </button>
-                <p className="donasi-note">*Tim kami akan menghubungi via WhatsApp untuk koordinasi</p>
-              </form>
             </div>
           </div>
 
-
+          <div className="donasi-card">
+            <h3>
+              <span className="section-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+              </span>
+              Form Donasi Buku
+            </h3>
+            <form className="donasi-form">
+              <div className="form-row">
+                <div className="form-group">
+                  <label>
+                    <span className="label-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </span>
+                    Nama Lengkap
+                  </label>
+                  <input type="text" placeholder="Nama Anda" required />
+                </div>
+                <div className="form-group">
+                  <label>
+                    <span className="label-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    </span>
+                    Nomor WhatsApp
+                  </label>
+                  <input type="tel" placeholder="08xxxxxxxxxx" required />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>
+                  <span className="label-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                  </span>
+                  Jumlah Buku
+                </label>
+                <input type="number" placeholder="Jumlah buku yang didonasikan" min="1" required />
+              </div>
+              <div className="form-group">
+                <label>
+                  <span className="label-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                  </span>
+                  Daftar Judul Buku
+                </label>
+                <textarea
+                  placeholder="Tulis judul buku (pisahkan dengan enter):&#10;1. Laskar Pelangi&#10;2. Matematika Kelas 5&#10;3. Ensiklopedia Anak"
+                  required
+                ></textarea>
+              </div>
+              <button type="submit" className="btn btn-donate">
+                <span className="btn-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </span>
+                Kirim Form Donasi
+              </button>
+              <p className="donasi-note">*Tim kami akan menghubungi via WhatsApp untuk koordinasi</p>
+            </form>
+          </div>
         </div>
       </section>
 

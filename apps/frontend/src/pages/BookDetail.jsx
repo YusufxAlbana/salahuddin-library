@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { doc, getDoc } from 'firebase/firestore'
-import { db } from '../config/firebase'
+import { supabase } from '../config/supabase'
 import { categories } from '../data/initialBooks'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -15,11 +14,18 @@ function BookDetail() {
     useEffect(() => {
         const fetchBook = async () => {
             try {
-                const docRef = doc(db, 'books', bookId)
-                const docSnap = await getDoc(docRef)
+                const { data, error } = await supabase
+                    .from('books')
+                    .select('*')
+                    .eq('id', bookId)
+                    .single()
 
-                if (docSnap.exists()) {
-                    setBook({ id: docSnap.id, ...docSnap.data() })
+                if (error && error.code !== 'PGRST116') { // PGRST116 is "not found"
+                    console.error("Error fetching book:", error)
+                }
+
+                if (data) {
+                    setBook(data)
                 } else {
                     setBook(null)
                 }

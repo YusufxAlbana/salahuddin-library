@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore'
-import { db } from '../config/firebase'
+import { supabase } from '../config/supabase'
 import { useAuth } from '../context/AuthContext'
 import { categories } from '../data/initialBooks'
 import Navbar from '../components/Navbar'
@@ -22,12 +21,12 @@ function Books() {
 
     const fetchBooks = async () => {
         try {
-            const querySnapshot = await getDocs(collection(db, 'books'))
-            const booksData = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }))
-            setBooks(booksData)
+            const { data, error } = await supabase
+                .from('books')
+                .select('*')
+
+            if (error) throw error
+            setBooks(data)
         } catch (error) {
             console.error("Error fetching books:", error)
         } finally {
@@ -40,7 +39,13 @@ function Books() {
         if (!confirm('Apakah Anda yakin ingin menghapus buku ini?')) return
 
         try {
-            await deleteDoc(doc(db, 'books', bookId))
+            const { error } = await supabase
+                .from('books')
+                .delete()
+                .eq('id', bookId)
+
+            if (error) throw error
+
             alert('Buku berhasil dihapus')
             fetchBooks() // Refresh list
         } catch (error) {
