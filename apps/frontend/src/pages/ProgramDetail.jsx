@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 import '../App.css'
 
 // Program data (same as in App.jsx - in a real app this would be in a shared file)
@@ -220,20 +221,12 @@ function ProgramDetail() {
                 </div>
             </section>
 
+
             {/* Footer */}
-            <footer className="footer">
-                <div className="footer-content">
-                    <div className="footer-logo">
-                        <span className="logo-icon">📚</span>
-                        <span>Salahuddin Library</span>
-                    </div>
-                    <p className="footer-copyright">
-                        © 2024 Salahuddin Library. Dibuat dengan ❤️ untuk literasi Indonesia.
-                    </p>
-                </div>
-            </footer>
+            <Footer />
         </div>
     )
 }
+
 
 export default ProgramDetail

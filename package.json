@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "echo \"Backend Placeholder\"",
-    "dev:frontend": "echo \"Frontend Placeholder\""
+    "dev:backend": "npm run dev --prefix apps/backend",
+    "dev:frontend": "npm run dev --prefix apps/frontend"
   },
   "keywords": [],
   "author": "",

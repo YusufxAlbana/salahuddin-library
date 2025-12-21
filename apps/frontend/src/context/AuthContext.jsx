@@ -23,10 +23,12 @@ export function AuthProvider({ children }) {
                 const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid))
                 const userData = userDoc.data()
 
-                setUser({
+            setUser({
                     id: firebaseUser.uid,
                     name: firebaseUser.displayName || userData?.name || 'User',
                     email: firebaseUser.email,
+                    role: userData?.role || 'member', // Default to member
+                    isAdmin: userData?.role === 'admin',
                     joinDate: userData?.joinDate || new Date().toLocaleDateString('id-ID'),
                     donatedBooks: userData?.donatedBooks || 0,
                     programsJoined: userData?.programsJoined || []
@@ -53,6 +55,7 @@ export function AuthProvider({ children }) {
             await setDoc(doc(db, 'users', firebaseUser.uid), {
                 name: name,
                 email: email,
+                role: 'member', // Default role
                 joinDate: new Date().toLocaleDateString('id-ID'),
                 donatedBooks: 0,
                 programsJoined: [],

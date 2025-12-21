@@ -1,0 +1,30 @@
+export const categories = [
+    { id: 'all', name: 'Semua' },
+    { id: 'novel', name: 'Novel' },
+    { id: 'why', name: 'Buku Why?' },
+    { id: 'education', name: 'Konsep Pendidikan' },
+    { id: 'motivation', name: 'Self Motivation' },
+    { id: 'islamic', name: 'Islamic Book' },
+    { id: 'islamic-history', name: 'Islamic History' },
+    { id: 'history', name: 'Sejarah' },
+    { id: 'language', name: 'Belajar Bahasa' },
+    { id: 'life', name: 'Konsep Hidup' },
+]
+
+export const initialBooks = [
+    { id: 1, title: 'Laskar Pelangi', author: 'Andrea Hirata', category: 'novel', cover: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop', year: 2005, stock: 3 },
+    { id: 2, title: 'Bumi Manusia', author: 'Pramoedya Ananta Toer', category: 'novel', cover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=400&fit=crop', year: 1980, stock: 2 },
+    { id: 3, title: 'Why? Dinosaurus', author: 'YeaRimDang', category: 'why', cover: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=300&h=400&fit=crop', year: 2018, stock: 5 },
+    { id: 4, title: 'Why? Antariksa', author: 'YeaRimDang', category: 'why', cover: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=300&h=400&fit=crop', year: 2019, stock: 0 },
+    { id: 5, title: 'Filosofi Teras', author: 'Henry Manampiring', category: 'motivation', cover: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=400&fit=crop', year: 2018, stock: 4 },
+    { id: 6, title: 'Atomic Habits', author: 'James Clear', category: 'motivation', cover: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=300&h=400&fit=crop', year: 2018, stock: 2 },
+    { id: 7, title: 'Sejarah Islam Lengkap', author: 'Dr. Badri Yatim', category: 'islamic-history', cover: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=300&h=400&fit=crop', year: 2015, stock: 3 },
+    { id: 8, title: 'Muhammad Al-Fatih', author: 'Felix Siauw', category: 'islamic-history', cover: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=300&h=400&fit=crop', year: 2013, stock: 2 },
+    { id: 9, title: 'Sejarah Dunia Kuno', author: 'Susan Wise Bauer', category: 'history', cover: 'https://images.unsplash.com/photo-1491841573634-28140fc7ced7?w=300&h=400&fit=crop', year: 2007, stock: 0 },
+    { id: 10, title: 'Belajar Bahasa Arab', author: 'Fuad Nimr', category: 'language', cover: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=400&fit=crop', year: 2020, stock: 6 },
+    { id: 11, title: 'English Grammar in Use', author: 'Raymond Murphy', category: 'language', cover: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=300&h=400&fit=crop', year: 2019, stock: 4 },
+    { id: 12, title: 'La Tahzan', author: 'Aidh Al-Qarni', category: 'islamic', cover: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=300&h=400&fit=crop', year: 2005, stock: 3 },
+    { id: 13, title: 'Ikigai', author: 'Héctor García', category: 'life', cover: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&h=400&fit=crop', year: 2017, stock: 2 },
+    { id: 14, title: 'Pendidikan Karakter', author: 'Thomas Lickona', category: 'education', cover: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=300&h=400&fit=crop', year: 2012, stock: 1 },
+    { id: 15, title: 'Sebuah Seni Bersikap', author: 'Mark Manson', category: 'life', cover: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=300&h=400&fit=crop', year: 2016, stock: 0 },
+]

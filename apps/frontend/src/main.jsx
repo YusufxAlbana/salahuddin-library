@@ -10,6 +10,7 @@ import Register from './pages/Register.jsx'
 import Profile from './pages/Profile.jsx'
 import Books from './pages/Books.jsx'
 import BookDetail from './pages/BookDetail.jsx'
+import AdminDashboard from './pages/AdminDashboard.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/profile" element={<Profile />} />
           <Route path="/books" element={<Books />} />
           <Route path="/book/:bookId" element={<BookDetail />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
