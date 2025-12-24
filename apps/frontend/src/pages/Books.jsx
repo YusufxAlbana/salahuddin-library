@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../config/supabase'
 import { useAuth } from '../context/AuthContext'
-import { categories } from '../data/initialBooks'
+import { useNotification } from '../components/Notification'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import '../App.css'
@@ -13,20 +13,41 @@ function Books() {
     const [activeCategory, setActiveCategory] = useState('all')
     const [searchQuery, setSearchQuery] = useState('')
     const [books, setBooks] = useState([])
+    const [categories, setCategories] = useState([])
     const [loading, setLoading] = useState(true)
+    const { toast, showConfirm } = useNotification()
 
     useEffect(() => {
         fetchBooks()
+        fetchCategories()
     }, [])
 
     const fetchBooks = async () => {
         try {
+            // Fetch books with their associated tags via book_tags junction table
             const { data, error } = await supabase
                 .from('books')
-                .select('*')
+                .select(`
+                    *,
+                    book_tags (
+                        tag_id,
+                        tags (
+                            id,
+                            name,
+                            color
+                        )
+                    )
+                `)
 
             if (error) throw error
-            setBooks(data)
+
+            // Transform data to include tags array on each book
+            const booksWithTags = data?.map(book => ({
+                ...book,
+                tags: book.book_tags?.map(bt => bt.tags).filter(Boolean) || []
+            })) || []
+
+            setBooks(booksWithTags)
         } catch (error) {
             console.error("Error fetching books:", error)
         } finally {
@@ -34,9 +55,31 @@ function Books() {
         }
     }
 
+    const fetchCategories = async () => {
+        try {
+            // Using 'tags' table (categories table doesn't exist)
+            const { data, error } = await supabase
+                .from('tags')
+                .select('*')
+                .order('name')
+
+            if (error) throw error
+            setCategories(data || [])
+        } catch (error) {
+            console.error("Error fetching categories:", error)
+        }
+    }
+
     const handleDelete = async (e, bookId) => {
         e.preventDefault() // Prevent navigation to detail
-        if (!confirm('Apakah Anda yakin ingin menghapus buku ini?')) return
+        const confirmed = await showConfirm({
+            title: 'Hapus Buku',
+            message: 'Apakah Anda yakin ingin menghapus buku ini?',
+            confirmText: 'Ya, Hapus',
+            cancelText: 'Batal',
+            type: 'error'
+        })
+        if (!confirmed) return
 
         try {
             const { error } = await supabase
@@ -46,11 +89,11 @@ function Books() {
 
             if (error) throw error
 
-            alert('Buku berhasil dihapus')
+            toast.success('Buku berhasil dihapus')
             fetchBooks() // Refresh list
         } catch (error) {
             console.error("Error deleting book:", error)
-            alert('Gagal menghapus buku: ' + error.message)
+            toast.error('Gagal menghapus buku: ' + error.message)
         }
     }
 
@@ -66,7 +109,9 @@ function Books() {
     }
 
     const filteredBooks = books.filter(book => {
-        const matchesCategory = activeCategory === 'all' || book.category === activeCategory
+        // Check if book has the selected tag (by tag name)
+        const matchesCategory = activeCategory === 'all' ||
+            book.tags?.some(tag => tag.name === activeCategory)
         const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             book.author.toLowerCase().includes(searchQuery.toLowerCase())
         return matchesCategory && matchesSearch
@@ -87,11 +132,9 @@ function Books() {
                     <p>Temukan berbagai koleksi buku berkualitas untuk pengembangan diri dan pengetahuan</p>
                     <div className="books-total-stats">
                         <span className="total-stat">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                             {books.length} Judul
                         </span>
                         <span className="total-stat">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                             {totalBooks} Buku Tersedia
                         </span>
                     </div>
@@ -115,34 +158,24 @@ function Books() {
             <section className="books-categories">
                 <div className="section-container">
                     <div className="categories-scroll">
-                        {/* Dynamic Category List */}
-                        {(() => {
-                            // Extract unique categories from books
-                            const uniqueCategories = ['all', ...new Set(books.map(b => b.category))]
+                        {/* Semua Button */}
+                        <button
+                            className={`category-btn ${activeCategory === 'all' ? 'active' : ''}`}
+                            onClick={() => setActiveCategory('all')}
+                        >
+                            Semua
+                        </button>
 
-                            // Map to objects with icons (using defaults if not found)
-                            const dynamicCategories = uniqueCategories.map(catId => {
-                                const existing = categories.find(c => c.id === catId)
-                                if (existing) return existing
-
-                                // Default for new custom categories
-                                return {
-                                    id: catId,
-                                    name: catId.charAt(0).toUpperCase() + catId.slice(1)
-                                }
-                            })
-
-                            return dynamicCategories.map(cat => (
-                                <button
-                                    key={cat.id}
-                                    className={`category-btn ${activeCategory === cat.id ? 'active' : ''}`}
-                                    onClick={() => setActiveCategory(cat.id)}
-                                >
-                                    <span>{getCategoryIcon(cat.id)}</span>
-                                    {cat.name}
-                                </button>
-                            ))
-                        })()}
+                        {/* Categories from Database */}
+                        {categories.map(cat => (
+                            <button
+                                key={cat.id}
+                                className={`category-btn ${activeCategory === cat.name ? 'active' : ''}`}
+                                onClick={() => setActiveCategory(cat.name)}
+                            >
+                                {cat.name}
+                            </button>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -165,7 +198,23 @@ function Books() {
                             {filteredBooks.map(book => (
                                 <Link to={`/book/${book.id}`} key={book.id} className="book-card">
                                     <div className="book-cover">
-                                        <img src={book.cover} alt={book.title} />
+                                        {book.cover ? (
+                                            <img
+                                                src={book.cover}
+                                                alt={book.title}
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none'
+                                                    e.target.nextSibling.style.display = 'flex'
+                                                }}
+                                            />
+                                        ) : null}
+                                        <div className="no-cover-placeholder" style={{ display: book.cover ? 'none' : 'flex' }}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                            </svg>
+                                            <span>No Cover</span>
+                                        </div>
                                         {book.stock === 0 && (
                                             <div className="book-unavailable">Habis</div>
                                         )}
@@ -225,3 +274,4 @@ function Books() {
 
 
 export default Books
+

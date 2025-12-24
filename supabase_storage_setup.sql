@@ -1,0 +1,59 @@
+-- =============================================
+-- KTP UPLOADS - MANUAL SETUP VIA DASHBOARD
+-- =============================================
+-- 
+-- Supabase Storage policies CANNOT be created via SQL.
+-- You MUST set this up via the Supabase Dashboard UI.
+--
+-- =============================================
+-- STEP 1: CREATE BUCKET
+-- =============================================
+-- 
+-- 1. Go to Supabase Dashboard: https://app.supabase.com
+-- 2. Select your project
+-- 3. Go to "Storage" in the left sidebar
+-- 4. Click "New bucket" button
+-- 5. Enter these settings:
+--    - Name: ktp-uploads
+--    - Check: "Public bucket" ✅
+-- 6. Click "Create bucket"
+--
+-- =============================================
+-- STEP 2: CREATE POLICIES
+-- =============================================
+--
+-- After bucket is created:
+-- 1. Click on "ktp-uploads" bucket
+-- 2. Go to "Policies" tab
+-- 3. Click "New Policy"
+--
+-- POLICY 1: Allow Upload (INSERT)
+-- --------------------------------
+-- - Click "For full customization"
+-- - Policy name: "Allow authenticated users to upload"
+-- - Allowed operation: INSERT
+-- - Target roles: authenticated
+-- - Policy definition: true
+-- - Click "Review" then "Save"
+--
+-- POLICY 2: Allow Update (UPDATE) 
+-- --------------------------------
+-- - Click "New Policy" > "For full customization"
+-- - Policy name: "Allow users to update their files"
+-- - Allowed operation: UPDATE
+-- - Target roles: authenticated
+-- - Policy definition: true
+-- - Click "Review" then "Save"
+--
+-- POLICY 3: Allow Read (SELECT)
+-- --------------------------------
+-- - Click "New Policy" > "For full customization"  
+-- - Policy name: "Allow public read"
+-- - Allowed operation: SELECT
+-- - Target roles: anon, authenticated
+-- - Policy definition: true
+-- - Click "Review" then "Save"
+--
+-- =============================================
+-- DONE! Now users can upload KTP photos.
+-- =============================================

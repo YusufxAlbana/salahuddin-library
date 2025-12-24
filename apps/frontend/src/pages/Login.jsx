@@ -26,7 +26,30 @@ function Login() {
         setLoading(false)
 
         if (result.success) {
-            navigate('/profile')
+            // Check for admin role immediately after login success if possible, 
+            // but relying on AuthContext to fetch profile might take a ms.
+            // Best to redirect to a neutral place or check returned session? 
+            // Actually, we can fetch profile here or let the effect in App/AuthContext handle it?
+            // Safer to check role if attached to result or just rely on the App.jsx redirect?
+
+            // Let's modify logic: if user is admin, go to /admin.
+            // Since `login` in AuthContext doesn't return user role, we might need to fetch it or wait.
+            // But wait, the App.jsx Effect will run on route change or auth state change.
+            // If we navigate to '/', App.jsx catches it.
+            // If we want to be explicit:
+
+            // For now, default to profile, and let the Profile page or App page redirect if needed?
+            // User requested "langsung ke dashboard admin".
+            // Let's verify role here if we can.
+
+            // Note: `login` function in AuthContext currently returns { success: true }.
+            // We can't access `user` state immediately here because state updates are async.
+            // However, we can check the session from supabase directly or modify `login` to return role.
+
+            // Simplest Approach: Redirect to '/' (Home). App.jsx will catch 'admin' and redirect to '/admin'.
+            // Redirect to '/profile' (Profile) -> Profile.jsx also needs to redirect admins.
+
+            navigate('/')
         } else {
             setError(result.error)
         }

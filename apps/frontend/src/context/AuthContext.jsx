@@ -51,8 +51,19 @@ export function AuthProvider({ children }) {
                 isAdmin: userData?.role === 'admin',
                 joinDate: userData?.join_date || new Date().toLocaleDateString('id-ID'),
                 donatedBooks: userData?.donated_books || 0,
-                programsJoined: userData?.programs_joined || []
+                programsJoined: userData?.programs_joined || [],
+                // Membership fields
+                memberStatus: userData?.member_status || 'non-member',
+                ktpUrl: userData?.ktp_url || null,
+                paymentStatus: userData?.payment_status || 'unpaid',
+                paymentDate: userData?.payment_date || null,
+                isMember: userData?.member_status === 'verified'
             })
+
+            // Fetch active loans separately or via join if relation exists. 
+            // For now, let's fetch in Profile.jsx component to keep AuthContext lighter?
+            // User requested "My Loans" in profile.
+            // Let's stick to basic profile here. Extra data can be fetched in component.
         } catch (err) {
             console.error('Fetch profile catch:', err)
         } finally {
@@ -73,23 +84,32 @@ export function AuthProvider({ children }) {
             if (error) throw error
 
             if (data.user) {
-                // Manually create user profile in 'users' table
+                // Wait a moment for session to be fully established
+                await new Promise(resolve => setTimeout(resolve, 500))
+
+                // Try to insert user profile into 'users' table using UPSERT
+                console.log('Attempting to insert user profile for:', data.user.id)
                 const { error: dbError } = await supabase
                     .from('users')
-                    .insert([
+                    .upsert([
                         {
                             id: data.user.id,
                             name: name,
                             email: email,
                             role: 'member',
-                            join_date: new Date().toLocaleDateString('id-ID'),
+                            join_date: new Date().toISOString(),
                             donated_books: 0,
                             programs_joined: []
-                            // created_at is auto-handled by Supabase
                         }
-                    ])
+                    ], { onConflict: 'id' })
 
-                if (dbError) console.error('Error creating user profile:', dbError)
+                if (dbError) {
+                    console.error('DB Insert Error Details:', JSON.stringify(dbError, null, 2))
+                    // Don't throw, auth was successful. Profile can be created later.
+                    // But return a warning
+                    return { success: true, warning: `Auth OK, Profil gagal tersimpan: ${dbError.message}` }
+                }
+                console.log('User profile inserted successfully!')
             }
 
             return { success: true }
