@@ -6,8 +6,11 @@ export const MIDTRANS_CLIENT_KEY = 'Mid-client-J7_9eGvHGuKWlmiT';
 // Midtrans Snap script URL (Sandbox)
 export const MIDTRANS_SNAP_URL = 'https://app.sandbox.midtrans.com/snap/snap.js';
 
-// Backend API URL
-export const PAYMENT_API_URL = import.meta.env.VITE_PAYMENT_API_URL || 'http://localhost:5000/api/payment';
+// Backend API URL - uses Vercel serverless functions in production
+const isDevelopment = import.meta.env.DEV;
+export const PAYMENT_API_URL = isDevelopment 
+    ? 'http://localhost:5000/api/payment' 
+    : '/api';
 
 // Load Midtrans Snap script dynamically
 export const loadMidtransScript = () => {
@@ -84,7 +87,7 @@ export const PaymentService = {
     // Check payment status
     checkStatus: async (orderId) => {
         try {
-            const response = await fetch(`${PAYMENT_API_URL}/status/${orderId}`);
+            const response = await fetch(`${PAYMENT_API_URL}/payment-status?orderId=${orderId}`);
             const data = await response.json();
 
             if (!response.ok) {
