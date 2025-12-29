@@ -8,7 +8,7 @@ const programs = [
     {
         id: 'children-read-out-loud',
         title: 'Children Read Out-Loud',
-        icon: '📢',
+        icon: 'megaphone',
         shortDesc: 'Aktivitas membaca nyaring untuk anak dengan artikulasi, intonasi, dan kecepatan yang benar',
         fullDesc: 'Sebuah aktivitas membaca nyaring untuk anak yang melibatkan kemampuan berkomunikasi seperti membaca dengan artikulasi, intonasi dan kecepatan yang benar. Program ini membantu anak-anak mengembangkan kepercayaan diri dalam berbicara di depan umum.',
         image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=600&fit=crop',
@@ -32,7 +32,7 @@ const programs = [
     {
         id: 'it-class',
         title: 'IT Class',
-        icon: '💻',
+        icon: 'laptop',
         shortDesc: 'Belajar menguasai Microsoft Office untuk kebutuhan profesional',
         fullDesc: 'Belajar menguasai Microsoft Office seperti Microsoft Excel untuk membuat laporan keuangan dan PowerPoint untuk presentasi. Kelas ini dirancang untuk membekali peserta dengan keterampilan digital yang dibutuhkan di dunia kerja modern.',
         image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop',
@@ -56,7 +56,7 @@ const programs = [
     {
         id: 'story-telling',
         title: 'Story Telling Class',
-        icon: '📖',
+        icon: 'book-open',
         shortDesc: 'Belajar berkisah dan mendongeng dengan benar',
         fullDesc: 'Belajar berkisah dengan benar seperti mendongeng. Program ini mengajarkan teknik bercerita yang menarik, penggunaan ekspresi wajah, gerakan tubuh, dan modulasi suara untuk memikat pendengar.',
         image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=600&fit=crop',
@@ -80,7 +80,7 @@ const programs = [
     {
         id: 'public-speaking',
         title: 'Public Speaking Class',
-        icon: '🎤',
+        icon: 'mic',
         shortDesc: 'Menjadi professional public speaker dengan powerful opening dan memorable closing',
         fullDesc: 'Belajar menjadi professional public speaker dengan memahami powerful opening, meaningful content, dan memorable closing. Kelas ini akan mengasah kemampuan berbicara di depan umum dengan percaya diri dan impactful.',
         image: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&h=600&fit=crop',
@@ -102,6 +102,17 @@ const programs = [
         ageGroup: '15 tahun ke atas'
     }
 ]
+
+// Helper function to render program icon
+const ProgramIcon = ({ icon, size = 32 }) => {
+    const icons = {
+        megaphone: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 11l18-5v12L3 13v-2z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>,
+        laptop: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line></svg>,
+        'book-open': <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>,
+        mic: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+    }
+    return icons[icon] || null
+}
 
 function ProgramDetail() {
     const { programId } = useParams()
@@ -147,7 +158,7 @@ function ProgramDetail() {
                     <div className="detail-hero-overlay"></div>
                 </div>
                 <div className="detail-hero-content">
-                    <span className="detail-icon">{program.icon}</span>
+                    <span className="detail-icon"><ProgramIcon icon={program.icon} size={48} /></span>
                     <h1>{program.title}</h1>
                     <p>{program.shortDesc}</p>
                 </div>
@@ -169,7 +180,7 @@ function ProgramDetail() {
                                 <ul className="benefit-list">
                                     {program.benefits.map((benefit, index) => (
                                         <li key={index}>
-                                            <span className="benefit-icon">✓</span>
+                                            <span className="benefit-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
                                             {benefit}
                                         </li>
                                     ))}
@@ -193,21 +204,21 @@ function ProgramDetail() {
                             <div className="sidebar-card">
                                 <h3>Informasi Program</h3>
                                 <div className="info-item">
-                                    <span className="info-icon">📅</span>
+                                    <span className="info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
                                     <div>
                                         <strong>Jadwal</strong>
                                         <p>{program.schedule}</p>
                                     </div>
                                 </div>
                                 <div className="info-item">
-                                    <span className="info-icon">👥</span>
+                                    <span className="info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
                                     <div>
                                         <strong>Usia Peserta</strong>
                                         <p>{program.ageGroup}</p>
                                     </div>
                                 </div>
                                 <div className="info-item">
-                                    <span className="info-icon">💰</span>
+                                    <span className="info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span>
                                     <div>
                                         <strong>Biaya</strong>
                                         <p>GRATIS</p>
@@ -221,7 +232,7 @@ function ProgramDetail() {
                                 <div className="other-programs">
                                     {programs.filter(p => p.id !== programId).map(p => (
                                         <Link to={`/program/${p.id}`} key={p.id} className="other-program-item">
-                                            <span>{p.icon}</span>
+                                            <span><ProgramIcon icon={p.icon} size={20} /></span>
                                             <span>{p.title}</span>
                                         </Link>
                                     ))}

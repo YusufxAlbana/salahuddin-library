@@ -581,6 +581,7 @@ function AdminDashboard() {
                                                 <th>Email</th>
                                                 <th>Role</th>
                                                 <th>KTP</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -625,11 +626,56 @@ function AdminDashboard() {
                                                                 <span style={{ color: '#9ca3af', fontSize: '0.85rem' }}>Belum upload</span>
                                                             )}
                                                         </td>
+                                                        <td>
+                                                            {usr.member_status !== 'verified' ? (
+                                                                <button
+                                                                    className="btn btn-sm"
+                                                                    style={{ background: '#10b981', color: '#fff' }}
+                                                                    onClick={async () => {
+                                                                        const confirmed = await showConfirm({
+                                                                            title: 'Upgrade ke Member',
+                                                                            message: `Yakin ingin menjadikan "${usr.name}" sebagai Member? Pembayaran COD sudah dikonfirmasi?`,
+                                                                            confirmText: 'Ya, Jadikan Member',
+                                                                            cancelText: 'Batal',
+                                                                            type: 'success'
+                                                                        })
+                                                                        if (!confirmed) return
+
+                                                                        try {
+                                                                            const { error } = await supabase
+                                                                                .from('users')
+                                                                                .update({ member_status: 'verified' })
+                                                                                .eq('id', usr.id)
+
+                                                                            if (error) throw error
+                                                                            toast.success(`${usr.name} berhasil dijadikan Member!`)
+                                                                            fetchUsers()
+                                                                        } catch (error) {
+                                                                            toast.error('Gagal: ' + error.message)
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                                    </svg>
+                                                                    Jadikan Member
+                                                                </button>
+                                                            ) : (
+                                                                <span style={{ color: '#10b981', fontSize: '0.85rem', fontWeight: '600' }}>
+                                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
+                                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                                    </svg>
+                                                                    Sudah Member
+                                                                </span>
+                                                            )}
+                                                        </td>
                                                     </tr>
                                                 ))
                                             ) : (
                                                 <tr>
-                                                    <td colSpan="4" className="text-center">Belum ada pengguna terdaftar</td>
+                                                    <td colSpan="5" className="text-center">Belum ada pengguna terdaftar</td>
                                                 </tr>
                                             )}
                                         </tbody>

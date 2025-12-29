@@ -50,6 +50,20 @@ function Information() {
                                 <div className="step-content">
                                     <h3>Pembayaran Kartu Anggota</h3>
                                     <p>Setelah diverifikasi, lakukan pembayaran untuk kartu anggota. Kartu ini <strong>berlaku seumur hidup</strong>!</p>
+                                    <div style={{ background: '#ecfdf5', border: '1px solid #10b981', borderRadius: '8px', padding: '1rem', marginTop: '0.75rem' }}>
+                                        <p style={{ fontWeight: '600', color: '#047857', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                                            </svg>
+                                            Metode Pembayaran:
+                                        </p>
+                                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '0.9rem', color: '#374151' }}>
+                                            <li style={{ marginBottom: '0.25rem' }}>• <strong>Transfer Online</strong> - Via Midtrans (segera hadir)</li>
+                                            <li style={{ marginBottom: '0.25rem' }}>• <strong>Bayar di Tempat (COD)</strong> - Kunjungi perpustakaan langsung</li>
+                                            <li>• <strong>Konfirmasi Admin</strong> - Setelah bayar di tempat, admin akan mengaktifkan kartu anggota Anda</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                             <div className="info-step">
@@ -134,22 +148,45 @@ function Information() {
                         <h3>Ringkasan Penting</h3>
                         <div className="summary-grid">
                             <div className="summary-item">
-                                <span className="summary-icon">📅</span>
+                                <span className="summary-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                </span>
                                 <span className="summary-label">Lama Pinjam</span>
                                 <span className="summary-value">5 Hari</span>
                             </div>
                             <div className="summary-item">
-                                <span className="summary-icon">📚</span>
+                                <span className="summary-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                    </svg>
+                                </span>
                                 <span className="summary-label">Max Buku</span>
                                 <span className="summary-value">3 Buku</span>
                             </div>
                             <div className="summary-item">
-                                <span className="summary-icon">🔄</span>
+                                <span className="summary-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="23 4 23 10 17 10"></polyline>
+                                        <polyline points="1 20 1 14 7 14"></polyline>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                    </svg>
+                                </span>
                                 <span className="summary-label">Perpanjangan</span>
                                 <span className="summary-value">2 Kali</span>
                             </div>
                             <div className="summary-item warning">
-                                <span className="summary-icon">💰</span>
+                                <span className="summary-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                    </svg>
+                                </span>
                                 <span className="summary-label">Denda</span>
                                 <span className="summary-value">Rp 5.000/hari</span>
                             </div>

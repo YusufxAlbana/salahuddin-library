@@ -137,7 +137,7 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
             )
         } catch (err) {
             console.error('Payment error:', err)
-            setError('Gagal memproses pembayaran: ' + err.message)
+            setError('Pembayaran online tidak tersedia saat ini. Silakan gunakan opsi "Bayar di Tempat (COD)" di bawah.')
             setLoading(false)
         }
     }
@@ -158,12 +158,12 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
             {/* Progress Steps - 3 Steps */}
             <div className="upgrade-steps">
                 <div className={`upgrade-step ${step >= 1 ? 'active' : ''} ${step > 1 ? 'completed' : ''}`}>
-                    <span className="step-number">{step > 1 ? '✓' : '1'}</span>
+                    <span className="step-number">{step > 1 ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"></polyline></svg> : '1'}</span>
                     <span>Upload KTP</span>
                 </div>
                 <div className="step-connector"></div>
                 <div className={`upgrade-step ${step >= 2 ? 'active' : ''} ${step > 2 ? 'completed' : ''}`}>
-                    <span className="step-number">{step > 2 ? '✓' : '2'}</span>
+                    <span className="step-number">{step > 2 ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"></polyline></svg> : '2'}</span>
                     <span>Verifikasi Admin</span>
                 </div>
                 <div className="step-connector"></div>
@@ -211,7 +211,7 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                                         fontSize: '18px'
                                     }}
                                 >
-                                    ✕
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                 </button>
                             </div>
                         ) : (
@@ -246,9 +246,9 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                             }
                         }}
                         disabled={loading}
-                        style={{ marginTop: '1rem', width: '100%' }}
+                        style={{ marginTop: '1rem', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                     >
-                        {loading ? '⏳ Mengupload...' : ktpFile ? 'Kirim KTP' : '📁 Pilih File KTP'}
+                        {loading ? (<><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg> Mengupload...</>) : ktpFile ? 'Kirim KTP' : (<><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Pilih File KTP</>)}
                     </button>
                 </div>
             )}
@@ -256,7 +256,12 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
             {/* Step 2: Waiting for Admin Approval */}
             {step === 2 && (
                 <div className="upgrade-content" style={{ textAlign: 'center', padding: '2rem' }}>
-                    <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>⏳</div>
+                    <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
                     <h3 style={{ color: '#d97706', marginBottom: '0.5rem' }}>Menunggu Verifikasi Admin</h3>
                     <p style={{ color: '#6b7280', marginBottom: '1rem' }}>
                         KTP Anda sudah diupload dan sedang diverifikasi oleh Admin.<br />
@@ -311,7 +316,7 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                         border: '1px solid #0ea5e9',
                         borderRadius: '8px',
                         padding: '1rem',
-                        marginBottom: '1.5rem'
+                        marginBottom: '1rem'
                     }}>
                         <p style={{ margin: 0, fontSize: '0.9rem', color: '#0369a1' }}>
                             <strong>Pembayaran via Midtrans</strong><br />
@@ -331,21 +336,63 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: '0.5rem'
+                            gap: '0.5rem',
+                            marginBottom: '0.75rem'
                         }}
                     >
                         {loading ? (
-                            '⏳ Memproses...'
+                            'Memproses...'
                         ) : (
                             <>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                                     <line x1="1" y1="10" x2="23" y2="10"></line>
                                 </svg>
-                                Bayar Sekarang
+                                Bayar Online
                             </>
                         )}
                     </button>
+
+                    <div style={{ textAlign: 'center', color: '#9ca3af', margin: '0.5rem 0', fontSize: '0.9rem' }}>atau</div>
+
+                    <button
+                        className="btn"
+                        onClick={() => {
+                            toast.info(
+                                'Kamu bisa bayar langsung (COD) dengan mendatangi alamat ini:\n\n' +
+                                'Rumah YAAI (Yayasan Alfata Aceh Indonesia)\n' +
+                                'G8M7+Q8H Belakang Mesjid As Shadaqah,\n' +
+                                'Jl. Memori Lr. Setia, Lam Lagang,\n' +
+                                'Kec. Banda Raya, Kota Banda Aceh,\n' +
+                                'Aceh 23122, Indonesia\n\n' +
+                                'Setelah bayar di tempat, Admin akan mengaktifkan kartu anggota Anda.'
+                            )
+                        }}
+                        style={{
+                            width: '100%',
+                            padding: '1rem',
+                            fontSize: '1rem',
+                            background: '#f59e0b',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.5rem',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        Bayar di Tempat (COD)
+                    </button>
+
+                    <p style={{ fontSize: '0.8rem', color: '#6b7280', textAlign: 'center', marginTop: '1rem' }}>
+                        Klik tombol di atas untuk melihat alamat perpustakaan
+                    </p>
                 </div>
             )}
         </div>
@@ -531,7 +578,12 @@ function Profile() {
                     <div className="auth-container">
                         <div className="auth-card">
                             <div className="auth-header">
-                                <span className="auth-icon">🔐</span>
+                                <span className="auth-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                </span>
                                 <h1>Belum Login</h1>
                                 <p>Silakan login terlebih dahulu untuk melihat profil</p>
                             </div>
