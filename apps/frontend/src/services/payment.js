@@ -1,10 +1,15 @@
 // Midtrans Client Configuration
 // Client Key is safe to expose in frontend
 
-export const MIDTRANS_CLIENT_KEY = 'Mid-client-J7_9eGvHGuKWlmiT';
+export const MIDTRANS_CLIENT_KEY = import.meta.env.VITE_MIDTRANS_CLIENT_KEY || process.env.MIDTRANS_CLIENT_KEY || '';
 
 // Midtrans Snap script URL (Sandbox)
-export const MIDTRANS_SNAP_URL = 'https://app.sandbox.midtrans.com/snap/snap.js';
+// Midtrans Snap script URL
+export const getSnapUrl = (clientKey) => {
+    return clientKey.includes('SB-') 
+        ? 'https://app.sandbox.midtrans.com/snap/snap.js'
+        : 'https://app.midtrans.com/snap/snap.js';
+};
 
 // Backend API URL - uses Vercel serverless functions in production
 const isDevelopment = import.meta.env.DEV;
@@ -21,8 +26,10 @@ export const loadMidtransScript = () => {
             return;
         }
 
+        const snapUrl = getSnapUrl(MIDTRANS_CLIENT_KEY);
+
         // Check if script is already in DOM
-        const existingScript = document.querySelector(`script[src="${MIDTRANS_SNAP_URL}"]`);
+        const existingScript = document.querySelector(`script[src="${snapUrl}"]`);
         if (existingScript) {
             existingScript.addEventListener('load', () => resolve(window.snap));
             return;
@@ -30,17 +37,17 @@ export const loadMidtransScript = () => {
 
         // Create and load script
         const script = document.createElement('script');
-        script.src = MIDTRANS_SNAP_URL;
+        script.src = snapUrl;
         script.setAttribute('data-client-key', MIDTRANS_CLIENT_KEY);
         script.async = true;
 
         script.onload = () => {
-            console.log('Midtrans Snap loaded successfully');
+            console.log('Midtrans Snap loaded successfully (' + (snapUrl.includes('sandbox') ? 'Sandbox' : 'Production') + ')');
             resolve(window.snap);
         };
 
         script.onerror = () => {
-            reject(new Error('Failed to load Midtrans Snap script'));
+            reject(new Error('Failed to load Midtrans Snap script from ' + snapUrl));
         };
 
         document.head.appendChild(script);
