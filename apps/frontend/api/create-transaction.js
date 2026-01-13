@@ -1,10 +1,14 @@
 import midtransClient from 'midtrans-client';
 
 // Initialize Midtrans Snap
+const serverKey = process.env.MIDTRANS_SERVER_KEY;
+const clientKey = process.env.MIDTRANS_CLIENT_KEY;
+const isProduction = process.env.MIDTRANS_IS_PRODUCTION === 'true' || (serverKey && !serverKey.startsWith('SB-'));
+
 const snap = new midtransClient.Snap({
-    isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
-    serverKey: process.env.MIDTRANS_SERVER_KEY,
-    clientKey: process.env.MIDTRANS_CLIENT_KEY
+    isProduction: isProduction,
+    serverKey: serverKey,
+    clientKey: clientKey
 });
 
 export default async (req, res) => {

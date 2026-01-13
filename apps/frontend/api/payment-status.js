@@ -1,10 +1,14 @@
 import midtransClient from 'midtrans-client';
 
 // Initialize Midtrans Core API
+const serverKey = process.env.MIDTRANS_SERVER_KEY;
+const clientKey = process.env.MIDTRANS_CLIENT_KEY;
+const isProduction = process.env.MIDTRANS_IS_PRODUCTION === 'true' || (serverKey && !serverKey.startsWith('SB-'));
+
 const coreApi = new midtransClient.CoreApi({
-    isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
-    serverKey: process.env.MIDTRANS_SERVER_KEY,
-    clientKey: process.env.MIDTRANS_CLIENT_KEY
+    isProduction: isProduction,
+    serverKey: serverKey,
+    clientKey: clientKey
 });
 
 export default async (req, res) => {
