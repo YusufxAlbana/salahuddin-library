@@ -489,6 +489,45 @@ function Profile() {
         }
     }
 
+
+
+    const handlePayFine = async (loan, amount) => {
+        // Prevent multiple clicks
+        if (loading) return
+
+        try {
+            await PaymentService.initiatePayment(
+                {
+                    userId: user.id,
+                    customerName: user.name,
+                    customerEmail: user.email,
+                    amount: amount
+                },
+                {
+                    onSuccess: async (result) => {
+                        console.log('Fine payment success:', result)
+                        toast.success('Pembayaran denda berhasil! Silakan kembalikan buku ke perpustakaan.')
+                        // In a real app, we might want to update the loan status to 'fine_paid' here via API
+                        // For now, we just refresh the list
+                        fetchMyLoans(profileUser.id)
+                    },
+                    onPending: (result) => {
+                        toast.info('Pembayaran denda sedang diproses.')
+                    },
+                    onError: (result) => {
+                        toast.error('Pembayaran denda gagal.')
+                    },
+                    onClose: () => {
+                        console.log('Payment closed')
+                    }
+                }
+            )
+        } catch (error) {
+            console.error('Fine payment error:', error)
+            toast.error('Gagal memproses pembayaran denda: ' + error.message)
+        }
+    }
+
     const handleLogout = async () => {
         await logout()
         navigate('/')
@@ -827,15 +866,15 @@ function Profile() {
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
                                                     <button
                                                         className="btn btn-sm"
-                                                        onClick={() => handleRenewLoan(loan.id)}
-                                                        disabled={!canRenew}
+                                                        onClick={() => isOverdue ? handlePayFine(loan, fineAmount) : handleRenewLoan(loan.id)}
+                                                        disabled={(!canRenew && !isOverdue)}
                                                         style={{
                                                             fontSize: '0.75rem',
                                                             padding: '0.35rem 0.75rem',
-                                                            background: canRenew ? '#047857' : '#d1d5db',
-                                                            color: canRenew ? 'white' : '#9ca3af',
-                                                            cursor: canRenew ? 'pointer' : 'not-allowed',
-                                                            opacity: canRenew ? 1 : 0.7
+                                                            background: isOverdue ? '#dc2626' : (canRenew ? '#047857' : '#d1d5db'),
+                                                            color: (isOverdue || canRenew) ? 'white' : '#9ca3af',
+                                                            cursor: (isOverdue || canRenew) ? 'pointer' : 'not-allowed',
+                                                            opacity: (isOverdue || canRenew) ? 1 : 0.7
                                                         }}
                                                     >
                                                         {renewalCount >= 2 ? 'Max Perpanjang' :
