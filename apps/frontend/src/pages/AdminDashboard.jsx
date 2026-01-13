@@ -57,6 +57,11 @@ function AdminDashboard() {
     const handleSubmitBook = async (e) => {
         e.preventDefault()
         try {
+            if (bookForm.tags.length === 0) {
+                toast.error('Setiap buku wajib memiliki minimal 1 tag/kategori!')
+                return
+            }
+
             const bookData = {
                 title: bookForm.title,
                 author: bookForm.author,
@@ -481,10 +486,15 @@ function AdminDashboard() {
                                                                     type="checkbox"
                                                                     checked={bookForm.tags.includes(tag.id)}
                                                                     onChange={(e) => {
-                                                                        const newTags = e.target.checked
-                                                                            ? [...bookForm.tags, tag.id]
-                                                                            : bookForm.tags.filter(id => id !== tag.id)
-                                                                        setBookForm({ ...bookForm, tags: newTags })
+                                                                        if (e.target.checked) {
+                                                                            if (bookForm.tags.length >= 3) {
+                                                                                toast.error('Maksimal 3 tags per buku')
+                                                                                return
+                                                                            }
+                                                                            setBookForm({ ...bookForm, tags: [...bookForm.tags, tag.id] })
+                                                                        } else {
+                                                                            setBookForm({ ...bookForm, tags: bookForm.tags.filter(id => id !== tag.id) })
+                                                                        }
                                                                     }}
                                                                     style={{ width: '16px', height: '16px', accentColor: tag.color }}
                                                                 />
@@ -1730,7 +1740,8 @@ function AdminInfoPage() {
                 'Menambahkan buku baru dengan upload cover',
                 'Mengedit informasi buku yang sudah ada',
                 'Menghapus buku dari database',
-                'Mengatur stok dan kategori buku'
+                'Mengatur stok buku',
+                'Wajib memilih minimal 1 tag per buku'
             ],
             color: '#3b82f6'
         },

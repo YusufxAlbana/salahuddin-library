@@ -245,6 +245,21 @@ function Books() {
                                     <div className="book-info">
                                         <h3 className="book-title">{book.title}</h3>
                                         <p className="book-author">{book.author}</p>
+                                        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', margin: '4px 0 8px' }}>
+                                            {book.tags && book.tags.slice(0, 3).map((tag, idx) => (
+                                                <span key={idx} style={{
+                                                    fontSize: '0.65rem',
+                                                    padding: '2px 6px',
+                                                    borderRadius: '4px',
+                                                    background: tag.color ? `${tag.color}15` : '#f3f4f6',
+                                                    color: tag.color || '#6b7280',
+                                                    fontWeight: '600',
+                                                    border: `1px solid ${tag.color ? `${tag.color}30` : '#e5e7eb'}`
+                                                }}>
+                                                    {tag.name}
+                                                </span>
+                                            ))}
+                                        </div>
                                         <div className="book-meta">
                                             <span className="book-year">{book.year}</span>
                                             <span className={`book-status ${book.stock > 0 ? 'available' : 'unavailable'}`}>

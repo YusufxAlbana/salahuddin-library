@@ -60,8 +60,8 @@ function Information() {
                                         </p>
                                         <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '0.9rem', color: '#374151' }}>
                                             <li style={{ marginBottom: '0.25rem' }}>• <strong>Transfer Online</strong> - Via Midtrans (segera hadir)</li>
-                                            <li style={{ marginBottom: '0.25rem' }}>• <strong>Bayar di Tempat (COD)</strong> - Kunjungi perpustakaan langsung</li>
-                                            <li>• <strong>Konfirmasi Admin</strong> - Setelah bayar di tempat, admin akan mengaktifkan kartu anggota Anda</li>
+                                            <li style={{ marginBottom: '0.25rem' }}>• <strong>Bayar di Tempat (COD)</strong> - Datang ke Rumah YAAI (Yayasan Alfata Aceh Indonesia), G8M7+Q8H Belakang Mesjid As Shadaqah, Jl. Memori Lr. Setia, Lam Lagang, Kec. Banda Raya, Kota Banda Aceh.</li>
+                                            <li>• <strong>Konfirmasi Admin</strong> - Setelah bayar di tempat, admin akan mengaktifkan kartu anggota Anda.</li>
                                         </ul>
                                     </div>
                                 </div>

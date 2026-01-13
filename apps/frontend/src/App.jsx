@@ -600,7 +600,7 @@ function App() {
                   </div>
                   <div>
                     <h4>Alamat</h4>
-                    <p>G8M7+Q8H Belakang Mesjid As Shadaqah<br />Jl. Memori Lr. Setia, Lam Lagang<br />Kec. Banda Raya, Kota Banda Aceh<br />Aceh 23122, Indonesia</p>
+                    <p>Rumah YAAI (Yayasan Alfata Aceh Indonesia)<br />G8M7+Q8H Belakang Mesjid As Shadaqah<br />Jl. Memori Lr. Setia, Lam Lagang<br />Kec. Banda Raya, Kota Banda Aceh<br />Aceh 23122, Indonesia</p>
                   </div>
                 </div>
                 <div className="contact-item">
@@ -654,7 +654,7 @@ function App() {
               {/* Google Maps Embed - Banda Aceh */}
               <div className="contact-map">
                 <iframe
-                  src="https://maps.google.com/maps?q=G8M7%2BQ8H%20Belakang%20Mesjid%20As%20Shadaqah%2C%20Jl.%20Memori%20Lr.%20Setia%2C%20Lam%20Lagang%2C%20Kec.%20Banda%20Raya%2C%20Kota%20Banda%20Aceh%2C%20Aceh%2023122%2C%20Indonesia&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                  src="https://maps.google.com/maps?q=G8M7%2BQ8H%2C+Banda+Aceh&t=&z=17&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="200"
                   style={{ border: 0, borderRadius: '12px' }}

@@ -76,7 +76,7 @@ function Footer() {
                             <circle cx="12" cy="10" r="3"></circle>
                         </svg>
                         <div>
-                            <p><strong>Rumah YAAI</strong></p>
+                            <p><strong>Rumah YAAI (Yayasan Alfata Aceh Indonesia)</strong></p>
                             <p>G8M7+Q8H Belakang Mesjid As Shadaqah</p>
                             <p>Jl. Memori Lr. Setia, Lam Lagang</p>
                             <p>Kec. Banda Raya, Kota Banda Aceh</p>
