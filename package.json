@@ -16,5 +16,8 @@
   },
   "dependencies": {
     "firebase": "^12.7.0"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }

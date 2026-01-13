@@ -7,9 +7,9 @@
   --primary-light: #10b981;
   --primary-dark: #065f46;
 
-  /* SECONDARY - Warm Gold/Amber */
-  --secondary: #d97706;
-  --secondary-light: #f59e0b;
+  /* SECONDARY - Rich Gold/Emas */
+  --secondary: #b8860b;
+  --secondary-light: #d4af37;
 
   /* ACCENT - Teal */
   --accent: #0d9488;
@@ -27,7 +27,7 @@
 
   /* GRADIENTS */
   --gradient-primary: linear-gradient(135deg, #047857 0%, #10b981 100%);
-  --gradient-secondary: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-secondary: linear-gradient(135deg, #996515 0%, #d4af37 100%);
   --gradient-dark: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
   --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
 
@@ -196,6 +196,24 @@ body {
 
 .nav-auth {
   margin-left: 1.5rem;
+}
+
+/* Desktop: hide mobile auth, show desktop auth */
+.mobile-auth {
+  display: none !important;
+}
+
+.nav-auth-buttons-mobile {
+  display: none !important;
+}
+
+.desktop-auth {
+  display: flex !important;
+}
+
+/* Hide overlay on desktop */
+.mobile-menu-overlay {
+  display: none !important;
 }
 
 .nav-auth-buttons {
@@ -438,23 +456,32 @@ body {
   background: var(--gradient-primary);
   color: var(--white);
   box-shadow: 0 4px 15px rgba(4, 120, 87, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(4, 120, 87, 0.5);
+  background: var(--white);
+  color: var(--primary);
+  border: 2px solid var(--white);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+  transform: none;
+  /* No lift animation */
 }
 
 .btn-secondary {
   background: transparent;
   color: var(--white);
   border: 2px solid var(--white);
+  transition: all 0.3s ease;
 }
 
 .btn-secondary:hover {
   background: var(--white);
-  color: var(--dark);
+  color: var(--primary);
+  border: 2px solid var(--white);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+  transform: none;
 }
 
 .scroll-indicator {
@@ -481,8 +508,8 @@ body {
   top: 8px;
   left: 50%;
   transform: translateX(-50%);
-  width: 6px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background: var(--white);
   border-radius: 50%;
   animation: scroll 2s infinite;
@@ -551,8 +578,8 @@ body {
   padding: 4rem 0;
   background: var(--light);
   position: relative;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
+  width: 100%;
+  margin: 0;
   overflow: hidden;
 }
 
@@ -560,12 +587,15 @@ body {
 #program .program-grid {
   display: flex !important;
   flex-direction: row !important;
-  flex-wrap: nowrap !important;
+  flex-wrap: wrap !important;
+  /* Changed to wrap for responsive */
   width: 100% !important;
   /* Gunakan 100% container parent */
   min-width: 100% !important;
-  min-height: 500px;
-  overflow: hidden !important;
+  min-height: auto;
+  /* Changed from fixed 500px */
+  overflow: visible !important;
+  /* Changed from hidden */
   /* Matikan scroll */
   margin: 0 !important;
   padding: 0 !important;
@@ -722,6 +752,19 @@ body {
   .program-card-image-container {
     height: 50%;
   }
+
+  /* Make cards 50% on tablet */
+  #program .program-card-link {
+    flex: 0 0 50% !important;
+    width: 50% !important;
+    max-width: 50% !important;
+  }
+
+  #program .program-grid:hover .program-card-link,
+  #program .program-grid:hover .program-card-link:hover {
+    flex: 0 0 50% !important;
+    width: 50% !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -736,6 +779,29 @@ body {
     /* Optional: show on mobile */
     opacity: 1;
     transform: none;
+  }
+
+  /* Make cards 50% on smaller tablets too */
+  #program .program-card-link {
+    flex: 0 0 50% !important;
+    width: 50% !important;
+    max-width: 50% !important;
+  }
+}
+
+@media (max-width: 600px) {
+
+  /* Make cards 100% on mobile */
+  #program .program-card-link {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #program .program-grid:hover .program-card-link,
+  #program .program-grid:hover .program-card-link:hover {
+    flex: 0 0 100% !important;
+    width: 100% !important;
   }
 }
 
@@ -842,10 +908,9 @@ body {
 #donasi.donasi-section {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  width: 100vw !important;
-  max-width: 100vw !important;
-  margin-left: calc(-50vw + 50%) !important;
-  height: 100vh !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
   min-height: 100vh !important;
   padding: 0 !important;
   margin-top: 0 !important;
@@ -966,12 +1031,35 @@ body {
 @media (max-width: 768px) {
   #donasi.donasi-section {
     grid-template-columns: 1fr !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
   }
 
-  #donasi .donasi-info,
-  #donasi .donasi-card {
-    padding: 2rem !important;
+  #donasi .donasi-info {
+    height: auto !important;
     min-height: auto !important;
+    padding: 2rem !important;
+  }
+
+  #donasi .donasi-card {
+    height: auto !important;
+    min-height: auto !important;
+    padding: 2rem !important;
+  }
+
+  .donasi-card h3 {
+    font-size: 1.5rem;
+  }
+
+  .donasi-form input,
+  .donasi-form textarea {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .donasi-form .form-row {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -1398,14 +1486,14 @@ body {
 
 .star-label:hover .star-icon,
 .star-label:hover~.star-label .star-icon {
-  color: #fbbf24;
+  color: #daa520;
   transform: scale(1.1);
 }
 
 .star-label input:checked~.star-icon,
 .star-label:has(input:checked) .star-icon,
 .star-label:has(input:checked)~.star-label .star-icon {
-  color: #fbbf24;
+  color: #daa520;
 }
 
 .rating-hint {
@@ -1816,42 +1904,236 @@ body {
 @media (max-width: 768px) {
   .menu-toggle {
     display: flex;
+    z-index: 1002;
+    position: relative;
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #000000;
+    /* BLACK hamburger button */
   }
 
+  .menu-toggle svg {
+    transition: transform 0.3s ease;
+    stroke: #000000;
+    /* BLACK stroke */
+  }
+
+  /* Mobile Menu Overlay - Not needed since menu is fullscreen transparent */
+  .mobile-menu-overlay {
+    display: none;
+    /* Hide overlay since menu itself is transparent */
+  }
+
+  .mobile-menu-overlay.active {
+    display: none;
+  }
+
+  /* Mobile Menu - FULL SCREEN with transparent background */
   .nav-links {
     position: fixed;
-    top: 70px;
+    top: 0;
     left: 0;
     right: 0;
-    background: var(--white);
+    bottom: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.85);
+    /* More transparent - 0.85 */
+    backdrop-filter: blur(10px);
+    /* Blur to see website behind */
+    -webkit-backdrop-filter: blur(10px);
     flex-direction: column;
-    padding: 2rem;
-    gap: 1rem;
-    box-shadow: var(--shadow-md);
-    transform: translateY(-150%);
-    transition: var(--transition);
+    padding: 0;
+    gap: 1.5rem;
+    /* More spacing between items */
+    box-shadow: none;
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* CENTER items vertically */
   }
 
   .nav-links.active {
-    transform: translateY(0);
+    transform: translateX(0);
+  }
+
+  .nav-links li {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: none;
+  }
+
+  .nav-links.active li {
+    animation: slideInLeft 0.4s ease forwards;
+  }
+
+  .nav-links.active li:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .nav-links.active li:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .nav-links.active li:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  .nav-links.active li:nth-child(4) {
+    animation-delay: 0.25s;
+  }
+
+  .nav-links.active li:nth-child(5) {
+    animation-delay: 0.3s;
+  }
+
+  .nav-links.active li:nth-child(6) {
+    animation-delay: 0.35s;
+  }
+
+  .nav-links.active li:nth-child(7) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes slideInLeft {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
   .nav-links a {
-    padding: 1rem;
+    padding: 1rem 2rem;
     display: block;
     text-align: center;
-    border-radius: 0;
+    /* CENTER text */
+    border-radius: 12px;
+    font-size: 1.5rem;
+    /* Bigger font */
+    font-weight: 700;
+    color: var(--dark);
+    border-bottom: none;
+    /* No border */
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: 280px;
   }
 
   .nav-links a:hover {
     background: var(--light);
+    padding-left: 1rem;
+    color: var(--primary);
+  }
+
+  .nav-links a::after {
+    display: none;
+  }
+
+  /* Hide desktop auth on mobile */
+  .desktop-auth {
+    display: none !important;
+  }
+
+  /* Show mobile auth */
+  .mobile-auth {
+    display: block !important;
+    margin-top: 2rem;
+    padding-top: 0;
+    border-top: none;
+    /* No border */
+    width: 100%;
+    max-width: 280px;
+  }
+
+  /* Mobile Auth Buttons */
+  .nav-auth-buttons-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .nav-login-btn-mobile {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem !important;
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--dark) !important;
+    border-radius: 50px !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    transition: all 0.2s ease !important;
+    border: none;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .nav-login-btn-mobile:hover {
+    background: var(--primary);
+    color: var(--white) !important;
+  }
+
+  .nav-login-btn-mobile svg {
+    flex-shrink: 0;
+  }
+
+  .nav-register-btn-mobile {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem !important;
+    background: var(--gradient-primary);
+    color: var(--white) !important;
+    border-radius: 50px !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 4px 12px rgba(4, 120, 87, 0.3);
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .nav-register-btn-mobile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(4, 120, 87, 0.4);
+  }
+
+  .nav-register-btn-mobile svg {
+    flex-shrink: 0;
+  }
+
+  /* Mobile Profile Button */
+  .mobile-auth .nav-profile-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem 2rem !important;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 50px !important;
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .mobile-profile-text {
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 1rem;
   }
 
   .program-grid {
     grid-template-columns: 1fr;
   }
-
-
 
   .welcome-buttons {
     flex-direction: column;
@@ -1959,6 +2241,7 @@ body {
   width: 100%;
   border-radius: 0;
   overflow: hidden;
+  /* Keep hidden to contain content inside book */
   box-shadow: var(--shadow-md);
 }
 
@@ -2005,6 +2288,7 @@ body {
   /* Book-like styling */
   border-radius: 4px 16px 16px 4px;
   overflow: hidden;
+  /* Keep hidden to contain badge inside book */
   box-shadow:
     /* Book spine shadow */
     -8px 0 20px rgba(0, 0, 0, 0.3),
@@ -2098,6 +2382,9 @@ body {
   text-align: center;
   z-index: 2;
   flex-shrink: 0;
+  width: 100%;
+  /* FULL WIDTH across the book */
+  box-sizing: border-box;
   /* Book banner style */
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
@@ -2219,18 +2506,24 @@ body {
    Program Cards with Images
 ================================== */
 .program-section {
-  padding: 4rem 0;
+  padding: 3rem 0;
   background: var(--light);
+}
+
+#program .section-container {
+  margin-bottom: 2rem;
 }
 
 .program-grid {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 0 !important;
-  border-radius: 12px;
-  overflow: hidden;
+  border-radius: 0;
+  overflow: visible;
   box-shadow: var(--shadow-lg);
   border: none !important;
+  width: 100%;
+  margin: 0;
 }
 
 .program-card-link {
@@ -2386,13 +2679,22 @@ body {
 
 @media (max-width: 1024px) {
   .program-grid {
-    grid-template-columns: repeat(2, 1fr);
-    border-radius: 12px;
+    grid-template-columns: repeat(2, 1fr) !important;
+    border-radius: 0;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .program-card-link {
+    display: flex;
   }
 
   .program-card {
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 500px;
+    /* Ensure equal card heights */
+    flex: 1;
   }
 
   /* Remove right border for every 2nd item (last in row) */
@@ -3549,7 +3851,7 @@ body {
   display: grid;
   grid-template-columns: 350px 1fr;
   gap: 3rem;
-  align-items: start;
+  /* Removed align-items: start to allow equal height stretching */
 }
 
 .book-detail-cover {
@@ -3557,10 +3859,17 @@ body {
   border-radius: 0;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  height: 100%;
+  /* Fill the grid height */
+  display: flex;
 }
 
 .book-detail-cover img {
   width: 100%;
+  height: 100%;
+  /* Fill the container height */
+  object-fit: cover;
+  /* Maintain aspect ratio while filling */
   display: block;
 }
 
@@ -4191,7 +4500,7 @@ body {
   transform: translateY(-50%);
   width: 4px;
   height: 60%;
-  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+  background: linear-gradient(180deg, #daa520 0%, #d4af37 100%);
   border-radius: 0 4px 4px 0;
 }
 
@@ -4247,7 +4556,7 @@ body {
 .user-info-small p {
   margin: 0;
   font-size: 0.75rem;
-  color: #fbbf24;
+  color: #daa520;
   font-weight: 500;
 }
 
@@ -5035,7 +5344,7 @@ body {
 
 .member-warning svg {
   flex-shrink: 0;
-  color: #d97706;
+  color: #b8860b;
 }
 
 /* Member Status Badge */
@@ -5062,7 +5371,7 @@ body {
 
 .member-badge.pending {
   background: #fef3c7;
-  color: #d97706;
+  color: #b8860b;
 }
 
 /* Auth Page Styles */
@@ -5194,7 +5503,7 @@ body {
 ================================== */
 .upgrade-section {
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  border: 2px solid #f59e0b;
+  border: 2px solid #d4af37;
   border-radius: 16px;
   padding: 2rem;
 }
@@ -5228,7 +5537,7 @@ body {
 
 .upgrade-step.active .step-number {
   background: var(--gradient-secondary);
-  border-color: #f59e0b;
+  border-color: #d4af37;
   color: white;
 }
 
@@ -5262,7 +5571,7 @@ body {
 }
 
 .status-badge.pending {
-  color: #d97706 !important;
+  color: #b8860b !important;
 }
 
 /* Status card styling based on membership */
@@ -5277,7 +5586,7 @@ body {
 }
 
 .profile-stat-card.status-card.pending {
-  border-color: #f59e0b;
+  border-color: #d4af37;
   background: linear-gradient(135deg, #fffbeb, #fef3c7);
 }
 
@@ -6261,7 +6570,7 @@ body {
 
 .membership-badge {
   display: inline-block;
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  background: linear-gradient(135deg, #daa520 0%, #d4af37 100%);
   color: #1e293b;
   font-size: 0.75rem;
   font-weight: 700;
@@ -6309,7 +6618,7 @@ body {
 }
 
 .membership-benefit .benefit-icon svg {
-  color: #fbbf24;
+  color: #daa520;
 }
 
 .membership-benefit h4 {
@@ -6962,20 +7271,8 @@ body {
     margin-left: 0;
   }
 
-  .nav-auth-buttons {
-    display: none;
-  }
-
-  .nav-links li.nav-auth-mobile {
-    display: block;
-  }
-
-  .nav-links .nav-login-btn,
-  .nav-links .nav-register-btn {
-    width: 100%;
-    text-align: center;
-    margin-top: 0.5rem;
-  }
+  /* DO NOT hide nav-auth-buttons - keep visible */
+  /* DO NOT change button styling - keep same as desktop */
 }
 
 /* ===============================
@@ -7053,5 +7350,773 @@ body {
 
   .footer-container {
     padding: 0 1rem 2rem;
+  }
+}
+
+/* ===============================
+   COMPREHENSIVE MOBILE RESPONSIVE FIXES
+   Added to ensure all devices work properly
+================================== */
+
+/* Mobile Navigation - Hamburger Menu - FULLSCREEN CENTERED */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: flex !important;
+    z-index: 1001;
+    color: #000 !important;
+  }
+
+  .menu-toggle svg {
+    stroke: #000 !important;
+  }
+
+  /* FULLSCREEN TRANSPARENT MENU - Fix scrolling & gaps */
+  .nav-links {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    /* Use dvh for mobile browsers */
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    flex-direction: column !important;
+    padding: 0 1rem !important;
+    /* Reduced padding */
+    gap: 1.5rem !important;
+    box-shadow: none !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    z-index: 1000 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow-y: auto !important;
+    /* Allow scrolling if needed */
+    overflow-x: hidden !important;
+  }
+
+  .nav-links.active {
+    transform: translateX(0) !important;
+  }
+
+  /* Style menu links BUT NOT auth buttons */
+  .nav-links a:not(.nav-login-btn):not(.nav-register-btn):not(.nav-profile-btn) {
+    font-size: 1.35rem !important;
+    /* Slightly smaller to fit better */
+    font-weight: 700 !important;
+    width: auto !important;
+    padding: 0.75rem 2rem !important;
+    border-bottom: none !important;
+    text-align: center !important;
+    color: var(--dark) !important;
+  }
+
+  /* Show desktop-auth in mobile menu */
+  .desktop-auth {
+    display: flex !important;
+    margin-left: 0 !important;
+    width: 100% !important;
+    margin-top: 2rem !important;
+    justify-content: center !important;
+  }
+
+  .mobile-auth {
+    display: none !important;
+  }
+
+  .nav-auth-buttons {
+    flex-direction: row !important;
+    width: auto !important;
+    /* Allow auto width to prevent stretching */
+    gap: 1rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+  }
+
+  /* Buttons EXACTLY like desktop but smaller size for mobile/tablet */
+  .nav-login-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.9rem 2rem !important;
+    background: transparent !important;
+    border: 2px solid var(--primary) !important;
+    color: var(--primary) !important;
+    border-radius: 0 !important;
+    /* LANCIP */
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    min-width: unset !important;
+  }
+
+  .nav-register-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.9rem 2rem !important;
+    background: var(--gradient-primary) !important;
+    color: var(--white) !important;
+    border-radius: 0 !important;
+    /* LANCIP */
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    text-decoration: none !important;
+    border: 2px solid transparent !important;
+    white-space: nowrap !important;
+    min-width: unset !important;
+  }
+
+  .nav-container {
+    padding: 0.75rem 1rem;
+  }
+
+  /* Hide mobile overlay - menu itself is transparent */
+  /* Hide mobile overlay - menu itself is transparent */
+  .mobile-menu-overlay {
+    display: none !important;
+  }
+}
+
+/* Auth Buttons Stack on All Mobile Screens */
+@media (max-width: 768px) {
+  .nav-auth-buttons {
+    flex-direction: column !important;
+    gap: 1rem !important;
+    width: 100% !important;
+  }
+
+  .nav-login-btn,
+  .nav-register-btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+  }
+
+  /* Fix Hover State for Mobile - Ensure visibility */
+  .nav-login-btn:hover {
+    background: var(--primary) !important;
+    color: var(--white) !important;
+  }
+
+  .nav-register-btn:hover {
+    opacity: 0.9 !important;
+  }
+}
+
+/* Program Section - Mobile Stack */
+@media (max-width: 1024px) {
+  #program .program-grid {
+    flex-wrap: wrap !important;
+  }
+
+  #program .program-card-link {
+    flex: 0 0 50% !important;
+    width: 50% !important;
+    max-width: 50% !important;
+  }
+
+  #program .program-grid:hover .program-card-link,
+  #program .program-grid:hover .program-card-link:hover {
+    flex: 0 0 50% !important;
+    width: 50% !important;
+  }
+}
+
+@media (max-width: 600px) {
+  #program .program-grid {
+    flex-direction: column !important;
+    min-height: auto !important;
+  }
+
+  #program .program-card-link {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #program .program-grid:hover .program-card-link,
+  #program .program-grid:hover .program-card-link:hover {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+  }
+
+  .program-card {
+    min-height: 380px !important;
+  }
+
+  .program-card-image-container {
+    height: 200px !important;
+  }
+
+  .program-section {
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding: 3rem 1rem !important;
+  }
+
+  .program-grid {
+    border-radius: 0 !important;
+  }
+}
+
+/* Filosofi Section - Mobile Stack */
+@media (max-width: 768px) {
+  .filosofi-section {
+    padding: 3rem 1rem;
+  }
+
+  .filosofi-content {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .filosofi-text h2 {
+    font-size: 1.75rem;
+    text-align: center;
+  }
+
+  .filosofi-quote {
+    font-size: 1.1rem;
+  }
+
+  .filosofi-story {
+    font-size: 0.95rem;
+    text-align: left;
+  }
+
+  .filosofi-images-stack {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .filosofi-badge-center {
+    width: 100% !important;
+    transform: none;
+    /* Remove translateX that was causing offset */
+  }
+}
+
+/* Visi Misi Section - Mobile */
+@media (max-width: 768px) {
+  .visi-misi-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem;
+  }
+
+  .about-values {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem;
+  }
+
+  .about-section {
+    padding: 3rem 1rem;
+  }
+
+  .about-title {
+    font-size: 1.75rem;
+  }
+
+  .visi-card,
+  .misi-card {
+    padding: 1.5rem;
+  }
+
+  .value-number {
+    font-size: 2rem;
+  }
+}
+
+/* Welcome Section - Mobile */
+@media (max-width: 600px) {
+  .welcome-section {
+    padding-top: 60px;
+  }
+
+  .welcome-title {
+    font-size: 2rem !important;
+  }
+
+  .welcome-subtitle {
+    font-size: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .welcome-buttons {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .welcome-buttons .btn {
+    width: 100%;
+  }
+
+  .scroll-indicator {
+    bottom: 1.5rem;
+  }
+}
+
+/* Contact Section - Mobile */
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 3rem 1rem;
+  }
+
+  .contact-content {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+  }
+
+  .contact-left,
+  .contact-right {
+    width: 100%;
+  }
+
+  .contact-info {
+    gap: 1rem;
+  }
+
+  .contact-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .contact-map {
+    height: 250px;
+  }
+
+  .contact-map iframe {
+    height: 250px !important;
+  }
+
+  .feedback-form-container {
+    padding: 1.5rem;
+  }
+
+  .home-footer {
+    padding: 1.5rem 0;
+  }
+
+  .footer-social {
+    gap: 1rem;
+  }
+}
+
+/* Donasi Section - Mobile */
+@media (max-width: 768px) {
+  .donasi-section .donasi-content {
+    grid-template-columns: 1fr !important;
+  }
+
+  .donasi-info {
+    padding: 2rem 1.5rem !important;
+  }
+
+  .donasi-card {
+    padding: 2rem 1.5rem !important;
+  }
+
+  .donasi-benefits li {
+    font-size: 0.95rem;
+  }
+}
+
+/* Admin Dashboard - Mobile */
+@media (max-width: 992px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100% !important;
+    min-width: 100% !important;
+    position: relative !important;
+    height: auto !important;
+    padding: 1rem;
+  }
+
+  .admin-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .admin-nav-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .admin-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 1rem !important;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-nav {
+    flex-direction: column;
+  }
+
+  .admin-nav-item {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Books Page - Mobile */
+@media (max-width: 768px) {
+  .books-hero {
+    padding: 6rem 1rem 3rem;
+  }
+
+  .books-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem;
+  }
+
+  .books-search-wrapper {
+    width: 100%;
+  }
+
+  .books-categories-scroll {
+    padding: 0 1rem;
+  }
+
+  .category-chip {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .books-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .book-card {
+    max-width: 100%;
+  }
+}
+
+/* Profile Page - Mobile */
+@media (max-width: 600px) {
+  .profile-page {
+    padding: 4.5rem 0.75rem 1rem;
+  }
+
+  .profile-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .profile-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .profile-tab {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .loans-list {
+    gap: 1rem;
+  }
+
+  .loan-card {
+    padding: 1rem;
+  }
+}
+
+/* Auth Pages (Login/Register) - Mobile */
+@media (max-width: 600px) {
+  .auth-page {
+    padding: 5rem 1rem 2rem;
+  }
+
+  .auth-card {
+    padding: 1.5rem;
+    margin: 0;
+  }
+
+  .auth-title {
+    font-size: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* General Text Responsiveness */
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 1.5rem !important;
+  }
+
+  .section-subtitle {
+    font-size: 0.95rem;
+    padding: 0 0.5rem;
+  }
+
+  h1 {
+    font-size: 1.75rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  h3 {
+    font-size: 1.25rem !important;
+  }
+
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+
+  .app {
+    overflow-x: hidden;
+  }
+
+  /* Ensure images don't overflow */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Ensure tables are scrollable */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Fix for very small screens */
+@media (max-width: 360px) {
+  .nav-logo {
+    font-size: 1.1rem;
+  }
+
+  .logo-image {
+    height: 32px;
+  }
+
+  .btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .welcome-title {
+    font-size: 1.75rem !important;
+  }
+
+  .about-values {
+    grid-template-columns: 1fr !important;
+  }
+
+  .btn-full {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+}
+
+/* Horizontal Scrolling for Categories */
+.books-categories {
+  position: sticky;
+  top: 0;
+  z-index: 990;
+  background: var(--white);
+  padding: 10px 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.books-categories .categories-scroll {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  gap: 10px;
+  padding-bottom: 5px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.books-categories .categories-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.category-btn {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* =========================================
+   IMPROVED RESPONSIVE ADMIN DASHBOARD
+   ========================================= */
+
+@media (max-width: 992px) {
+  .admin-layout {
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Fixed Mobile Sidebar (Off-canvas) */
+  .admin-sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px !important;
+    min-width: 280px !important;
+    height: 100vh !important;
+    z-index: 1050;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Overlay backdrop */
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px);
+  }
+
+  .sidebar-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Mobile Header with Toggle */
+  .mobile-menu-toggle {
+    display: flex !important;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1030;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Main Content Adjustments */
+  .admin-main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 5rem 1rem 2rem !important;
+    /* Top padding for toggle button */
+  }
+
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .admin-header h1 {
+    font-size: 1.75rem;
+  }
+
+  /* Stats Grid Responsive */
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem;
+  }
+
+  .admin-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .admin-actions button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+
+
+  /* Form Responsive */
+  .admin-form-card {
+    padding: 1.5rem;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 16px;
+    /* Prevent zoom on iOS */
+  }
+}
+
+/* =========================================
+   TAGS MANAGEMENT RESPONSIVE
+   ========================================= */
+.tags-management-container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 992px) {
+  .tags-management-container {
+    grid-template-columns: 1fr;
   }
 }

@@ -351,7 +351,7 @@ function App() {
               </p>
 
               <p className="filosofi-story">
-                Namun, jauh sebelum masa itu, ada seorang pemuda Islam bernama <strong>Muhammad Al-Fatih</strong> yang sangat senang membaca. Dari kegemaran membacanya, ia berhasil menajamkan kemampuan analisa dan berpikir kritis. Berkat ilmu yang ia peroleh dari membaca, ia kemudian berhasil mewujudkan impian umat Islam selama 800 tahun — merebut kembali Konstantinopel pada tahun 1453.
+                Nama <strong>Salahuddin</strong> identik dengan satu pencapaian monumental yang menggetarkan dunia: pembebasan Yerusalem (Al-Quds) dari cengkeraman Pasukan Salib setelah 88 tahun lamanya. Ia adalah sosok ksatria Muslim yang tidak hanya piawai dalam strategi perang, tetapi juga memiliki hati seluas samudra—adil, pemaaf, dan sangat dermawan. Karakternya yang mulia inilah yang membuatnya dihormati oleh kawan dan disegani oleh lawan.
               </p>
             </div>
           </div>
@@ -600,7 +600,7 @@ function App() {
                   </div>
                   <div>
                     <h4>Alamat</h4>
-                    <p>Monumen Nasional<br />Jakarta Pusat, DKI Jakarta</p>
+                    <p>G8M7+Q8H Belakang Mesjid As Shadaqah<br />Jl. Memori Lr. Setia, Lam Lagang<br />Kec. Banda Raya, Kota Banda Aceh<br />Aceh 23122, Indonesia</p>
                   </div>
                 </div>
                 <div className="contact-item">
@@ -651,17 +651,17 @@ function App() {
             </div>
 
             <div className="contact-right">
-              {/* Google Maps Embed - Monas Jakarta */}
+              {/* Google Maps Embed - Banda Aceh */}
               <div className="contact-map">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.6664447751965!2d106.82496231476882!3d-6.175392395528828!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d2e764b12d%3A0x3d2ad6e1e0e9bcc8!2sMonumen%20Nasional!5e0!3m2!1sid!2sid!4v1703322000000!5m2!1sid!2sid"
+                  src="https://maps.google.com/maps?q=G8M7%2BQ8H%20Belakang%20Mesjid%20As%20Shadaqah%2C%20Jl.%20Memori%20Lr.%20Setia%2C%20Lam%20Lagang%2C%20Kec.%20Banda%20Raya%2C%20Kota%20Banda%20Aceh%2C%20Aceh%2023122%2C%20Indonesia&t=&z=15&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="200"
                   style={{ border: 0, borderRadius: '12px' }}
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Lokasi Salahuddin Library - Monas Jakarta"
+                  title="Lokasi Salahuddin Library - Banda Aceh"
                 ></iframe>
               </div>
 

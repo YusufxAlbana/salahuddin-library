@@ -36,7 +36,7 @@ const TOAST_TYPES = {
                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
             </svg>
         ),
-        color: '#f59e0b',
+        color: '#d4af37',
         bg: '#fef3c7'
     },
     info: {

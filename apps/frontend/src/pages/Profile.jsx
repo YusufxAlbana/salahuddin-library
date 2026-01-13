@@ -144,7 +144,7 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
 
     return (
         <div className="profile-section upgrade-section">
-            <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#d97706' }}>
+            <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#b8860b' }}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                 </svg>
@@ -257,19 +257,19 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
             {step === 2 && (
                 <div className="upgrade-content" style={{ textAlign: 'center', padding: '2rem' }}>
                     <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#b8860b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
                             <polyline points="12 6 12 12 16 14"></polyline>
                         </svg>
                     </div>
-                    <h3 style={{ color: '#d97706', marginBottom: '0.5rem' }}>Menunggu Verifikasi Admin</h3>
+                    <h3 style={{ color: '#b8860b', marginBottom: '0.5rem' }}>Menunggu Verifikasi Admin</h3>
                     <p style={{ color: '#6b7280', marginBottom: '1rem' }}>
                         KTP Anda sudah diupload dan sedang diverifikasi oleh Admin.<br />
                         Anda akan mendapat notifikasi setelah disetujui.
                     </p>
                     <div style={{
                         background: '#fef3c7',
-                        border: '1px solid #f59e0b',
+                        border: '1px solid #d4af37',
                         borderRadius: '8px',
                         padding: '1rem',
                         fontSize: '0.9rem',
@@ -361,10 +361,7 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                             toast.info(
                                 'Kamu bisa bayar langsung (COD) dengan mendatangi alamat ini:\n\n' +
                                 'Rumah YAAI (Yayasan Alfata Aceh Indonesia)\n' +
-                                'G8M7+Q8H Belakang Mesjid As Shadaqah,\n' +
-                                'Jl. Memori Lr. Setia, Lam Lagang,\n' +
-                                'Kec. Banda Raya, Kota Banda Aceh,\n' +
-                                'Aceh 23122, Indonesia\n\n' +
+                                'G8M7+Q8H Belakang Mesjid As Shadaqah, Jl. Memori Lr. Setia, Lam Lagang, Kec. Banda Raya, Kota Banda Aceh, Aceh 23122, Indonesia.\n\n' +
                                 'Setelah bayar di tempat, Admin akan mengaktifkan kartu anggota Anda.'
                             )
                         }}
@@ -372,7 +369,7 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                             width: '100%',
                             padding: '1rem',
                             fontSize: '1rem',
-                            background: '#f59e0b',
+                            background: '#d4af37',
                             color: 'white',
                             border: 'none',
                             borderRadius: '12px',
@@ -663,7 +660,7 @@ function Profile() {
                                         <path d="M10 15.17L7.41 12.59L6 14L10 18L18 10L16.59 8.59L10 15.17Z" fill="white" />
                                     </svg>
                                 ) : (profileUser?.memberStatus === 'pending_approval' || profileUser?.memberStatus === 'approved') ? (
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="#d4af37" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <polyline points="12 6 12 12 16 14"></polyline>
                                     </svg>
@@ -754,7 +751,7 @@ function Profile() {
                                                 background: loan.status === 'borrowed' && isOverdue ? '#fee2e2' :
                                                     loan.status === 'borrowed' && (isUrgent || isDueToday) ? '#fef3c7' : 'white',
                                                 border: loan.status === 'borrowed' && isOverdue ? '2px solid #ef4444' :
-                                                    loan.status === 'borrowed' && (isUrgent || isDueToday) ? '2px solid #f59e0b' : '1px solid #e5e7eb',
+                                                    loan.status === 'borrowed' && (isUrgent || isDueToday) ? '2px solid #d4af37' : '1px solid #e5e7eb',
                                                 borderRadius: '12px'
                                             }}
                                         >
@@ -767,7 +764,7 @@ function Profile() {
                                                         fontSize: '0.85rem',
                                                         color: loan.status === 'returned' ? 'green' :
                                                             isOverdue ? '#dc2626' :
-                                                                (isUrgent || isDueToday) ? '#d97706' : '#666',
+                                                                (isUrgent || isDueToday) ? '#b8860b' : '#666',
                                                         fontWeight: (isUrgent || isOverdue || isDueToday) ? '600' : 'normal',
                                                         display: 'flex',
                                                         alignItems: 'center',
@@ -906,7 +903,7 @@ function Profile() {
                                         onClick={handleResetPassword}
                                         className="btn"
                                         disabled={passwordLoading}
-                                        style={{ background: '#f59e0b', color: 'white', fontSize: '0.9rem', padding: '0.75rem 1.5rem' }}
+                                        style={{ background: '#d4af37', color: 'white', fontSize: '0.9rem', padding: '0.75rem 1.5rem' }}
                                     >
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '0.5rem' }}>
                                             <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>

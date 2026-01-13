@@ -25,7 +25,7 @@ function AdminDashboard() {
     const [showAddBook, setShowAddBook] = useState(false)
     const [editingBook, setEditingBook] = useState(null)
     const [bookForm, setBookForm] = useState({
-        title: '', author: '', category: '', year: new Date().getFullYear(), stock: 1, cover: ''
+        title: '', author: '', year: new Date().getFullYear(), stock: 1, cover: '', tags: []
     })
 
     const fetchStats = async () => {
@@ -41,7 +41,10 @@ function AdminDashboard() {
 
     const fetchBooks = async () => {
         try {
-            const { data, error } = await supabase.from('books').select('*').order('created_at', { ascending: false })
+            const { data, error } = await supabase
+                .from('books')
+                .select('*, book_tags(tag_id, tags(id, name, color))')
+                .order('created_at', { ascending: false })
             if (!error) setBooksList(data || [])
         } catch (e) { console.error(e) }
     }
@@ -54,20 +57,46 @@ function AdminDashboard() {
     const handleSubmitBook = async (e) => {
         e.preventDefault()
         try {
+            const bookData = {
+                title: bookForm.title,
+                author: bookForm.author,
+                year: bookForm.year,
+                stock: bookForm.stock,
+                cover: bookForm.cover
+                // category is deprecated, we use tags now
+            }
+
+            let bookId = editingBook?.id
+
             if (editingBook) {
                 // Update existing book
-                const { error } = await supabase.from('books').update(bookForm).eq('id', editingBook.id)
+                const { error } = await supabase.from('books').update(bookData).eq('id', bookId)
                 if (error) throw error
-                toast.success('Buku berhasil diupdate!')
+
+                // Update tags: Delete all existing and re-insert
+                await supabase.from('book_tags').delete().eq('book_id', bookId)
             } else {
                 // Insert new book
-                const { error } = await supabase.from('books').insert([bookForm])
+                const { data, error } = await supabase.from('books').insert([bookData]).select()
                 if (error) throw error
-                toast.success('Buku berhasil ditambahkan!')
+                bookId = data[0].id
             }
+
+            // Insert new tags
+            if (bookForm.tags && bookForm.tags.length > 0) {
+                const tagInserts = bookForm.tags.map(tagId => ({
+                    book_id: bookId,
+                    tag_id: tagId
+                }))
+                const { error: tagError } = await supabase.from('book_tags').insert(tagInserts)
+                if (tagError) throw tagError
+            }
+
+            toast.success(editingBook ? 'Buku berhasil diupdate!' : 'Buku berhasil ditambahkan!')
+
             setShowAddBook(false)
             setEditingBook(null)
-            setBookForm({ title: '', author: '', category: '', year: new Date().getFullYear(), stock: 1, cover: '' })
+            setBookForm({ title: '', author: '', year: new Date().getFullYear(), stock: 1, cover: '', tags: [] })
             fetchBooks()
             fetchStats()
         } catch (error) {
@@ -77,13 +106,14 @@ function AdminDashboard() {
 
     const handleEditBook = (book) => {
         setEditingBook(book)
+        const currentTags = book.book_tags?.map(bt => bt.tag_id) || []
         setBookForm({
             title: book.title || '',
             author: book.author || '',
-            category: book.category || '',
             year: book.year || new Date().getFullYear(),
             stock: book.stock || 0,
-            cover: book.cover || ''
+            cover: book.cover || '',
+            tags: currentTags
         })
         setShowAddBook(true)
     }
@@ -127,7 +157,7 @@ function AdminDashboard() {
                     <div className="auth-container">
                         <div className="auth-card" style={{ textAlign: 'center', padding: '3rem' }}>
                             <div style={{ width: '80px', height: '80px', margin: '0 auto 1.5rem', background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
@@ -432,20 +462,40 @@ function AdminDashboard() {
                                                 <label>Penulis</label>
                                                 <input type="text" value={bookForm.author} onChange={e => setBookForm({ ...bookForm, author: e.target.value })} required placeholder="Nama penulis..." />
                                             </div>
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-                                                <div className="form-group">
-                                                    <label>Kategori</label>
-                                                    <select
-                                                        value={bookForm.category}
-                                                        onChange={e => setBookForm({ ...bookForm, category: e.target.value })}
-                                                        style={{ width: '100%', padding: '0.75rem', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '0.95rem', background: 'white' }}
-                                                    >
-                                                        <option value="">Pilih kategori...</option>
-                                                        {availableTags.map(tag => (
-                                                            <option key={tag.id} value={tag.name.toLowerCase()}>{tag.name}</option>
-                                                        ))}
-                                                    </select>
+                                            <div className="form-group">
+                                                <label>Tags / Kategori</label>
+                                                <div style={{
+                                                    border: '1px solid #e5e7eb',
+                                                    borderRadius: '8px',
+                                                    padding: '0.5rem',
+                                                    maxHeight: '150px',
+                                                    overflowY: 'auto',
+                                                    background: 'white'
+                                                }}>
+                                                    {availableTags.length === 0 ? (
+                                                        <p style={{ color: '#9ca3af', fontSize: '0.85rem', margin: 0 }}>Belum ada tags tersedia.</p>
+                                                    ) : (
+                                                        availableTags.map(tag => (
+                                                            <label key={tag.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.25rem 0', cursor: 'pointer' }}>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={bookForm.tags.includes(tag.id)}
+                                                                    onChange={(e) => {
+                                                                        const newTags = e.target.checked
+                                                                            ? [...bookForm.tags, tag.id]
+                                                                            : bookForm.tags.filter(id => id !== tag.id)
+                                                                        setBookForm({ ...bookForm, tags: newTags })
+                                                                    }}
+                                                                    style={{ width: '16px', height: '16px', accentColor: tag.color }}
+                                                                />
+                                                                <span style={{ fontSize: '0.9rem', color: '#374151' }}>{tag.name}</span>
+                                                                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: tag.color }}></span>
+                                                            </label>
+                                                        ))
+                                                    )}
                                                 </div>
+                                            </div>
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                                 <div className="form-group">
                                                     <label>Tahun</label>
                                                     <input type="number" value={bookForm.year} onChange={e => setBookForm({ ...bookForm, year: e.target.value })} />
@@ -551,7 +601,24 @@ function AdminDashboard() {
                                                         <td><img src={book.cover} alt="" style={{ width: '40px', height: '55px', objectFit: 'cover', borderRadius: '4px' }} /></td>
                                                         <td><strong>{book.title}</strong></td>
                                                         <td>{book.author}</td>
-                                                        <td><span className={`role-badge ${book.category}`}>{book.category}</span></td>
+                                                        <td>
+                                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
+                                                                {book.book_tags && book.book_tags.length > 0 ? (
+                                                                    book.book_tags.map(bt => (
+                                                                        <span key={bt.tag_id} className="role-badge" style={{
+                                                                            background: bt.tags?.color ? `${bt.tags.color}20` : '#e2e8f0', // 20 opacity
+                                                                            color: bt.tags?.color || '#64748b',
+                                                                            fontSize: '0.75rem',
+                                                                            padding: '2px 8px'
+                                                                        }}>
+                                                                            {bt.tags?.name || 'Unknown'}
+                                                                        </span>
+                                                                    ))
+                                                                ) : (
+                                                                    <span style={{ color: '#9ca3af', fontStyle: 'italic', fontSize: '0.85rem' }}>No tags</span>
+                                                                )}
+                                                            </div>
+                                                        </td>
                                                         <td>{book.stock}</td>
                                                         <td>
                                                             <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -837,7 +904,7 @@ function LoansTable({ supabase }) {
                                         } else if (diffDays === 0) {
                                             return <span style={{ color: '#dc2626', fontWeight: '600' }}>Hari ini</span>
                                         } else if (diffDays <= 2) {
-                                            return <span style={{ color: '#f59e0b', fontWeight: '500' }}>{diffDays} hari lagi</span>
+                                            return <span style={{ color: '#d4af37', fontWeight: '500' }}>{diffDays} hari lagi</span>
                                         } else {
                                             return <span style={{ color: '#10b981' }}>{diffDays} hari lagi</span>
                                         }
@@ -1179,7 +1246,7 @@ function TagsManagement({ supabase }) {
     const availableBooks = books.filter(b => !tagBooks.find(tb => tb.id === b.id))
 
     return (
-        <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '1.5rem' }}>
+        <div className="tags-management-container">
             {/* Left Panel - Tags List */}
             <div className="table-responsive" style={{ height: 'fit-content' }}>
                 <h3>Daftar Tags</h3>
@@ -1701,7 +1768,7 @@ function AdminInfoPage() {
                 'Memantau tanggal jatuh tempo peminjaman',
                 'Menandai buku yang sudah dikembalikan'
             ],
-            color: '#f59e0b'
+            color: '#d4af37'
         },
         {
             title: 'Manajemen Tags',
@@ -1941,7 +2008,7 @@ function AdminInfoPage() {
                 alignItems: 'center',
                 gap: '0.5rem'
             }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2">
                     <path d="M9 18h6M12 2v1m6.36 1.64l-.71.71M21 12h-1M18.36 18.36l-.71-.71M12 21v-1M6.36 18.36l.71-.71M3 12h1M6.36 5.64l.71.71"></path>
                     <circle cx="12" cy="12" r="4"></circle>
                 </svg>
@@ -1966,7 +2033,7 @@ function AdminInfoPage() {
                             alignItems: 'flex-start'
                         }}
                     >
-                        <div style={{ color: '#f59e0b', flexShrink: 0, marginTop: '2px' }}>
+                        <div style={{ color: '#d4af37', flexShrink: 0, marginTop: '2px' }}>
                             {tip.icon}
                         </div>
                         <div>

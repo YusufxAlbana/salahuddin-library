@@ -77,8 +77,7 @@ function Footer() {
                         </svg>
                         <div>
                             <p><strong>Rumah YAAI</strong></p>
-                            <p>(Yayasan Alfata Aceh Indonesia)</p>
-                            <p>Belakang Mesjid As Shadaqah</p>
+                            <p>G8M7+Q8H Belakang Mesjid As Shadaqah</p>
                             <p>Jl. Memori Lr. Setia, Lam Lagang</p>
                             <p>Kec. Banda Raya, Kota Banda Aceh</p>
                             <p>Aceh 23122, Indonesia</p>
