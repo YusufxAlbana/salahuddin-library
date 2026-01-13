@@ -1,4 +1,4 @@
-const midtransClient = require('midtrans-client');
+import midtransClient from 'midtrans-client';
 
 // Initialize Midtrans Snap
 const snap = new midtransClient.Snap({
@@ -7,7 +7,7 @@ const snap = new midtransClient.Snap({
     clientKey: process.env.MIDTRANS_CLIENT_KEY
 });
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
     // Enable CORS
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
