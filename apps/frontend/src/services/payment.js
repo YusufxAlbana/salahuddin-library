@@ -1,21 +1,18 @@
 // Midtrans Client Configuration
 // Client Key is safe to expose in frontend
 
-export const MIDTRANS_CLIENT_KEY = import.meta.env.VITE_MIDTRANS_CLIENT_KEY || process.env.MIDTRANS_CLIENT_KEY || '';
+export const MIDTRANS_CLIENT_KEY = import.meta.env.VITE_MIDTRANS_CLIENT_KEY || 'Mid-client-J7_9eGvHGuKWlmiT';
 
-// Midtrans Snap script URL (Sandbox)
 // Midtrans Snap script URL
-export const getSnapUrl = (clientKey) => {
-    return clientKey.includes('SB-') 
-        ? 'https://app.sandbox.midtrans.com/snap/snap.js'
-        : 'https://app.midtrans.com/snap/snap.js';
+export const getSnapUrl = () => {
+    const isProduction = import.meta.env.VITE_MIDTRANS_IS_PRODUCTION === 'true';
+    return isProduction
+        ? 'https://app.midtrans.com/snap/snap.js'
+        : 'https://app.sandbox.midtrans.com/snap/snap.js';
 };
 
 // Backend API URL - uses Vercel serverless functions in production
-const isDevelopment = import.meta.env.DEV;
-export const PAYMENT_API_URL = isDevelopment 
-    ? 'http://localhost:5000/api/payment' 
-    : '/api';
+export const PAYMENT_API_URL = '/api';
 
 // Load Midtrans Snap script dynamically
 export const loadMidtransScript = () => {
@@ -26,7 +23,7 @@ export const loadMidtransScript = () => {
             return;
         }
 
-        const snapUrl = getSnapUrl(MIDTRANS_CLIENT_KEY);
+        const snapUrl = getSnapUrl();
 
         // Check if script is already in DOM
         const existingScript = document.querySelector(`script[src="${snapUrl}"]`);

@@ -10,7 +10,17 @@ export function AuthProvider({ children }) {
     // Listen for auth state changes
     useEffect(() => {
         // Check active session
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        supabase.auth.getSession().then(({ data: { session }, error }) => {
+            if (error) {
+                console.error('Session check error:', error)
+                if (error.message.includes('Refresh Token Not Found') || error.message.includes('Invalid Refresh Token')) {
+                    supabase.auth.signOut() // Force cleanup
+                }
+                setUser(null)
+                setLoading(false)
+                return
+            }
+
             if (session) {
                 fetchUserProfile(session.user)
             } else {
