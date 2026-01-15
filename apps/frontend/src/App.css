@@ -241,8 +241,9 @@ body {
 }
 
 .nav-login-btn:hover {
-  background: var(--primary);
-  color: var(--white) !important;
+  background: var(--white);
+  color: var(--primary) !important;
+  border: 2px solid var(--primary);
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(4, 120, 87, 0.2);
 }
@@ -271,6 +272,9 @@ body {
 }
 
 .nav-register-btn:hover {
+  background: var(--white);
+  color: var(--primary) !important;
+  border: 2px solid var(--primary);
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(4, 120, 87, 0.4);
 }
@@ -411,11 +415,13 @@ body {
 }
 
 .welcome-title .highlight {
-  background: var(--gradient-secondary);
+  background: linear-gradient(to right, #FFD700, #FDB931, #FFC107);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   display: inline-block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  /* Adds depth to transparent text */
 }
 
 .welcome-subtitle {
@@ -463,8 +469,8 @@ body {
 .btn-primary:hover {
   background: var(--white);
   color: var(--primary);
-  border: 2px solid var(--white);
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+  border: 2px solid var(--primary);
+  box-shadow: 0 4px 15px rgba(4, 120, 87, 0.3);
   transform: none;
   /* No lift animation */
 }
@@ -1004,7 +1010,7 @@ body {
   padding: 1.25rem;
   background: var(--secondary);
   color: var(--white);
-  border: none;
+  border: 2px solid transparent;
   font-size: 1.1rem;
   font-weight: 700;
   border-radius: 12px;
@@ -1016,8 +1022,12 @@ body {
 
 .btn-donate:hover {
   transform: translateY(-3px);
-  background: var(--secondary-light);
+  background: var(--white);
+  color: var(--secondary);
+  border: 2px solid var(--secondary);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  padding: 1.15rem;
+  /* Adjust padding to compensate border */
 }
 
 .donasi-note {
@@ -1630,7 +1640,11 @@ body {
 }
 
 .footer-contact-link:hover {
-  color: var(--primary);
+  color: var(--secondary);
+}
+
+.footer-contact-link:hover svg {
+  color: var(--secondary);
 }
 
 .footer-contact-link svg {
@@ -2026,9 +2040,10 @@ body {
   }
 
   .nav-links a:hover {
-    background: var(--light);
-    padding-left: 1rem;
+    background: rgba(4, 120, 87, 0.15);
     color: var(--primary);
+    padding-left: 2rem;
+    /* Keep original padding, no shift */
   }
 
   .nav-links a::after {
@@ -2071,14 +2086,16 @@ body {
     font-weight: 600 !important;
     font-size: 1.1rem !important;
     transition: all 0.2s ease !important;
-    border: none;
+    border: 2px solid transparent;
+    /* Prepare for border on hover */
     width: 100%;
     max-width: 280px;
   }
 
   .nav-login-btn-mobile:hover {
-    background: var(--primary);
-    color: var(--white) !important;
+    background: var(--white);
+    color: var(--primary) !important;
+    border: 2px solid var(--primary);
   }
 
   .nav-login-btn-mobile svg {
@@ -2097,12 +2114,17 @@ body {
     font-weight: 600 !important;
     font-size: 1.1rem !important;
     transition: all 0.2s ease !important;
+    border: 2px solid transparent;
+    /* Prepare for border on hover */
     box-shadow: 0 4px 12px rgba(4, 120, 87, 0.3);
     width: 100%;
     max-width: 280px;
   }
 
   .nav-register-btn-mobile:hover {
+    background: var(--white);
+    color: var(--primary) !important;
+    border: 2px solid var(--primary);
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(4, 120, 87, 0.4);
   }
@@ -2143,6 +2165,33 @@ body {
   .btn {
     width: 100%;
     max-width: 280px;
+  }
+
+  .btn.btn-full,
+  .btn.btn-donate,
+  .upgrade-content .btn,
+  .account-section .btn {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Fix button groups in profile to stack vertically */
+  .account-section div[style*="display: flex"] {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  /* Payment Summary Mobile */
+  .payment-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Contact Items Mobile */
+  .contact-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 }
 
@@ -2938,7 +2987,7 @@ body {
 }
 
 .btn-full {
-  width: 100%;
+  width: 100% !important;
   margin-top: 1rem;
 }
 
@@ -3138,10 +3187,19 @@ body {
   transition: var(--transition);
 }
 
-.auth-form .form-group input:focus {
-  outline: none;
+.auth-form .form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.1);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  outline: none;
+}
+
+.w-full-important {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
 }
 
 .auth-form .btn-full {
@@ -4790,19 +4848,28 @@ body {
 
 .admin-actions {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
 }
 
 .admin-actions .btn {
   display: flex;
   align-items: center;
+  justify-content: center;
+  /* Center content */
+  width: 100%;
+  /* Full width */
   gap: 0.6rem;
   padding: 0.9rem 1.5rem;
   font-weight: 600;
   border-radius: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 0.9rem;
+  max-width: 100% !important;
+  /* Force full width override */
+  flex: 1;
+  /* Allow flex growth */
 }
 
 .admin-actions .btn svg {
@@ -6148,8 +6215,9 @@ body {
 }
 
 .info-step:hover {
-  transform: translateX(8px);
-  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  transform: none;
+  background: rgba(4, 120, 87, 0.15);
+  /* Darker visible green */
 }
 
 .step-number {
@@ -6199,7 +6267,8 @@ body {
 }
 
 .rule-item:hover {
-  transform: translateX(4px);
+  transform: none;
+  background: rgba(4, 120, 87, 0.15);
   box-shadow: var(--shadow-sm);
 }
 
@@ -7768,6 +7837,12 @@ body {
 
   .admin-stats-grid {
     grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem;
+  }
+
+  /* Center the 3rd card on Tablet/Mobile (up to 992px) */
+  .admin-stats-grid .stat-card:nth-child(3) {
+    grid-column: 1 / -1;
   }
 }
 
@@ -7998,18 +8073,46 @@ body {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 280px !important;
-    min-width: 280px !important;
-    height: 100vh !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 100dvh !important;
     z-index: 1050;
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 4px 0 25px rgba(0, 0, 0, 0.1);
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: none;
   }
 
   .admin-sidebar.open {
     transform: translateX(0);
+  }
+
+  /* Center Sidebar Content */
+  .sidebar-header {
+    width: 100%;
+    justify-content: center;
+    padding-top: 2rem;
+  }
+
+  .sidebar-menu {
+    width: 100%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-link {
+    width: 80% !important;
+    justify-content: center;
+  }
+
+  .sidebar-footer {
+    width: 100%;
+    justify-content: center;
+    padding-bottom: 2rem;
   }
 
   /* Overlay backdrop */
@@ -8067,15 +8170,45 @@ body {
     gap: 1rem;
   }
 
+  /* Make the 3rd stat card (Active Loans) span full width on mobile/tablet */
+  .admin-stats-grid .stat-card:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+
   .admin-actions {
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
   }
 
-  .admin-actions button {
+  .admin-actions button,
+  .admin-actions .btn {
     width: 100% !important;
     justify-content: center !important;
+    margin-right: 0 !important;
+    margin-bottom: 0.75rem;
+    /* Add spacing between stacked buttons */
+  }
+
+  .admin-actions button:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Specific Books Page Mobile Fixes */
+@media (max-width: 768px) {
+  .books-search {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 1rem;
+  }
+
+  .books-search input {
+    width: 100% !important;
+  }
+
+  .books-hero-content {
+    padding: 0 1rem;
   }
 }
 
@@ -8118,5 +8251,19 @@ body {
 @media (max-width: 992px) {
   .tags-management-container {
     grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   FINAL MOBILE OVERRIDE - FORCE 1 COLUMN
+   ========================================= */
+@media (max-width: 768px) {
+  .admin-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Ensure the 3rd card also follows 1 column flow (auto) */
+  .admin-stats-grid .stat-card:nth-child(3) {
+    grid-column: auto !important;
   }
 }

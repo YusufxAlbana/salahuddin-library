@@ -153,6 +153,18 @@ function AdminDashboard() {
         }
     }, [activeTab])
 
+    // Lock body scroll when sidebar is open
+    useEffect(() => {
+        if (sidebarOpen) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = 'auto'
+        }
+        return () => {
+            document.body.style.overflow = 'auto'
+        }
+    }, [sidebarOpen])
+
     // Check if user is not admin - show Access Denied page
     if (!user) {
         return (
@@ -247,6 +259,29 @@ function AdminDashboard() {
                     )}
                 </svg>
             </button>
+            <button
+                className="mobile-menu-close"
+                style={{
+                    display: sidebarOpen ? 'flex' : 'none',
+                    position: 'fixed',
+                    top: '1rem',
+                    right: '1rem',
+                    zIndex: 1100,
+                    background: '#ef4444',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                }}
+                onClick={() => setSidebarOpen(false)}
+                aria-label="Close menu"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
 
             {/* Sidebar Overlay */}
             <div
@@ -262,66 +297,39 @@ function AdminDashboard() {
                 </div>
 
                 <nav className="sidebar-menu">
-                    <button
-                        onClick={() => setActiveTab('dashboard')}
-                        className={`sidebar-link ${activeTab === 'dashboard' ? 'active' : ''}`}
-                    >
+                    <button onClick={() => { setActiveTab('dashboard'); setSidebarOpen(false); }} className={`sidebar-link ${activeTab === 'dashboard' ? 'active' : ''}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                         Dashboard
                     </button>
-                    <button
-                        onClick={() => setActiveTab('books')}
-                        className={`sidebar-link ${activeTab === 'books' ? 'active' : ''}`}
-                    >
+                    <button onClick={() => { setActiveTab('books'); setSidebarOpen(false); }} className={`sidebar-link ${activeTab === 'books' ? 'active' : ''}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                         Buku
                     </button>
-                    <button
-                        onClick={() => setActiveTab('users')}
-                        className={`sidebar-link ${activeTab === 'users' ? 'active' : ''}`}
-                    >
+                    <button onClick={() => { setActiveTab('users'); setSidebarOpen(false); }} className={`sidebar-link ${activeTab === 'users' ? 'active' : ''}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         Pengguna
                     </button>
-                    <button
-                        onClick={() => setActiveTab('loans')}
-                        className={`sidebar-link ${activeTab === 'loans' ? 'active' : ''}`}
-                    >
+                    <button onClick={() => { setActiveTab('loans'); setSidebarOpen(false); }} className={`sidebar-link ${activeTab === 'loans' ? 'active' : ''}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                         Peminjaman
                     </button>
-                    <button
-                        onClick={() => setActiveTab('tags')}
-                        className={`sidebar-link ${activeTab === 'tags' ? 'active' : ''}`}
-                    >
+                    <button onClick={() => { setActiveTab('tags'); setSidebarOpen(false); }} className={`sidebar-link ${activeTab === 'tags' ? 'active' : ''}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                         Tags
                     </button>
-                    <button
-                        onClick={() => setActiveTab('donations')}
-                        className={`sidebar-link ${activeTab === 'donations' ? 'active' : ''}`}
-                    >
+                    <button onClick={() => { setActiveTab('donations'); setSidebarOpen(false); }} className={`sidebar-link ${activeTab === 'donations' ? 'active' : ''}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                         Donasi Buku
                     </button>
-                    <button
-                        onClick={() => setActiveTab('ktp')}
-                        className={`sidebar-link ${activeTab === 'ktp' ? 'active' : ''}`}
-                    >
+                    <button onClick={() => { setActiveTab('ktp'); setSidebarOpen(false); }} className={`sidebar-link ${activeTab === 'ktp' ? 'active' : ''}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                         Verifikasi KTP
                     </button>
-                    <button
-                        onClick={() => setActiveTab('feedback')}
-                        className={`sidebar-link ${activeTab === 'feedback' ? 'active' : ''}`}
-                    >
+                    <button onClick={() => { setActiveTab('feedback'); setSidebarOpen(false); }} className={`sidebar-link ${activeTab === 'feedback' ? 'active' : ''}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                         Feedback
                     </button>
-                    <button
-                        onClick={() => setActiveTab('info')}
-                        className={`sidebar-link ${activeTab === 'info' ? 'active' : ''}`}
-                    >
+                    <button onClick={() => { setActiveTab('info'); setSidebarOpen(false); }} className={`sidebar-link ${activeTab === 'info' ? 'active' : ''}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                         Informasi
                     </button>
@@ -448,8 +456,8 @@ function AdminDashboard() {
                         {/* BOOKS TAB */}
                         {activeTab === 'books' && (
                             <>
-                                <div className="admin-actions">
-                                    <button className="btn btn-primary" onClick={() => { setShowAddBook(!showAddBook); setEditingBook(null) }}>
+                                <div style={{ marginBottom: '1rem', width: '100%' }}>
+                                    <button className="btn btn-primary w-full-important" onClick={() => { setShowAddBook(!showAddBook); setEditingBook(null) }} style={{ width: '100% !important', maxWidth: '100% !important' }}>
                                         {showAddBook ? 'Tutup Form' : '+ Tambah Buku Baru'}
                                     </button>
                                 </div>

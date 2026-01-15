@@ -305,10 +305,6 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                             <span>Biaya Membership (Seumur Hidup)</span>
                             <span className="payment-amount">Rp 50.000</span>
                         </div>
-                        <div className="payment-item total">
-                            <span>Total Pembayaran</span>
-                            <span className="payment-amount">Rp 50.000</span>
-                        </div>
                     </div>
 
                     <div style={{

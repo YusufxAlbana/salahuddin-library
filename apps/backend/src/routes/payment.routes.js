@@ -82,9 +82,9 @@ router.post('/create-transaction', async (req, res) => {
 });
 
 // Check payment status
-router.get('/status/:orderId', async (req, res) => {
+router.get('/payment-status', async (req, res) => {
     try {
-        const { orderId } = req.params;
+        const { orderId } = req.query;
 
         const status = await coreApi.transaction.status(orderId);
 
