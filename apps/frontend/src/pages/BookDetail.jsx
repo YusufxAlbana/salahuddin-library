@@ -171,13 +171,7 @@ function BookDetail() {
                         <p className="book-detail-author">oleh <strong>{book.author}</strong></p>
 
                         <div className="book-detail-meta">
-                            <div className="meta-item">
-                                <span className="meta-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                </span>
-                                <span>Tahun {book.year}</span>
-                            </div>
-
+                            {/* Meta items removed */}
                         </div>
 
                         {/* Stock Info & Borrow Button */}
@@ -240,17 +234,7 @@ function BookDetail() {
                             )}
                         </div>
 
-                        <div className="book-detail-description">
-                            <h3>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px', verticalAlign: 'text-bottom' }}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                                Sinopsis
-                            </h3>
-                            <p>{book.description}</p>
-                        </div>
 
-                        <div className="book-detail-isbn">
-                            <span>ISBN:</span> {book.isbn}
-                        </div>
                     </div>
                 </div>
             </div>

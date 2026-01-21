@@ -485,8 +485,6 @@ function Profile() {
         }
     }
 
-
-
     const handlePayFine = async (loan, amount) => {
         // Prevent multiple clicks
         if (loading) return
@@ -765,13 +763,18 @@ function Profile() {
                                     today.setHours(0, 0, 0, 0);
                                     dueDate.setHours(0, 0, 0, 0);
                                     const diffTime = dueDate - today;
+
+                                    // Original calculations
+                                    // Original calculations
                                     const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                                    const isUrgent = daysLeft <= 2 && daysLeft > 0;
                                     const isOverdue = daysLeft < 0;
                                     const isDueToday = daysLeft === 0;
                                     const renewalCount = loan.renewal_count || 0;
                                     const canRenew = loan.status === 'borrowed' && daysLeft <= 2 && renewalCount < 2 && !isOverdue;
                                     const fineAmount = isOverdue ? Math.abs(daysLeft) * 5000 : 0;
+                                    const isUrgent = daysLeft <= 2 && daysLeft > 0;
+
+
 
                                     return (
                                         <div

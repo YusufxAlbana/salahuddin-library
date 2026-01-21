@@ -3,6 +3,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { useNotification } from './components/Notification'
+import childrenReadImage from './assets/How-Reading-Aloud-Helps-Children.jpg'
 
 // Program data fallback (Dummy)
 const initialPrograms = [
@@ -11,7 +12,7 @@ const initialPrograms = [
     title: 'Children Read Out-Loud',
     shortDesc: 'Sebuah aktivitas membaca nyaring untuk anak yang melibatkan kemampuan berkomunikasi seperti membaca dengan artikulasi yang jelas, intonasi yang tepat, dan kecepatan yang benar. Program ini membantu anak-anak mengembangkan kepercayaan diri dan kemampuan berbicara di depan umum sejak usia dini.',
     fullDesc: 'Sebuah aktivitas membaca nyaring untuk anak yang melibatkan kemampuan berkomunikasi seperti membaca dengan artikulasi, intonasi dan kecepatan yang benar. Program ini membantu anak-anak mengembangkan kepercayaan diri dalam berbicara di depan umum.',
-    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=600&fit=crop'
+    image: childrenReadImage
   },
   {
     id: 'it-class',
@@ -76,11 +77,37 @@ function App() {
   // Donation form submit handler
   const handleDonationSubmit = async (e) => {
     e.preventDefault()
-    const form = e.target
-    const donorName = form.donorName.value
+    // Determine donor name: use profile name if logged in, otherwise get from form
+    let donorName = ''
+    if (user) {
+      donorName = user.name
+    } else {
+      donorName = form.donorName?.value
+      if (!donorName) {
+        toast.error('Mohon isi Nama Lengkap Anda!')
+        return
+      }
+    }
+
     const whatsapp = form.whatsapp.value
     const bookCount = parseInt(form.bookCount.value)
     const bookTitles = form.bookTitles.value
+
+    // Validation for WhatsApp Number
+    if (!/^\d+$/.test(whatsapp)) {
+      toast.error('Nomor WhatsApp harus berupa angka!')
+      return
+    }
+
+    if (whatsapp.length < 10) {
+      toast.error('Nomor WhatsApp terlalu pendek (minimal 10 digit)!')
+      return
+    }
+
+    if (!whatsapp.startsWith('08') && !whatsapp.startsWith('62')) {
+      toast.error('Nomor WhatsApp harus diawali dengan 08 atau 62!')
+      return
+    }
 
     try {
       const { error } = await supabase
@@ -388,107 +415,109 @@ function App() {
         </div>
       </section>
 
-      {/* Membership Section */}
-      <section id="membership" className="membership-section">
-        <div className="section-container">
-          <div className="membership-content">
-            <div className="membership-info">
-              <span className="membership-badge">Eksklusif</span>
-              <h2>Jadilah Member Salahuddin Library</h2>
-              <p className="membership-subtitle">
-                Nikmati berbagai keuntungan dengan menjadi anggota perpustakaan kami
-              </p>
+      {/* Membership Section - Only for logged-in users who are NOT members */}
+      {user && user.role !== 'member' && (
+        <section id="membership" className="membership-section">
+          <div className="section-container">
+            <div className="membership-content">
+              <div className="membership-info">
+                <span className="membership-badge">Eksklusif</span>
+                <h2>Jadilah Member Salahuddin Library</h2>
+                <p className="membership-subtitle">
+                  Nikmati berbagai keuntungan dengan menjadi anggota perpustakaan kami
+                </p>
 
-              <div className="membership-benefits">
-                <div className="membership-benefit">
-                  <div className="benefit-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                    </svg>
+                <div className="membership-benefits">
+                  <div className="membership-benefit">
+                    <div className="benefit-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h4>Pinjam Hingga 3 Buku</h4>
+                      <p>Pinjam buku favorit Anda dengan durasi 5 hari</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4>Pinjam Hingga 3 Buku</h4>
-                    <p>Pinjam buku favorit Anda dengan durasi 5 hari</p>
-                  </div>
-                </div>
 
-                <div className="membership-benefit">
-                  <div className="benefit-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
+                  <div className="membership-benefit">
+                    <div className="benefit-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                    </div>
+                    <div>
+                      <h4>Kartu Seumur Hidup</h4>
+                      <p>Sekali daftar, berlaku selamanya tanpa perpanjangan</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4>Kartu Seumur Hidup</h4>
-                    <p>Sekali daftar, berlaku selamanya tanpa perpanjangan</p>
-                  </div>
-                </div>
 
-                <div className="membership-benefit">
-                  <div className="benefit-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="9" cy="7" r="4"></circle>
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
+                  <div className="membership-benefit">
+                    <div className="benefit-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h4>Akses Semua Program</h4>
+                      <p>Ikuti program edukatif seperti Public Speaking & IT Class</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4>Akses Semua Program</h4>
-                    <p>Ikuti program edukatif seperti Public Speaking & IT Class</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="membership-cta-card">
-              <div className="cta-price-tag">
-                <span className="cta-price-label">Biaya Member</span>
-                <span className="cta-price-value">Rp 50.000</span>
-                <span className="cta-price-note">sekali bayar, seumur hidup</span>
-              </div>
-
-              <div className="cta-features">
-                <div className="cta-feature">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <span>Kartu member fisik & digital</span>
-                </div>
-                <div className="cta-feature">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <span>Pinjam buku tanpa batas waktu</span>
-                </div>
-                <div className="cta-feature">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <span>Perpanjang pinjaman 2x</span>
                 </div>
               </div>
 
-              <button
-                className="btn btn-membership"
-                onClick={() => user ? navigate('/profile?tab=membership') : navigate('/register')}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="8.5" cy="7" r="4"></circle>
-                  <line x1="20" y1="8" x2="20" y2="14"></line>
-                  <line x1="23" y1="11" x2="17" y2="11"></line>
-                </svg>
-                {user ? 'Daftar Member Sekarang' : 'Daftar & Jadi Member'}
-              </button>
+              <div className="membership-cta-card">
+                <div className="cta-price-tag">
+                  <span className="cta-price-label">Biaya Member</span>
+                  <span className="cta-price-value">Rp 50.000</span>
+                  <span className="cta-price-note">sekali bayar, seumur hidup</span>
+                </div>
 
-              <p className="cta-note">Sudah ribuan orang bergabung dengan kami</p>
+                <div className="cta-features">
+                  <div className="cta-feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Kartu member fisik & digital</span>
+                  </div>
+                  <div className="cta-feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Pinjam buku tanpa batas waktu</span>
+                  </div>
+                  <div className="cta-feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Perpanjang pinjaman 2x</span>
+                  </div>
+                </div>
+
+                <button
+                  className="btn btn-membership"
+                  onClick={() => user ? navigate('/profile?tab=membership') : navigate('/register')}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                  </svg>
+                  {user ? 'Daftar Member Sekarang' : 'Daftar & Jadi Member'}
+                </button>
+
+                <p className="cta-note">Sudah ribuan orang bergabung dengan kami</p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Donasi Buku Section */}
       <section id="donasi" className="donasi-section">
@@ -530,19 +559,19 @@ function App() {
               Form Donasi Buku
             </h3>
             <form className="donasi-form" onSubmit={handleDonationSubmit}>
-              <div className="form-row">
+              {!user && (
                 <div className="form-group">
                   <label>
                     Nama Lengkap
                   </label>
                   <input type="text" name="donorName" placeholder="Nama Anda" required />
                 </div>
-                <div className="form-group">
-                  <label>
-                    Nomor WhatsApp
-                  </label>
-                  <input type="tel" name="whatsapp" placeholder="08xxxxxxxxxx" required />
-                </div>
+              )}
+              <div className="form-group">
+                <label>
+                  Nomor WhatsApp
+                </label>
+                <input type="tel" name="whatsapp" placeholder="08xxxxxxxxxx" required />
               </div>
               <div className="form-group">
                 <label>

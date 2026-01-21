@@ -43,11 +43,38 @@ export function AuthProvider({ children }) {
 
     const fetchUserProfile = async (authUser) => {
         try {
-            const { data: userData, error } = await supabase
+            let { data: userData, error } = await supabase
                 .from('users')
                 .select('*')
                 .eq('id', authUser.id)
                 .single()
+
+            // If profile not found (e.g. email verification flow skipped initial creation), create it now
+            if (error && error.code === 'PGRST116') {
+                console.log('Profile not found, creating new profile for:', authUser.id)
+                const newProfile = {
+                    id: authUser.id,
+                    name: authUser.user_metadata?.name || 'User',
+                    email: authUser.email,
+                    role: 'member',
+                    join_date: new Date().toISOString(),
+                    donated_books: 0,
+                    programs_joined: []
+                }
+
+                const { data: createdProfile, error: createError } = await supabase
+                    .from('users')
+                    .upsert([newProfile])
+                    .select()
+                    .single()
+
+                if (!createError && createdProfile) {
+                    userData = createdProfile
+                    error = null // Clear error
+                } else {
+                    console.error('Failed to create delayed profile:', createError)
+                }
+            }
 
             if (error && error.code !== 'PGRST116') {
                 console.error('Error fetching profile:', error)
@@ -122,7 +149,7 @@ export function AuthProvider({ children }) {
                 console.log('User profile inserted successfully!')
             }
 
-            return { success: true }
+            return { success: true, user: data.user, session: data.session }
         } catch (error) {
             console.error('Register error:', error)
             return { success: false, error: error.message }

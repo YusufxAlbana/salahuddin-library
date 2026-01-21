@@ -65,7 +65,7 @@ function AdminDashboard() {
             const bookData = {
                 title: bookForm.title,
                 author: bookForm.author,
-                year: bookForm.year,
+                // year: bookForm.year, // Removed
                 stock: bookForm.stock,
                 cover: bookForm.cover
                 // category is deprecated, we use tags now
@@ -165,62 +165,16 @@ function AdminDashboard() {
         }
     }, [sidebarOpen])
 
-    // Check if user is not admin - show Access Denied page
-    if (!user) {
-        return (
-            <div className="app">
-                <Navbar />
-                <div className="auth-page">
-                    <div className="auth-container">
-                        <div className="auth-card" style={{ textAlign: 'center', padding: '3rem' }}>
-                            <div style={{ width: '80px', height: '80px', margin: '0 auto 1.5rem', background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b8860b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                </svg>
-                            </div>
-                            <h1 style={{ color: 'var(--dark)', marginBottom: '0.5rem', fontSize: '1.75rem', fontWeight: '700' }}>Akses Ditolak</h1>
-                            <p style={{ color: '#64748b', marginBottom: '2rem' }}>
-                                Anda harus login terlebih dahulu untuk mengakses halaman ini.
-                            </p>
-                            <Link to="/login" className="btn btn-primary">Masuk Sekarang</Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
+    // Protect Admin Route - Redirect to Home if not admin
+    useEffect(() => {
+        if (!user || user.role !== 'admin') {
+            navigate('/', { replace: true })
+        }
+    }, [user, navigate])
 
-    if (user.role !== 'admin') {
-        return (
-            <div className="app">
-                <Navbar />
-                <div className="auth-page">
-                    <div className="auth-container">
-                        <div className="auth-card" style={{ textAlign: 'center', padding: '3rem' }}>
-                            <div style={{ width: '80px', height: '80px', margin: '0 auto 1.5rem', background: 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                </svg>
-                            </div>
-                            <h1 style={{ color: 'var(--dark)', marginBottom: '0.5rem', fontSize: '1.75rem', fontWeight: '700' }}>Akses Terbatas</h1>
-                            <p style={{ color: '#64748b', marginBottom: '1rem' }}>
-                                Maaf, halaman ini hanya dapat diakses oleh Administrator.
-                            </p>
-                            <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '2rem' }}>
-                                Jika Anda merasa ini adalah kesalahan, silakan hubungi pengelola perpustakaan.
-                            </p>
-                            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                                <Link to="/" className="btn btn-primary">Kembali ke Beranda</Link>
-                                <Link to="/profile" className="btn btn-outline">Lihat Profil Saya</Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
+    // If not admin, do not render anything while redirecting
+    if (!user || user.role !== 'admin') {
+        return null
     }
 
     const fetchUsers = async () => {
@@ -513,15 +467,9 @@ function AdminDashboard() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                                                <div className="form-group">
-                                                    <label>Tahun</label>
-                                                    <input type="number" value={bookForm.year} onChange={e => setBookForm({ ...bookForm, year: e.target.value })} />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Stok</label>
-                                                    <input type="number" value={bookForm.stock} onChange={e => setBookForm({ ...bookForm, stock: e.target.value })} min="0" />
-                                                </div>
+                                            <div className="form-group">
+                                                <label>Stok</label>
+                                                <input type="number" value={bookForm.stock} onChange={e => setBookForm({ ...bookForm, stock: e.target.value })} min="0" />
                                             </div>
                                             <div className="form-group">
                                                 <label>Cover Buku (Upload)</label>

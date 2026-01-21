@@ -6,11 +6,11 @@ import Navbar from '../components/Navbar'
 import '../App.css'
 
 function Register() {
+    const [emailSent, setEmailSent] = useState(false)
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const { user, register } = useAuth()
     const navigate = useNavigate()
@@ -19,29 +19,33 @@ function Register() {
 
     // Redirect if already logged in
     useEffect(() => {
-        if (user && !hasRedirected.current) {
+        if (user && !hasRedirected.current && !emailSent) {
             hasRedirected.current = true
             toast.info('Anda sudah memiliki akun! Mengarahkan ke halaman profil...')
             navigate('/profile', { replace: true })
         }
-    }, [user, navigate, toast])
+    }, [user, navigate, toast, emailSent])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setError('')
 
         if (!name || !email || !password || !confirmPassword) {
-            setError('Mohon isi semua field')
+            toast.error('Mohon lengkapi semua data pendaftaran')
+            return
+        }
+
+        if (name.trim().split(' ').length < 2) {
+            toast.error('Nama Lengkap harus terdiri dari minimal 2 kata (Nama Depan dan Belakang)')
             return
         }
 
         if (password !== confirmPassword) {
-            setError('Password tidak cocok')
+            toast.error('Password dan Konfirmasi Password tidak cocok')
             return
         }
 
         if (password.length < 6) {
-            setError('Password minimal 6 karakter')
+            toast.error('Password harus memiliki minimal 6 karakter')
             return
         }
 
@@ -50,10 +54,30 @@ function Register() {
         setLoading(false)
 
         if (result.success) {
-            toast.success('Registrasi berhasil! Selamat datang di Salahuddin Library.')
-            navigate('/?showMemberOffer=true')
+            if (result.session) {
+                // User logged in immediately (email verification disabled or auto-confirmed)
+                toast.success('Registrasi berhasil! Selamat datang di Salahuddin Library.')
+                navigate('/?showMemberOffer=true')
+            } else {
+                // User registered but session is null -> Email verification required
+                setEmailSent(true)
+                toast.success('Registrasi berhasil! Silakan cek email Anda untuk verifikasi.')
+            }
         } else {
-            setError(`Gagal Mendaftar: ${result.error || 'Server tidak merespon'}`)
+            // Translate common Supabase errors to Indonesian
+            let errorMessage = result.error || 'Terjadi kesalahan pada server'
+
+            if (errorMessage.toLowerCase().includes('invalid email') || errorMessage.toLowerCase().includes('is invalid')) {
+                errorMessage = 'Format email tidak valid. Pastikan email Anda benar.'
+            } else if (errorMessage.toLowerCase().includes('already registered')) {
+                errorMessage = 'Email sudah terdaftar. Silakan gunakan email lain atau login.'
+            } else if (errorMessage.toLowerCase().includes('password should be')) {
+                errorMessage = 'Password minimal 6 karakter.'
+            } else if (errorMessage.toLowerCase().includes('rate limit')) {
+                errorMessage = 'Terlalu banyak percobaan. Silakan coba beberapa saat lagi.'
+            }
+
+            toast.error(`Gagal Mendaftar: ${errorMessage}`)
         }
     }
 
@@ -68,8 +92,45 @@ function Register() {
         transition: 'all 0.3s ease'
     }
 
+    // Success Email Sent State
+    if (emailSent) {
+        return (
+            <div className="app">
+                <Navbar />
+                <div className="auth-page">
+                    <div className="auth-container">
+                        <div className="auth-card" style={{ textAlign: 'center' }}>
+                            <div className="auth-header">
+                                <div className="auth-logo" style={{ marginBottom: '1.5rem' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                        <polyline points="22,6 12,13 2,6"></polyline>
+                                    </svg>
+                                </div>
+                                <h1>Verifikasi Email Anda</h1>
+                                <p style={{ fontSize: '1.125rem', color: '#4b5563', marginBottom: '1.5rem', lineHeight: '1.6' }}>
+                                    Kami telah mengirimkan link verifikasi ke <strong>{email}</strong>.
+                                    <br />
+                                    Silakan cek kotak masuk atau folder spam Anda.
+                                </p>
+                                <div style={{ background: '#ecfdf5', padding: '1rem', borderRadius: '8px', border: '1px solid #d1fae5', marginBottom: '1.5rem' }}>
+                                    <p style={{ margin: 0, fontSize: '0.875rem', color: '#047857' }}>
+                                        <strong>Penting:</strong> Anda perlu memverifikasi email sebelum dapat masuk.
+                                    </p>
+                                </div>
+                                <Link to="/login" className="btn btn-primary btn-full" style={{ borderRadius: '12px', textDecoration: 'none', display: 'inline-block' }}>
+                                    Kembali ke Halaman Login
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     // Don't render form if user is logged in
-    if (user) {
+    if (user && !emailSent) {
         return (
             <div className="app">
                 <Navbar />
@@ -107,7 +168,7 @@ function Register() {
                             <p>Bergabung dengan Salahuddin Library</p>
                         </div>
 
-                        {error && <div className="auth-error">{error}</div>}
+
 
                         <form onSubmit={handleSubmit} className="auth-form">
                             <div className="form-group">

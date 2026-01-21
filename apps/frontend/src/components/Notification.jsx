@@ -131,7 +131,15 @@ export function ToastProvider({ children }) {
 
     const addToast = useCallback((message, type = 'info', duration = 4000) => {
         const id = Date.now() + Math.random()
-        setToasts(prev => [...prev, { id, message, type }])
+
+        // Limit to max 3 toasts (keep the newest ones)
+        setToasts(prev => {
+            const newToasts = [...prev, { id, message, type }]
+            if (newToasts.length > 3) {
+                return newToasts.slice(newToasts.length - 3)
+            }
+            return newToasts
+        })
 
         // Auto remove after duration
         if (duration > 0) {
