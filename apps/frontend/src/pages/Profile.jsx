@@ -470,17 +470,62 @@ function Profile() {
     }
 
     const handleRenewLoan = async (loanId) => {
+        console.log("Attempting to renew loan:", loanId)
         try {
-            const { data, error } = await supabase.rpc('renew_loan', { p_loan_id: loanId })
-            if (error) throw error
+            // 1. Fetch current loan data to ensure we have latest status
+            const { data: loan, error: fetchError } = await supabase
+                .from('loans')
+                .select('due_date, renewal_count, status')
+                .eq('id', loanId)
+                .single()
 
-            if (data.success) {
-                toast.success(data.message)
-                fetchMyLoans(profileUser.id) // Refresh list
-            } else {
-                toast.warning(data.message)
+            if (fetchError) {
+                console.error("Fetch error:", fetchError)
+                throw fetchError
             }
+            console.log("Current loan data:", loan)
+
+            // 2. Validate renewal possibilities
+            if (loan.status !== 'borrowed') {
+                toast.error('Gagal: Buku tidak sedang dipinjam.')
+                return
+            }
+
+            const currentRenewalCount = loan.renewal_count || 0
+            if (currentRenewalCount >= 3) {
+                toast.error('Gagal: Batas maksimal perpanjangan (3 kali) sudah habis.')
+                return
+            }
+
+            const dueDate = new Date(loan.due_date)
+            // Calculate new date: current due date + 5 days
+            const newDueDate = new Date(dueDate)
+            newDueDate.setDate(newDueDate.getDate() + 5)
+            console.log(`Renewal #${currentRenewalCount + 1}. Old Due: ${dueDate.toISOString()}, New Due: ${newDueDate.toISOString()}`)
+
+            // 3. Update loan
+            const { error: updateError } = await supabase
+                .from('loans')
+                .update({
+                    due_date: newDueDate.toISOString(),
+                    renewal_count: currentRenewalCount + 1
+                })
+                .eq('id', loanId)
+
+            if (updateError) {
+                console.error("Update error:", updateError)
+                // Specific RLS message
+                if (updateError.code === '42501') {
+                    alert("Maaf, terjadi kesalahan izin (RLS). Silakan hubungi admin untuk memperpanjang.")
+                }
+                throw updateError
+            }
+
+            toast.success(`Berhasil diperpanjang! Batas baru: ${newDueDate.toLocaleDateString('id-ID')}`)
+            fetchMyLoans(profileUser.id) // Refresh list
+
         } catch (error) {
+            console.error(error)
             toast.error('Gagal memperpanjang: ' + error.message)
         }
     }
@@ -749,7 +794,7 @@ function Profile() {
                                         <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.25rem', lineHeight: 1.6 }}>
                                             <li>Periode peminjaman: <strong>5 hari</strong> per buku</li>
                                             <li>Perpanjangan hanya bisa dilakukan saat <strong>sisa 2 hari</strong></li>
-                                            <li>Maksimal perpanjangan: <strong>2 kali</strong></li>
+                                            <li>Maksimal perpanjangan: <strong>3 kali</strong></li>
                                             <li>Denda keterlambatan: <strong>Rp 5.000/hari</strong></li>
                                         </ul>
                                     </div>
@@ -770,7 +815,7 @@ function Profile() {
                                     const isOverdue = daysLeft < 0;
                                     const isDueToday = daysLeft === 0;
                                     const renewalCount = loan.renewal_count || 0;
-                                    const canRenew = loan.status === 'borrowed' && daysLeft <= 2 && renewalCount < 2 && !isOverdue;
+                                    const canRenew = loan.status === 'borrowed' && daysLeft <= 2 && renewalCount < 3 && !isOverdue;
                                     const fineAmount = isOverdue ? Math.abs(daysLeft) * 5000 : 0;
                                     const isUrgent = daysLeft <= 2 && daysLeft > 0;
 

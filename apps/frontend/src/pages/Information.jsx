@@ -130,7 +130,7 @@ function Information() {
                                 <span className="rule-number">6</span>
                                 <div className="rule-content">
                                     <h4>Perpanjangan</h4>
-                                    <p>Anggota dapat memperpanjang periode peminjaman buku sebanyak <strong>2 kali perpanjangan</strong> (baik secara online maupun offline).</p>
+                                    <p>Anggota dapat memperpanjang periode peminjaman buku sebanyak <strong>3 kali perpanjangan</strong> (baik secara online maupun offline).</p>
                                 </div>
                             </div>
                             <div className="rule-item warning">
@@ -178,7 +178,7 @@ function Information() {
                                     </svg>
                                 </span>
                                 <span className="summary-label">Perpanjangan</span>
-                                <span className="summary-value">2 Kali</span>
+                                <span className="summary-value">3 Kali</span>
                             </div>
                             <div className="summary-item warning">
                                 <span className="summary-icon">

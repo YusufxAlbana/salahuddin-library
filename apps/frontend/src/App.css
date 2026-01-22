@@ -8403,3 +8403,167 @@ body {
   position: relative;
   z-index: 1;
 }
+
+/* ===============================
+   Contact Section Motif & Enhancements
+================================== */
+.contact-section {
+  position: relative;
+  background-color: var(--dark);
+  padding: 5rem 0;
+  overflow: hidden;
+}
+
+/* Islamic Geometric Pattern Overlay - White Motif */
+.contact-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='0.5' opacity='0.3'%3E%3Cpath d='M20 5 L60 5 L75 20 L75 60 L60 75 L20 75 L5 60 L5 20 Z'/%3E%3Cpath d='M20 5 L60 75 M60 5 L20 75 M5 20 L75 60 M75 20 L5 60'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 80px 80px;
+  background-repeat: repeat;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Text Colors - Force White */
+.contact-section .section-title,
+.contact-section .section-subtitle,
+.contact-section h4,
+.contact-section p,
+.contact-section span {
+  color: var(--white);
+}
+
+.contact-section .section-subtitle {
+  opacity: 0.9;
+}
+
+/* Ensure content sits on top of the pattern */
+.contact-section .section-container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Enhancing Contact Cards - Glassmorphism & Shadow */
+.contact-info .contact-item {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 1rem;
+  transition: var(--transition);
+}
+
+.contact-info .contact-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.contact-icon {
+  background: white;
+  color: var(--primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Map styling */
+.contact-map iframe {
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 12px;
+}
+
+/* Feedback Form - Glassmorphism */
+.feedback-form-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feedback-form-container h3,
+.feedback-form-container p {
+  color: white !important;
+}
+
+.feedback-icon {
+  background: white;
+  color: var(--primary);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+.feedback-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+/* Form Inputs in Dark Mode */
+.contact-section input,
+.contact-section textarea {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.contact-section input::placeholder,
+.contact-section textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.contact-section input:focus,
+.contact-section textarea:focus {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+  outline: none;
+}
+
+.contact-section label {
+  color: white;
+}
+
+.btn-feedback-submit {
+  width: 100%;
+  padding: 0.875rem;
+  background: var(--gradient-secondary);
+  color: white;
+  border: none;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-feedback-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.1);
+}
