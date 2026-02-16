@@ -3218,9 +3218,7 @@ body {
   gap: 0.5rem;
 }
 
-.auth-error::before {
-  content: '⚠️';
-}
+
 
 .auth-form {
   display: flex;
@@ -6966,25 +6964,42 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  width: 100%;
-  padding: 0.875rem 1.25rem;
+  width: calc(100% - 1.5rem);
+  margin: 0.25rem 0.75rem;
+  padding: 0.75rem 1rem;
   background: transparent;
   border: none;
+  border-radius: 10px;
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.95rem;
   font-weight: 500;
   text-align: left;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .sidebar-link:hover {
   color: white;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-link.active {
-  color: #10b981;
-  border-left: 3px solid #10b981;
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+}
+
+.sidebar-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60%;
+  width: 4px;
+  background-color: var(--secondary);
+  border-radius: 0 4px 4px 0;
 }
 
 .sidebar-footer {

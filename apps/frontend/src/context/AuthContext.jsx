@@ -167,6 +167,9 @@ export function AuthProvider({ children }) {
                 if (error.message.includes('Invalid login')) {
                     return { success: false, error: 'Email atau password salah' }
                 }
+                if (error.message.includes('Failed to fetch')) {
+                    return { success: false, error: 'Gagal menghubungi server. Periksa koneksi internet Anda.' }
+                }
                 throw error
             }
 

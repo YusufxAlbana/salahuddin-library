@@ -21,12 +21,21 @@ function AdminDashboard() {
 
     // Books Management State
     const [booksList, setBooksList] = useState([])
+    const [hasMoreBooks, setHasMoreBooks] = useState(true)
+    const [loadingMoreBooks, setLoadingMoreBooks] = useState(false)
+
     const [availableTags, setAvailableTags] = useState([])
     const [showAddBook, setShowAddBook] = useState(false)
     const [editingBook, setEditingBook] = useState(null)
     const [bookForm, setBookForm] = useState({
         title: '', author: '', year: new Date().getFullYear(), stock: 1, cover: '', tags: []
     })
+
+    // Users Management State
+    const [hasMoreUsers, setHasMoreUsers] = useState(true)
+    const [loadingMoreUsers, setLoadingMoreUsers] = useState(false)
+
+    const ITEMS_PER_PAGE = 10
 
     const fetchStats = async () => {
         try {
@@ -39,14 +48,34 @@ function AdminDashboard() {
         finally { setLoading(false) }
     }
 
-    const fetchBooks = async () => {
+    const fetchBooks = async (loadMore = false) => {
         try {
+            if (loadMore) setLoadingMoreBooks(true)
+            else setLoading(true)
+
+            const start = loadMore ? booksList.length : 0
+            const end = start + ITEMS_PER_PAGE - 1
+
             const { data, error } = await supabase
                 .from('books')
                 .select('*, book_tags(tag_id, tags(id, name, color))')
                 .order('created_at', { ascending: false })
-            if (!error) setBooksList(data || [])
+                .range(start, end)
+
+            if (error) throw error
+
+            if (loadMore) {
+                setBooksList(prev => [...prev, ...(data || [])])
+            } else {
+                setBooksList(data || [])
+            }
+
+            setHasMoreBooks((data || []).length === ITEMS_PER_PAGE)
         } catch (e) { console.error(e) }
+        finally {
+            setLoading(false)
+            setLoadingMoreBooks(false)
+        }
     }
 
     const fetchAvailableTags = async () => {
@@ -177,21 +206,35 @@ function AdminDashboard() {
         return null
     }
 
-    const fetchUsers = async () => {
-        setLoading(true)
+    const fetchUsers = async (loadMore = false) => {
+        if (loadMore) setLoadingMoreUsers(true)
+        else setLoading(true)
+
         try {
+            const start = loadMore ? usersList.length : 0
+            const end = start + ITEMS_PER_PAGE - 1
+
             const { data, error } = await supabase
                 .from('users')
                 .select('*')
                 .neq('role', 'admin') // Exclude admin users
                 .order('join_date', { ascending: false })
+                .range(start, end)
 
             if (error) throw error
-            setUsersList(data || [])
+
+            if (loadMore) {
+                setUsersList(prev => [...prev, ...(data || [])])
+            } else {
+                setUsersList(data || [])
+            }
+
+            setHasMoreUsers((data || []).length === ITEMS_PER_PAGE)
         } catch (error) {
             console.error("Error fetching users:", error)
         } finally {
             setLoading(false)
+            setLoadingMoreUsers(false)
         }
     }
 
@@ -600,6 +643,18 @@ function AdminDashboard() {
                                         </tbody>
                                     </table>
                                 </div>
+
+                                {hasMoreBooks && (
+                                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
+                                        <button
+                                            className="btn btn-outline"
+                                            onClick={() => fetchBooks(true)}
+                                            disabled={loadingMoreBooks}
+                                        >
+                                            {loadingMoreBooks ? 'Memuat...' : 'Load More Books'}
+                                        </button>
+                                    </div>
+                                )}
                             </>
                         )}
 
@@ -714,6 +769,18 @@ function AdminDashboard() {
                                         </tbody>
                                     </table>
                                 </div>
+
+                                {hasMoreUsers && (
+                                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
+                                        <button
+                                            className="btn btn-outline"
+                                            onClick={() => fetchUsers(true)}
+                                            disabled={loadingMoreUsers}
+                                        >
+                                            {loadingMoreUsers ? 'Memuat...' : 'Load More Users'}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
 
@@ -746,9 +813,9 @@ function AdminDashboard() {
                             <AdminInfoPage />
                         )}
                     </div>
-                </section>
-            </main>
-        </div>
+                </section >
+            </main >
+        </div >
     )
 }
 
@@ -756,15 +823,23 @@ function AdminDashboard() {
 function LoansTable({ supabase }) {
     const [loans, setLoans] = useState([])
     const [loading, setLoading] = useState(true)
+    const [hasMore, setHasMore] = useState(true)
+    const [loadingMore, setLoadingMore] = useState(false)
     const { toast, showConfirm } = useNotification()
+    const ITEMS_PER_PAGE = 10
 
     useEffect(() => {
         fetchLoans()
     }, [])
 
-    const fetchLoans = async () => {
+    const fetchLoans = async (loadMore = false) => {
+        if (loadMore) setLoadingMore(true)
+        else setLoading(true)
+
         try {
-            setLoading(true)
+            const start = loadMore ? loans.length : 0
+            const end = start + ITEMS_PER_PAGE - 1
+
             // First get loans with book info
             const { data: loansData, error: loansError } = await supabase
                 .from('loans')
@@ -780,6 +855,7 @@ function LoansTable({ supabase }) {
                 `)
                 .eq('status', 'borrowed')
                 .order('due_date', { ascending: true })
+                .range(start, end)
 
             if (loansError) throw loansError
 
@@ -795,11 +871,17 @@ function LoansTable({ supabase }) {
                 })
             )
 
-            setLoans(loansWithUsers)
+            if (loadMore) {
+                setLoans(prev => [...prev, ...loansWithUsers])
+            } else {
+                setLoans(loansWithUsers)
+            }
+            setHasMore(loansData.length === ITEMS_PER_PAGE)
         } catch (error) {
             console.error("Error fetching loans:", error)
         } finally {
             setLoading(false)
+            setLoadingMore(false)
         }
     }
 
@@ -988,6 +1070,18 @@ function LoansTable({ supabase }) {
                     </tbody>
                 </table>
             </div>
+
+            {hasMore && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
+                    <button
+                        className="btn btn-outline"
+                        onClick={() => fetchLoans(true)}
+                        disabled={loadingMore}
+                    >
+                        {loadingMore ? 'Memuat...' : 'Load More'}
+                    </button>
+                </div>
+            )}
         </div>
     )
 }
@@ -996,28 +1090,44 @@ function LoansTable({ supabase }) {
 function KtpVerificationTable({ supabase }) {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
+    const [hasMore, setHasMore] = useState(true)
+    const [loadingMore, setLoadingMore] = useState(false)
     const [previewKtp, setPreviewKtp] = useState(null)
     const { toast, showConfirm } = useNotification()
+    const ITEMS_PER_PAGE = 10
 
     useEffect(() => {
         fetchPendingUsers()
     }, [])
 
-    const fetchPendingUsers = async () => {
+    const fetchPendingUsers = async (loadMore = false) => {
+        if (loadMore) setLoadingMore(true)
+        else setLoading(true)
+
         try {
-            setLoading(true)
+            const start = loadMore ? users.length : 0
+            const end = start + ITEMS_PER_PAGE - 1
+
             const { data, error } = await supabase
                 .from('users')
                 .select('*')
                 .eq('member_status', 'pending_approval')
                 .order('join_date', { ascending: false })
+                .range(start, end)
 
             if (error) throw error
-            setUsers(data || [])
+
+            if (loadMore) {
+                setUsers(prev => [...prev, ...(data || [])])
+            } else {
+                setUsers(data || [])
+            }
+            setHasMore((data || []).length === ITEMS_PER_PAGE)
         } catch (error) {
             console.error("Error fetching pending users:", error)
         } finally {
             setLoading(false)
+            setLoadingMore(false)
         }
     }
 
@@ -1168,6 +1278,18 @@ function KtpVerificationTable({ supabase }) {
                     )}
                 </tbody>
             </table>
+
+            {hasMore && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
+                    <button
+                        className="btn btn-outline"
+                        onClick={() => fetchPendingUsers(true)}
+                        disabled={loadingMore}
+                    >
+                        {loadingMore ? 'Memuat...' : 'Load More'}
+                    </button>
+                </div>
+            )}
         </div>
     )
 }
@@ -1474,26 +1596,42 @@ function TagsManagement({ supabase }) {
 function DonationsTable({ supabase }) {
     const [donations, setDonations] = useState([])
     const [loading, setLoading] = useState(true)
+    const [hasMore, setHasMore] = useState(true)
+    const [loadingMore, setLoadingMore] = useState(false)
     const { toast } = useNotification()
+    const ITEMS_PER_PAGE = 10
 
     useEffect(() => {
         fetchDonations()
     }, [])
 
-    const fetchDonations = async () => {
+    const fetchDonations = async (loadMore = false) => {
+        if (loadMore) setLoadingMore(true)
+        else setLoading(true)
+
         try {
-            setLoading(true)
+            const start = loadMore ? donations.length : 0
+            const end = start + ITEMS_PER_PAGE - 1
+
             const { data, error } = await supabase
                 .from('donations')
                 .select('*')
                 .order('created_at', { ascending: false })
+                .range(start, end)
 
             if (error) throw error
-            setDonations(data || [])
+
+            if (loadMore) {
+                setDonations(prev => [...prev, ...(data || [])])
+            } else {
+                setDonations(data || [])
+            }
+            setHasMore((data || []).length === ITEMS_PER_PAGE)
         } catch (error) {
             console.error("Error fetching donations:", error)
         } finally {
             setLoading(false)
+            setLoadingMore(false)
         }
     }
 
@@ -1610,6 +1748,18 @@ function DonationsTable({ supabase }) {
                     )}
                 </tbody>
             </table>
+
+            {hasMore && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
+                    <button
+                        className="btn btn-outline"
+                        onClick={() => fetchDonations(true)}
+                        disabled={loadingMore}
+                    >
+                        {loadingMore ? 'Memuat...' : 'Load More'}
+                    </button>
+                </div>
+            )}
         </div>
     )
 }
@@ -1618,26 +1768,42 @@ function DonationsTable({ supabase }) {
 function FeedbackTable({ supabase }) {
     const [feedbacks, setFeedbacks] = useState([])
     const [loading, setLoading] = useState(true)
+    const [hasMore, setHasMore] = useState(true)
+    const [loadingMore, setLoadingMore] = useState(false)
     const { toast, showConfirm } = useNotification()
+    const ITEMS_PER_PAGE = 10
 
     useEffect(() => {
         fetchFeedbacks()
     }, [])
 
-    const fetchFeedbacks = async () => {
+    const fetchFeedbacks = async (loadMore = false) => {
+        if (loadMore) setLoadingMore(true)
+        else setLoading(true)
+
         try {
-            setLoading(true)
+            const start = loadMore ? feedbacks.length : 0
+            const end = start + ITEMS_PER_PAGE - 1
+
             const { data, error } = await supabase
                 .from('feedback')
                 .select('*')
                 .order('created_at', { ascending: false })
+                .range(start, end)
 
             if (error) throw error
-            setFeedbacks(data || [])
+
+            if (loadMore) {
+                setFeedbacks(prev => [...prev, ...(data || [])])
+            } else {
+                setFeedbacks(data || [])
+            }
+            setHasMore((data || []).length === ITEMS_PER_PAGE)
         } catch (error) {
             console.error("Error fetching feedbacks:", error)
         } finally {
             setLoading(false)
+            setLoadingMore(false)
         }
     }
 
@@ -1753,6 +1919,18 @@ function FeedbackTable({ supabase }) {
                     )}
                 </tbody>
             </table>
+
+            {hasMore && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
+                    <button
+                        className="btn btn-outline"
+                        onClick={() => fetchFeedbacks(true)}
+                        disabled={loadingMore}
+                    >
+                        {loadingMore ? 'Memuat...' : 'Load More'}
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

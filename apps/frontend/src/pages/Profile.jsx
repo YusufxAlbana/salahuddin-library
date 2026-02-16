@@ -955,8 +955,14 @@ function Profile() {
                                 <span className="account-value">{user.email}</span>
                             </div>
                             <div className="account-row">
-                                <span className="account-label">ID Member</span>
-                                <span className="account-value">{user.id?.slice(0, 8)}...</span>
+                                <span className="account-label">Status Keanggotaan</span>
+                                <span className="account-value">
+                                    {profileUser?.role === 'admin' ? 'Admin' :
+                                        profileUser?.memberStatus === 'verified' ? 'Member Verified' :
+                                            profileUser?.memberStatus === 'approved' ? 'Menunggu Pembayaran' :
+                                                profileUser?.memberStatus === 'pending_approval' ? 'Menunggu Verifikasi' :
+                                                    'Non-Member'}
+                                </span>
                             </div>
                         </div>
 
