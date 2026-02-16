@@ -23,6 +23,7 @@ function AdminDashboard() {
     const [booksList, setBooksList] = useState([])
     const [hasMoreBooks, setHasMoreBooks] = useState(true)
     const [loadingMoreBooks, setLoadingMoreBooks] = useState(false)
+    const [bookSearchQuery, setBookSearchQuery] = useState('')
 
     const [availableTags, setAvailableTags] = useState([])
     const [showAddBook, setShowAddBook] = useState(false)
@@ -48,7 +49,7 @@ function AdminDashboard() {
         finally { setLoading(false) }
     }
 
-    const fetchBooks = async (loadMore = false) => {
+    const fetchBooks = async (loadMore = false, searchQuery = bookSearchQuery) => {
         try {
             if (loadMore) setLoadingMoreBooks(true)
             else setLoading(true)
@@ -56,11 +57,17 @@ function AdminDashboard() {
             const start = loadMore ? booksList.length : 0
             const end = start + ITEMS_PER_PAGE - 1
 
-            const { data, error } = await supabase
+            let query = supabase
                 .from('books')
                 .select('*, book_tags(tag_id, tags(id, name, color))')
                 .order('created_at', { ascending: false })
                 .range(start, end)
+
+            if (searchQuery) {
+                query = query.ilike('title', `%${searchQuery}%`)
+            }
+
+            const { data, error } = await query
 
             if (error) throw error
 
@@ -453,9 +460,53 @@ function AdminDashboard() {
                         {/* BOOKS TAB */}
                         {activeTab === 'books' && (
                             <>
-                                <div style={{ marginBottom: '1rem', width: '100%' }}>
-                                    <button className="btn btn-primary w-full-important" onClick={() => { setShowAddBook(!showAddBook); setEditingBook(null) }} style={{ width: '100% !important', maxWidth: '100% !important' }}>
-                                        {showAddBook ? 'Tutup Form' : '+ Tambah Buku Baru'}
+                                <div style={{ marginBottom: '1rem', width: '100%', display: 'flex', gap: '0.5rem', alignItems: 'stretch' }}>
+                                    <div style={{ position: 'relative', flex: 1 }}>
+                                        <input
+                                            type="text"
+                                            placeholder="Cari buku berdasarkan judul..."
+                                            value={bookSearchQuery}
+                                            onChange={(e) => {
+                                                const val = e.target.value
+                                                setBookSearchQuery(val)
+                                                // Live search
+                                                fetchBooks(false, val)
+                                            }}
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                padding: '0.75rem 1rem 0.75rem 2.5rem',
+                                                border: '1px solid #e5e7eb',
+                                                borderRadius: '8px',
+                                                fontSize: '0.95rem'
+                                            }}
+                                        />
+                                        <div style={{
+                                            position: 'absolute',
+                                            left: '0.75rem',
+                                            top: 0,
+                                            bottom: 0,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}>
+                                            <svg
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="#9ca3af"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <circle cx="11" cy="11" r="8"></circle>
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button className="btn btn-primary" onClick={() => { setShowAddBook(!showAddBook); setEditingBook(null) }} style={{ whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                                        {showAddBook ? 'Tutup' : '+ Tambah'}
                                     </button>
                                 </div>
 
