@@ -395,7 +395,26 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
 
 
 function Profile() {
-    const { user, logout } = useAuth()
+    const { user: authUser, logout } = useAuth()
+
+    // TEMPORARY: Mock user for public preview
+    const mockUser = {
+        id: 'mock-123',
+        email: 'maman@gmail.com',
+        name: 'Maman',
+        role: 'member',
+        isAdmin: false,
+        joinDate: new Date().toISOString(),
+        donatedBooks: 0,
+        programsJoined: [],
+        memberStatus: 'non-member',
+        ktpUrl: null,
+        paymentStatus: 'unpaid',
+        paymentDate: null,
+        isMember: false
+    }
+
+    const user = authUser || mockUser
     const navigate = useNavigate()
     const { userId } = useParams() // Optional param for admin viewing others
     const [profileUser, setProfileUser] = useState(null)
