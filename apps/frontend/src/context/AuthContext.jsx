@@ -97,10 +97,15 @@ export function AuthProvider({ children }) {
                 isMember: userData?.member_status === 'verified'
             })
 
-            // Fetch active loans separately or via join if relation exists. 
-            // For now, let's fetch in Profile.jsx component to keep AuthContext lighter?
             // User requested "My Loans" in profile.
             // Let's stick to basic profile here. Extra data can be fetched in component.
+
+            // EMERGENCY FIX: Circuit breaker for persistent mock user
+            if (authUser.email === 'maman@gmail.com') {
+                console.warn('Blocking restricted mock user')
+                await logout()
+                return
+            }
         } catch (err) {
             console.error('Fetch profile catch:', err)
         } finally {
@@ -185,6 +190,17 @@ export function AuthProvider({ children }) {
             await supabase.auth.signOut()
         } catch (error) {
             console.error('Logout error:', error)
+        } finally {
+            // Aggressive Cleanup
+            setUser(null)
+            localStorage.removeItem('sb-access-token')
+            localStorage.removeItem('sb-refresh-token')
+            // Clear any other supabase keys
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('sb-')) {
+                    localStorage.removeItem(key)
+                }
+            })
         }
     }
 

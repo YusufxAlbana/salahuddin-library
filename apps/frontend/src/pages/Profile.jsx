@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../config/supabase'
@@ -395,28 +395,18 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
 
 
 function Profile() {
-    const { user: authUser, logout } = useAuth()
-
-    // TEMPORARY: Mock user for public preview
-    const mockUser = {
-        id: 'mock-123',
-        email: 'maman@gmail.com',
-        name: 'Maman',
-        role: 'member',
-        isAdmin: false,
-        joinDate: new Date().toISOString(),
-        donatedBooks: 0,
-        programsJoined: [],
-        memberStatus: 'non-member',
-        ktpUrl: null,
-        paymentStatus: 'unpaid',
-        paymentDate: null,
-        isMember: false
-    }
-
-    const user = authUser || mockUser
+    const { user, logout, loading: authLoading } = useAuth()
     const navigate = useNavigate()
     const { userId } = useParams() // Optional param for admin viewing others
+
+    if (authLoading) {
+        return <div className="text-center p-5">Memuat data pengguna...</div>
+    }
+
+    if (!user) {
+        return <Navigate to="/" replace />
+    }
+
     const [profileUser, setProfileUser] = useState(null)
     const [myLoans, setMyLoans] = useState([])
     const [loading, setLoading] = useState(true)
@@ -664,37 +654,8 @@ function Profile() {
 
     if (loading) return <div className="text-center p-5">Memuat profil...</div>
 
-    if (!user) {
-        return (
-            <div className="app">
-                <Navbar />
-                <div className="auth-page">
-                    <div className="auth-container">
-                        <div className="auth-card">
-                            <div className="auth-header">
-                                <span className="auth-icon">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                    </svg>
-                                </span>
-                                <h1>Belum Login</h1>
-                                <p>Silakan login terlebih dahulu untuk melihat profil</p>
-                            </div>
-                            <div className="auth-buttons">
-                                <Link to="/login" className="btn btn-primary btn-full">
-                                    Masuk
-                                </Link>
-                                <Link to="/register" className="btn btn-secondary-outline btn-full">
-                                    Daftar Baru
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
+    // User check moved to top
+
 
     return (
         <div className="app">
