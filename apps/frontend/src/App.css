@@ -4409,28 +4409,50 @@ body {
   margin: 0 auto;
 }
 
-.donasi-benefits {
+.donasi-benefit-card {
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+  margin-bottom: 1.5rem;
+}
+
+.donasi-benefit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.donasi-benefits-list {
   list-style: none;
   padding: 0;
-  margin: 2rem 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-}
-
-.donasi-benefits li {
-  display: flex;
-  align-items: center;
   gap: 1rem;
-  padding: 1rem;
-  background: var(--bg-card);
-  border-radius: 0;
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.donasi-benefits li:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+.donasi-benefits-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.donasi-benefits-list li svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.donasi-benefits-list li span {
+  font-weight: 500;
+  color: var(--dark);
+  font-size: 1.05rem;
+  line-height: 1.4;
 }
 
 .benefit-icon {

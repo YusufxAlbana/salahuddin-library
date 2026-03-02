@@ -59,7 +59,7 @@ function BookDetail() {
         // Check member status
         if (!user.isMember) {
             toast.warning('Maaf, hanya Member Verified yang dapat meminjam buku. Silakan lengkapi verifikasi KTP dan pembayaran di halaman profil Anda.')
-            navigate('/profile')
+            navigate('/profile?tab=membership')
             return
         }
 
@@ -209,9 +209,21 @@ function BookDetail() {
                                 <>
                                     {/* Non-member warning */}
                                     {user && !user.isMember && (
-                                        <div className="member-warning">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                                            <span>Anda harus menjadi <strong>Member Verified</strong> untuk meminjam buku</span>
+                                        <div className="member-warning" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0.5rem' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                                <span>Anda harus menjadi <strong>Member Verified</strong> untuk meminjam buku.</span>
+                                            </div>
+                                            <Link to="/profile?tab=membership" style={{
+                                                display: 'inline-block',
+                                                marginTop: '0.25rem',
+                                                color: '#b45309',
+                                                fontWeight: '600',
+                                                textDecoration: 'underline',
+                                                fontSize: '0.9rem'
+                                            }}>
+                                                Daftar Jadi Member Sekarang &rarr;
+                                            </Link>
                                         </div>
                                     )}
 

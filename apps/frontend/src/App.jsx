@@ -523,24 +523,34 @@ function App() {
       <section id="donasi" className="donasi-section">
         <div className="donasi-content">
           <div className="donasi-info">
-            <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '0.5rem' }}>Donasi Buku</h2>
-            <p className="section-subtitle" style={{ textAlign: 'left', marginBottom: '2rem', maxWidth: '100%', margin: '0 0 2rem 0' }}>Berbagi ilmu melalui buku untuk generasi penerus bangsa</p>
+            <div className="donasi-benefit-card">
+              <h2 className="section-title" style={{ textAlign: 'left', margin: 0 }}>Donasi Buku</h2>
+            </div>
 
+            <div className="donasi-benefit-card">
+              <p className="section-subtitle" style={{ color: 'var(--primary)', fontWeight: '600', textAlign: 'left', margin: 0, maxWidth: '100%' }}>Berbagi ilmu melalui buku untuk generasi penerus bangsa</p>
+            </div>
 
-            <ul className="donasi-benefits">
-              <li>
-                <span>Buku Anda akan dibaca oleh puluhan anak-anak</span>
-              </li>
-              <li>
-                <span>Menumbuhkan minat baca sejak dini</span>
-              </li>
-              <li>
-                <span>Membuka wawasan dan pengetahuan baru</span>
-              </li>
-              <li>
-                <span>Berbagi kebahagiaan melalui literasi</span>
-              </li>
-            </ul>
+            <div className="donasi-benefit-card">
+              <ul className="donasi-benefits-list">
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Buku Anda akan dibaca oleh puluhan anak-anak</span>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Menumbuhkan minat baca sejak dini</span>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Membuka wawasan dan pengetahuan baru</span>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Berbagi kebahagiaan melalui literasi</span>
+                </li>
+              </ul>
+            </div>
 
             <div className="donasi-note-box" style={{ display: 'none' }}>
               <h4>📋 Jenis Buku yang Diterima:</h4>

@@ -17,7 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 const paymentRoutes = require('./src/routes/payment.routes');
+const emailRoutes = require('./src/modules/email/email.routes');
+
 app.use('/api', paymentRoutes);
+app.use('/api/email', emailRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

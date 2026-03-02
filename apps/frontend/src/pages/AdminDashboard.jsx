@@ -1182,7 +1182,7 @@ function KtpVerificationTable({ supabase }) {
         }
     }
 
-    const handleApprove = async (userId) => {
+    const handleApprove = async (userId, userEmail, userName) => {
         const confirmed = await showConfirm({
             title: 'Setujui KTP',
             message: 'Setujui KTP user ini? User akan bisa melakukan pembayaran.',
@@ -1199,6 +1199,22 @@ function KtpVerificationTable({ supabase }) {
                 .eq('id', userId)
 
             if (error) throw error
+
+            // Call Backend Node.js API to send Email Notification
+            if (userEmail && userName) {
+                try {
+                    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+                    await fetch(`${apiUrl}/email/send-verification-email`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: userEmail, name: userName })
+                    });
+                } catch (emailErr) {
+                    console.error('Failed to send email notification:', emailErr);
+                    // we don't block the UI flow if purely email fails
+                }
+            }
+
             toast.success('KTP disetujui! User sekarang bisa melakukan pembayaran.')
             fetchPendingUsers()
         } catch (error) {
