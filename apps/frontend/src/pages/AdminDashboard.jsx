@@ -1222,17 +1222,41 @@ function KtpVerificationTable({ supabase }) {
         }
     }
 
-    const handleReject = async (userId) => {
+    const handleReject = async (userId, ktpUrl) => {
         const reason = prompt('Alasan penolakan (opsional):')
 
         try {
+            // Delete the KTP file from storage if it exists
+            if (ktpUrl) {
+                try {
+                    // Extract the filepath from the public URL
+                    // Example URL: https://[project_id].supabase.co/storage/v1/object/public/ktp-uploads/user-uuid/ktp.jpg
+                    const urlParts = ktpUrl.split('/ktp-uploads/');
+                    if (urlParts.length > 1) {
+                        const filePath = urlParts[1];
+                        const { error: storageError } = await supabase.storage
+                            .from('ktp-uploads')
+                            .remove([filePath]);
+
+                        if (storageError) {
+                            console.error('Failed to delete KTP from storage:', storageError);
+                        } else {
+                            console.log('Successfully deleted KTP file:', filePath);
+                        }
+                    }
+                } catch (imgErr) {
+                    console.error('Error during KTP deletion:', imgErr);
+                }
+            }
+
+            // Update user status in database
             const { error } = await supabase
                 .from('users')
                 .update({ member_status: 'non-member', ktp_url: null })
                 .eq('id', userId)
 
             if (error) throw error
-            toast.warning('KTP ditolak. User harus upload ulang.')
+            toast.warning('KTP ditolak. Foto dihapus agar tidak memenuhi memori.')
             fetchPendingUsers()
         } catch (error) {
             toast.error('Error: ' + error.message)
@@ -1331,7 +1355,7 @@ function KtpVerificationTable({ supabase }) {
                                         </button>
                                         <button
                                             className="btn btn-sm btn-danger"
-                                            onClick={() => handleReject(usr.id)}
+                                            onClick={() => handleReject(usr.id, usr.ktp_url)}
                                             style={{ background: '#dc2626', color: 'white', fontSize: '0.75rem' }}
                                         >
                                             Tolak

@@ -6,6 +6,7 @@ import { PaymentService } from '../services/payment'
 import { useNotification } from '../components/Notification'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import imageCompression from 'browser-image-compression'
 import '../App.css'
 
 // Member Upgrade Section Component
@@ -32,10 +33,6 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
     const handleKtpChange = (e) => {
         const file = e.target.files[0]
         if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-                setError('Ukuran file maksimal 5MB')
-                return
-            }
             setKtpFile(file)
             const reader = new FileReader()
             reader.onloadend = () => setKtpPreview(reader.result)
@@ -54,12 +51,20 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
         setError('')
 
         try {
-            const fileExt = ktpFile.name.split('.').pop()
+            // Compress Image Before Upload
+            const options = {
+                maxSizeMB: 1, // Max file size in MB
+                maxWidthOrHeight: 1920, // Max width/height
+                useWebWorker: true, // Use Web-Worker for better performance
+            }
+            const compressedFile = await imageCompression(ktpFile, options)
+
+            const fileExt = compressedFile.name.split('.').pop()
             const fileName = `${userId}/ktp.${fileExt}`
 
             const { error: uploadError } = await supabase.storage
                 .from('ktp-uploads')
-                .upload(fileName, ktpFile, { upsert: true })
+                .upload(fileName, compressedFile, { upsert: true })
 
             if (uploadError) {
                 console.error('Upload error:', uploadError)
@@ -222,7 +227,7 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                                     <polyline points="21 15 16 10 5 21"></polyline>
                                 </svg>
                                 <p style={{ fontWeight: '600', color: '#047857' }}>Klik untuk pilih foto KTP</p>
-                                <small>Format: JPG, PNG (Maks. 5MB)</small>
+                                <small>Format: JPG, PNG (Semua Ukuran)</small>
                             </>
                         )}
                     </div>
