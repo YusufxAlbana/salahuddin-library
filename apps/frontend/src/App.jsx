@@ -4,6 +4,8 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { useNotification } from './components/Notification'
 import childrenReadImage from './assets/How-Reading-Aloud-Helps-Children.jpg'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
+import 'react-lazy-load-image-component/src/effects/blur.css'
 
 // Program data fallback (Dummy)
 const initialPrograms = [
@@ -346,10 +348,11 @@ function App() {
             <div className="filosofi-image">
               <div className="filosofi-images-stack">
                 <div className="filosofi-image-wrapper filosofi-img-top">
-                  <img
+                  <LazyLoadImage
                     src="/images/bookCover2.jpeg"
                     alt="Filosofi Perpustakaan 1"
                     className="filosofi-img"
+                    effect="blur"
                   />
                 </div>
                 <div className="filosofi-badge-center">
@@ -357,10 +360,11 @@ function App() {
                   <small>Tahun Bersejarah</small>
                 </div>
                 <div className="filosofi-image-wrapper filosofi-img-bottom">
-                  <img
+                  <LazyLoadImage
                     src="/images/booksCover.jpeg"
                     alt="Filosofi Perpustakaan 2"
                     className="filosofi-img"
+                    effect="blur"
                   />
                 </div>
               </div>
@@ -400,7 +404,7 @@ function App() {
             >
               <div className="program-card">
                 <div className="program-card-image-container">
-                  <img src={program.image} alt={program.title} className="program-img" />
+                  <LazyLoadImage src={program.image} alt={program.title} className="program-img" effect="blur" />
                 </div>
 
                 <div className="program-card-content">

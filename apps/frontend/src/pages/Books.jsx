@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
+import 'react-lazy-load-image-component/src/effects/blur.css'
 import { supabase } from '../config/supabase'
 import { useAuth } from '../context/AuthContext'
 import { useNotification } from '../components/Notification'
@@ -12,19 +15,12 @@ function Books() {
     const navigate = useNavigate()
     const [activeCategory, setActiveCategory] = useState('all')
     const [searchQuery, setSearchQuery] = useState('')
-    const [books, setBooks] = useState([])
-    const [categories, setCategories] = useState([])
-    const [loading, setLoading] = useState(true)
     const { toast, showConfirm } = useNotification()
 
-    useEffect(() => {
-        fetchBooks()
-        fetchCategories()
-    }, [])
-
-    const fetchBooks = async () => {
-        try {
-            // Fetch books with their associated tags via book_tags junction table
+    // Query for Books
+    const { data: books = [], isLoading: loadingBooks, refetch: refetchBooks } = useQuery({
+        queryKey: ['books'],
+        queryFn: async () => {
             const { data, error } = await supabase
                 .from('books')
                 .select(`
@@ -41,34 +37,28 @@ function Books() {
 
             if (error) throw error
 
-            // Transform data to include tags array on each book
-            const booksWithTags = data?.map(book => ({
+            return data?.map(book => ({
                 ...book,
                 tags: book.book_tags?.map(bt => bt.tags).filter(Boolean) || []
             })) || []
-
-            setBooks(booksWithTags)
-        } catch (error) {
-            console.error("Error fetching books:", error)
-        } finally {
-            setLoading(false)
         }
-    }
+    })
 
-    const fetchCategories = async () => {
-        try {
-            // Using 'tags' table (categories table doesn't exist)
+    // Query for Categories (Tags)
+    const { data: categories = [], isLoading: loadingCategories } = useQuery({
+        queryKey: ['categories'],
+        queryFn: async () => {
             const { data, error } = await supabase
                 .from('tags')
                 .select('*')
                 .order('name')
 
             if (error) throw error
-            setCategories(data || [])
-        } catch (error) {
-            console.error("Error fetching categories:", error)
+            return data || []
         }
-    }
+    })
+
+    const loading = loadingBooks || loadingCategories;
 
     const handleDelete = async (e, bookId) => {
         e.preventDefault() // Prevent navigation to detail
@@ -209,9 +199,10 @@ function Books() {
                                     <Link to={`/book/${book.id}`} key={book.id} className="book-card">
                                         <div className="book-cover">
                                             {book.cover ? (
-                                                <img
+                                                <LazyLoadImage
                                                     src={book.cover}
                                                     alt={book.title}
+                                                    effect="blur"
                                                     onError={(e) => {
                                                         e.target.style.display = 'none'
                                                         e.target.nextSibling.style.display = 'flex'
