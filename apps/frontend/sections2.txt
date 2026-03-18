@@ -1,0 +1,76 @@
+0:    Global Styles & Variables
+2: :root {
+66:    Navigation
+68: /* Logo Styles */
+337:    Welcome Section
+339: .welcome-section {
+554:    Section Base Styles
+556: .section-container {
+579:    Program Section - Hover Expand Effect
+581: .program-section {
+813:    Filosofi Section (Added)
+815: .filosofi-section {
+910:    DONASI SECTION - SIMPLE APPROACH
+912: #donasi.donasi-section {
+1218:    Contact Section
+1220: /* ===============================
+1221:    Contact Section
+1223: .contact-section {
+1359:    Feedback Form - Modern Design
+1361: .feedback-form-container {
+1558:    Footer
+1560: .footer-section {
+1760:    Program Section - Creative Cards
+1762: .program-section {
+1904:    Responsive Design
+1906: @media (max-width: 992px) {
+2218:    Filosofi Section
+2220: .filosofi-section {
+2553:    Program Cards with Images
+2555: .program-section {
+2841:    Detail Page Styles
+2843: .navbar-detail {
+3128:    Auth Pages (Login/Register)
+3130: .auth-page {
+3293:    Profile Page
+3295: .profile-page {
+3599:    Books Catalog Page
+3601: /* ===============================
+3602:    Books Catalog Page
+3604: .books-hero {
+3965:    Book Detail Page
+3967: .book-detail-page {
+4382:    Donasi Section Styles
+4384: .donasi-section {
+4582:    Quick Actions Section
+4584: .table-responsive {
+4700:    Multi-Step Registration Form
+4702: .register-card {
+5143:    Upgrade Section (Profile)
+5145: .upgrade-section {
+5235:    Custom Toast Notifications
+5237: .toast-container {
+5307:    Confirmation Modal
+5309: .modal-overlay {
+5458:    About Us / Visi Misi Section
+5460: .about-section {
+5689:    Information Page Styles
+5691: .info-hero {
+6000:    Member Offer Modal
+6002: .modal-overlay {
+6179:    Membership Section - Home Page
+6181: .membership-section {
+6692:    Navigation Responsive Fixes
+6694: @media (max-width: 768px) {
+6708:    Books Page Responsive
+6710: @media (max-width: 768px) {
+6735:    Additional Mobile Fixes
+6737: @media (max-width: 480px) {
+6786:    COMPREHENSIVE MOBILE RESPONSIVE FIXES
+6789: 
+7449:    TAGS MANAGEMENT RESPONSIVE
+7451: 
+7453:    FINAL MOBILE OVERRIDE - FORCE 1 COLUMN
+7455: @media (max-width: 768px) {
+7486:    Contact Section Motif & Enhancements
+7488: .contact-section {

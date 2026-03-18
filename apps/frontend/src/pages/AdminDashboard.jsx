@@ -6,7 +6,9 @@ import { initialBooks } from '../data/initialBooks'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { useNotification } from '../components/Notification'
+import imageCompression from 'browser-image-compression'
 import '../App.css'
+import './AdminDashboard.css'
 
 function AdminDashboard() {
     const { user, logout } = useAuth()
@@ -256,31 +258,13 @@ function AdminDashboard() {
                 aria-label="Toggle menu"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    {sidebarOpen ? (
-                        <><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></>
-                    ) : (
-                        <><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></>
-                    )}
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg>
             </button>
             <button
-                className="mobile-menu-close"
-                style={{
-                    display: sidebarOpen ? 'flex' : 'none',
-                    position: 'fixed',
-                    top: '1rem',
-                    right: '1rem',
-                    zIndex: 1100,
-                    background: '#ef4444',
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: '40px',
-                    height: '40px',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                }}
+                className={`mobile-menu-close ${sidebarOpen ? 'show' : ''}`}
                 onClick={() => setSidebarOpen(false)}
                 aria-label="Close menu"
             >
@@ -612,13 +596,25 @@ function AdminDashboard() {
                                                         if (!file) return
 
                                                         try {
-                                                            const fileExt = file.name.split('.').pop()
+                                                            let compressedFile = file;
+                                                            try {
+                                                                const options = {
+                                                                    maxSizeMB: 0.5,
+                                                                    maxWidthOrHeight: 1024,
+                                                                    useWebWorker: true,
+                                                                };
+                                                                compressedFile = await imageCompression(file, options);
+                                                            } catch (err) {
+                                                                console.warn('Image compression failed, using original file', err);
+                                                            }
+
+                                                            const fileExt = compressedFile.name.split('.').pop() || 'jpg'
                                                             const fileName = `${Math.random()}.${fileExt}`
                                                             const filePath = `${fileName}`
 
                                                             const { error: uploadError } = await supabase.storage
                                                                 .from('book-covers')
-                                                                .upload(filePath, file)
+                                                                .upload(filePath, compressedFile)
 
                                                             if (uploadError) throw uploadError
 
@@ -1591,12 +1587,12 @@ function TagsManagement({ supabase }) {
             <div className="table-responsive">
                 {selectedTag ? (
                     <>
-                        <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <h3 style={{ margin: 0, padding: 0, border: 'none', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                <span style={{ width: '14px', height: '14px', borderRadius: '50%', background: selectedTag.color }}></span>
-                                Buku dalam "{selectedTag.name}"
+                        <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #f3f4f6', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
+                            <h3 style={{ margin: 0, padding: 0, border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', flexShrink: 1, minWidth: 0 }}>
+                                <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: selectedTag.color, flexShrink: 0 }}></span>
+                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Buku dalam "{selectedTag.name}"</span>
                             </h3>
-                            <button className="btn btn-primary" onClick={() => setShowAssignModal(true)} style={{ padding: '0.5rem 1rem' }}>
+                            <button className="btn btn-primary" onClick={() => setShowAssignModal(true)} style={{ padding: '0.5rem 1rem', whiteSpace: 'nowrap', flexShrink: 0 }}>
                                 + Tambah Buku
                             </button>
                         </div>

@@ -4,8 +4,7 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { useNotification } from './components/Notification'
 import childrenReadImage from './assets/How-Reading-Aloud-Helps-Children.jpg'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
-import 'react-lazy-load-image-component/src/effects/blur.css'
+
 
 // Program data fallback (Dummy)
 const initialPrograms = [
@@ -43,6 +42,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import { supabase } from './config/supabase'
+import { Capacitor } from '@capacitor/core'
 
 function App() {
   const [programs, setPrograms] = useState(initialPrograms)
@@ -157,14 +157,29 @@ function App() {
   }
 
   useEffect(() => {
-    if (user && user.role === 'admin') {
-      navigate('/admin')
+    if (Capacitor.isNativePlatform()) {
+      if (!user) {
+        navigate('/login', { replace: true })
+      } else if (user.role === 'admin') {
+        navigate('/admin', { replace: true })
+      } else {
+        navigate('/login', { replace: true })
+      }
+    } else {
+      if (user && user.role === 'admin') {
+        navigate('/admin')
+      }
     }
   }, [user, navigate])
 
-
-
-  // DEBUG: Connection Status Check
+  // Block rendering of landing page for Native Admin App
+  if (Capacitor.isNativePlatform()) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#ecfdf5', color: '#047857' }}>
+        <h3>Memuat Aplikasi Admin...</h3>
+      </div>
+    )
+  }  // DEBUG: Connection Status Check
   const [connectionStatus, setConnectionStatus] = useState('Checking...')
   useEffect(() => {
     supabase.from('programs').select('count', { count: 'exact', head: true })
@@ -348,11 +363,10 @@ function App() {
             <div className="filosofi-image">
               <div className="filosofi-images-stack">
                 <div className="filosofi-image-wrapper filosofi-img-top">
-                  <LazyLoadImage
+                  <img
                     src="/images/bookCover2.jpeg"
                     alt="Filosofi Perpustakaan 1"
                     className="filosofi-img"
-                    effect="blur"
                   />
                 </div>
                 <div className="filosofi-badge-center">
@@ -360,11 +374,10 @@ function App() {
                   <small>Tahun Bersejarah</small>
                 </div>
                 <div className="filosofi-image-wrapper filosofi-img-bottom">
-                  <LazyLoadImage
+                  <img
                     src="/images/booksCover.jpeg"
                     alt="Filosofi Perpustakaan 2"
                     className="filosofi-img"
-                    effect="blur"
                   />
                 </div>
               </div>
@@ -404,7 +417,7 @@ function App() {
             >
               <div className="program-card">
                 <div className="program-card-image-container">
-                  <LazyLoadImage src={program.image} alt={program.title} className="program-img" effect="blur" />
+                  <img src={program.image} alt={program.title} className="program-img" />
                 </div>
 
                 <div className="program-card-content">

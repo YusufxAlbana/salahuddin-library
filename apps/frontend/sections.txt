@@ -1,0 +1,94 @@
+0:    Global Styles & Variables
+2: :root {
+66:    Navigation
+68: /* Logo Styles */
+337:    Welcome Section
+339: .welcome-section {
+554:    Section Base Styles
+556: .section-container {
+579:    Program Section - Hover Expand Effect
+581: .program-section {
+813:    Filosofi Section (Added)
+815: .filosofi-section {
+910:    DONASI SECTION - SIMPLE APPROACH
+912: #donasi.donasi-section {
+1218:    Contact Section
+1220: /* ===============================
+1221:    Contact Section
+1223: .contact-section {
+1359:    Feedback Form - Modern Design
+1361: .feedback-form-container {
+1558:    Footer
+1560: .footer-section {
+1760:    Program Section - Creative Cards
+1762: .program-section {
+1904:    Responsive Design
+1906: @media (max-width: 992px) {
+2218:    Filosofi Section
+2220: .filosofi-section {
+2553:    Program Cards with Images
+2555: .program-section {
+2841:    Detail Page Styles
+2843: .navbar-detail {
+3128:    Auth Pages (Login/Register)
+3130: .auth-page {
+3293:    Profile Page
+3295: .profile-page {
+3599:    Books Catalog Page
+3601: /* ===============================
+3602:    Books Catalog Page
+3604: .books-hero {
+3965:    Book Detail Page
+3967: .book-detail-page {
+4355:    Admin Book Actions Overlay
+4357: .admin-book-overlay {
+4402:    Donasi Section Styles
+4404: .donasi-section {
+4538:    Modern Admin Sidebar
+4540: .admin-sidebar {
+4745:    Modern Admin Stats Grid
+4747: .admin-stats-grid {
+4847:    Quick Actions Section
+4849: .admin-quick-actions {
+4939:    Modern Admin Form Card
+4941: .admin-form-card {
+4975:    Admin Table Styles - Modern Design
+4977: .table-responsive {
+5154:    Multi-Step Registration Form
+5156: .register-card {
+5597:    Upgrade Section (Profile)
+5599: .upgrade-section {
+5689:    Custom Toast Notifications
+5691: .toast-container {
+5761:    Confirmation Modal
+5763: .modal-overlay {
+5912:    About Us / Visi Misi Section
+5914: .about-section {
+6143:    Information Page Styles
+6145: .info-hero {
+6454:    Member Offer Modal
+6456: .modal-overlay {
+6633:    Membership Section - Home Page
+6635: .membership-section {
+6861:    Admin Layout Styles
+6863: .admin-layout {
+7061:    Admin Responsive - Tablet
+7063: @media (max-width: 992px) {
+7529:    Navigation Responsive Fixes
+7531: @media (max-width: 768px) {
+7545:    Books Page Responsive
+7547: @media (max-width: 768px) {
+7572:    Additional Mobile Fixes
+7574: @media (max-width: 480px) {
+7623:    COMPREHENSIVE MOBILE RESPONSIVE FIXES
+7626: 
+8151:    DESKTOP ADMIN SIDEBAR ENHANCEMENTS
+8153: @media (min-width: 993px) {
+8302:    IMPROVED RESPONSIVE ADMIN DASHBOARD
+8304: 
+8485:    TAGS MANAGEMENT RESPONSIVE
+8487: .tags-management-container {
+8500:    FINAL MOBILE OVERRIDE - FORCE 1 COLUMN
+8502: @media (max-width: 768px) {
+8539:    Contact Section Motif & Enhancements
+8541: .contact-section {

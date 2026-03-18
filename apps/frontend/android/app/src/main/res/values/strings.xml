@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">salahuddin-admin</string>
+    <string name="title_activity_main">salahuddin-admin</string>
+    <string name="package_name">com.salahuddin.admin</string>
+    <string name="custom_url_scheme">com.salahuddin.admin</string>
+</resources>

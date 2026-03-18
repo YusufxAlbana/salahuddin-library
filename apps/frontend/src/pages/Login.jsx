@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useNotification } from '../components/Notification'
 import Navbar from '../components/Navbar'
+import { Capacitor } from '@capacitor/core'
 import '../App.css'
 
 function Login() {
@@ -10,7 +11,7 @@ function Login() {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-    const { user, login } = useAuth()
+    const { user, login, logout } = useAuth()
     const navigate = useNavigate()
     const { toast } = useNotification()
     const hasRedirected = useRef(false)
@@ -18,11 +19,21 @@ function Login() {
     // Redirect if already logged in
     useEffect(() => {
         if (user && !hasRedirected.current) {
-            hasRedirected.current = true
-            toast.info('Anda sudah login! Mengarahkan ke halaman profil...')
-            navigate('/profile', { replace: true })
+            if (Capacitor.isNativePlatform()) {
+                if (user.role !== 'admin') {
+                    logout()
+                    toast.error('AKUN INI BUKAN ROLE ADMIN')
+                    return
+                }
+                hasRedirected.current = true
+                navigate('/admin', { replace: true })
+            } else {
+                hasRedirected.current = true
+                toast.info('Anda sudah login! Mengarahkan ke halaman profil...')
+                navigate('/profile', { replace: true })
+            }
         }
-    }, [user, navigate, toast])
+    }, [user, navigate, toast, logout])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -59,7 +70,7 @@ function Login() {
     if (user) {
         return (
             <div className="app">
-                <Navbar />
+                {!Capacitor.isNativePlatform() && <Navbar />}
                 <div className="auth-page">
                     <div className="auth-container">
                         <div className="auth-card">
@@ -76,7 +87,7 @@ function Login() {
 
     return (
         <div className="app">
-            <Navbar />
+            {!Capacitor.isNativePlatform() && <Navbar />}
 
             <div className="auth-page">
                 <div className="auth-container">
@@ -124,9 +135,11 @@ function Login() {
                             </button>
                         </form>
 
-                        <div className="auth-footer">
-                            <p>Belum punya akun? <Link to="/register">Daftar Sekarang</Link></p>
-                        </div>
+                        {!Capacitor.isNativePlatform() && (
+                            <div className="auth-footer">
+                                <p>Belum punya akun? <Link to="/register">Daftar Sekarang</Link></p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

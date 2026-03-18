@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
-import 'react-lazy-load-image-component/src/effects/blur.css'
+
 import { supabase } from '../config/supabase'
 import { useAuth } from '../context/AuthContext'
 import { useNotification } from '../components/Notification'
@@ -129,10 +128,9 @@ function BookDetail() {
                     {/* Book Cover */}
                     <div className="book-detail-cover">
                         {book.cover ? (
-                            <LazyLoadImage
+                            <img
                                 src={book.cover}
                                 alt={book.title}
-                                effect="blur"
                                 onError={(e) => {
                                     e.target.style.display = 'none'
                                     e.target.nextSibling.style.display = 'flex'

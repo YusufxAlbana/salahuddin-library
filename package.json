@@ -12,9 +12,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@capacitor/cli": "^8.1.0",
     "concurrently": "^9.1.0"
   },
   "dependencies": {
+    "@capacitor/android": "^8.1.0",
     "firebase": "^12.7.0"
   },
   "engines": {
