@@ -651,7 +651,7 @@ function Profile() {
                                         }}>
                                             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                                                 {loan.books?.cover && (
-                                                    <img src={loan.books.cover} alt="" style={{ width: '45px', height: '60px', objectFit: 'cover', borderRadius: '6px' }} />
+                                                    <img src={loan.books.cover} alt={`Cover buku ${loan.books?.title || 'pinjaman'} - Salahuddin Library`} style={{ width: '45px', height: '60px', objectFit: 'cover', borderRadius: '6px' }} />
                                                 )}
                                                 <div style={{ flex: 1 }}>
                                                     <strong>{loan.books?.title || 'Unknown Book'}</strong>

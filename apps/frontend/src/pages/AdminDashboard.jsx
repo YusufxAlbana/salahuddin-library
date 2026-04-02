@@ -673,7 +673,7 @@ function AdminDashboard() {
                                             {booksList.length > 0 ? (
                                                 booksList.map(book => (
                                                     <tr key={book.id}>
-                                                        <td><img src={book.cover} alt="" style={{ width: '40px', height: '55px', objectFit: 'cover', borderRadius: '4px' }} /></td>
+                                                        <td><img src={book.cover} alt={`Cover buku ${book.title}`} style={{ width: '40px', height: '55px', objectFit: 'cover', borderRadius: '4px' }} /></td>
                                                         <td><strong>{book.title}</strong></td>
                                                         <td>{book.author}</td>
                                                         <td>
@@ -1049,7 +1049,7 @@ function LoansTable() {
                                         </td>
                                         <td>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                                {loan.books?.cover && <img src={loan.books.cover} style={{ width: 30, height: 45, borderRadius: 4, objectFit: 'cover' }} />}
+                                                {loan.books?.cover && <img src={loan.books.cover} alt={`Cover buku ${loan.books?.title || 'pinjaman'}`} style={{ width: 30, height: 45, borderRadius: 4, objectFit: 'cover' }} />}
                                                 <span title={loan.books?.title} style={{ maxWidth: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                                     {loan.books?.title}
                                                 </span>
@@ -1578,7 +1578,7 @@ function TagsManagement() {
                                     {tagBooks.map(book => (
                                         <tr key={book.id}>
                                             <td>
-                                                <img src={book.cover} alt="" style={{ width: '40px', height: '55px' }} />
+                                                <img src={book.cover} alt={`Cover buku ${book.title}`} style={{ width: '40px', height: '55px' }} />
                                             </td>
                                             <td><strong>{book.title}</strong></td>
                                             <td>{book.author}</td>
@@ -1634,7 +1634,7 @@ function TagsManagement() {
                                     }} onClick={() => handleAssignBook(book.id)}
                                         onMouseOver={(e) => { e.currentTarget.style.borderColor = '#10b981'; e.currentTarget.style.background = '#f0fdf4'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(16, 185, 129, 0.1)' }}
                                         onMouseOut={(e) => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#fafafa'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none' }}>
-                                        <img src={book.cover} alt="" style={{ width: '45px', height: '64px', borderRadius: '6px', objectFit: 'cover', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} />
+                                        <img src={book.cover} alt={`Cover buku ${book.title}`} style={{ width: '45px', height: '64px', borderRadius: '6px', objectFit: 'cover', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} />
                                         <div style={{ flex: 1, overflow: 'hidden' }}>
                                             <span style={{ fontWeight: '600', color: '#334155', display: 'block', marginBottom: '0.2rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{book.title}</span>
                                             <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Oleh: {book.author || 'Tidak diketahui'}</span>

@@ -9,6 +9,7 @@ import { useNotification } from '../components/Notification'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import '../App.css'
+import { optimizeCloudinaryUrl } from '../utils/cloudinary'
 
 function Books() {
     const { user } = useAuth()
@@ -210,7 +211,7 @@ function Books() {
                                         <div className="book-cover">
                                             {book.cover ? (
                                                 <img
-                                                    src={book.cover}
+                                                    src={optimizeCloudinaryUrl(book.cover, { width: 400 })}
                                                     alt={book.title}
                                                     onError={(e) => {
                                                         e.target.style.display = 'none'

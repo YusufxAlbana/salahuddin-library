@@ -9,6 +9,7 @@ import { useNotification } from '../components/Notification'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import '../App.css'
+import { optimizeCloudinaryUrl } from '../utils/cloudinary'
 
 function BookDetail() {
     const { bookId } = useParams()
@@ -146,7 +147,7 @@ function BookDetail() {
                     <div className="book-detail-cover">
                         {book.cover ? (
                             <img
-                                src={book.cover}
+                                src={optimizeCloudinaryUrl(book.cover, { width: 600 })}
                                 alt={book.title}
                                 onError={(e) => {
                                     e.target.style.display = 'none'
