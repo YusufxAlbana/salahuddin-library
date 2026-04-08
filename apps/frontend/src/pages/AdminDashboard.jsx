@@ -40,7 +40,15 @@ function AdminDashboard() {
     const [hasMoreUsers, setHasMoreUsers] = useState(true)
     const [loadingMoreUsers, setLoadingMoreUsers] = useState(false)
 
-    const ITEMS_PER_PAGE = 10
+    // Dynamically limit to 5 for HP/Mobile, 10 for Desktop
+    const getItemsPerPage = () => window.innerWidth <= 768 ? 5 : 10;
+    const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage())
+
+    useEffect(() => {
+        const handleResize = () => setItemsPerPage(getItemsPerPage())
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
 
     const fetchStats = async () => {
         try {
@@ -84,7 +92,7 @@ function AdminDashboard() {
             }
 
             const start = loadMore ? booksList.length : 0
-            const pageBooks = allBooks.slice(start, start + ITEMS_PER_PAGE)
+            const pageBooks = allBooks.slice(start, start + itemsPerPage)
 
             if (loadMore) {
                 setBooksList(prev => [...prev, ...pageBooks])
@@ -92,7 +100,7 @@ function AdminDashboard() {
                 setBooksList(pageBooks)
             }
 
-            setHasMoreBooks(pageBooks.length === ITEMS_PER_PAGE)
+            setHasMoreBooks(pageBooks.length === itemsPerPage)
         } catch (e) { console.error(e) }
         finally {
             setLoading(false)
@@ -240,7 +248,7 @@ function AdminDashboard() {
                 .sort((a, b) => new Date(b.join_date || 0) - new Date(a.join_date || 0))
 
             const start = loadMore ? usersList.length : 0
-            const pageUsers = allUsers.slice(start, start + ITEMS_PER_PAGE)
+            const pageUsers = allUsers.slice(start, start + itemsPerPage)
 
             if (loadMore) {
                 setUsersList(prev => [...prev, ...pageUsers])
@@ -248,7 +256,7 @@ function AdminDashboard() {
                 setUsersList(pageUsers)
             }
 
-            setHasMoreUsers(pageUsers.length === ITEMS_PER_PAGE)
+            setHasMoreUsers(pageUsers.length === itemsPerPage)
         } catch (error) {
             console.error("Error fetching users:", error)
         } finally {
@@ -781,51 +789,53 @@ function AdminDashboard() {
                                                             )}
                                                         </td>
                                                         <td style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                                                            {usr.member_status !== 'verified' ? (
-                                                                <button
-                                                                    className="btn btn-sm"
-                                                                    style={{ background: '#10b981', color: '#fff' }}
-                                                                    onClick={async () => {
-                                                                        const confirmed = await showConfirm({
-                                                                            title: 'Upgrade ke Member',
-                                                                            message: `Yakin ingin menjadikan "${usr.name}" sebagai Member? Pastikan Pembayaran (QRIS/COD) sudah dikonfirmasi!`,
-                                                                            confirmText: 'Ya, Jadikan Member',
-                                                                            cancelText: 'Batal',
-                                                                            type: 'success'
-                                                                        })
-                                                                        if (!confirmed) return
+                                                            <div style={{ width: '145px' }}>
+                                                                {usr.member_status !== 'verified' ? (
+                                                                    <button
+                                                                        className="btn btn-sm"
+                                                                        style={{ background: '#10b981', color: '#fff', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                                                        onClick={async () => {
+                                                                            const confirmed = await showConfirm({
+                                                                                title: 'Upgrade ke Member',
+                                                                                message: `Yakin ingin menjadikan "${usr.name}" sebagai Member? Pastikan Pembayaran (QRIS/Bayar di Tempat) sudah dikonfirmasi!`,
+                                                                                confirmText: 'Ya, Jadikan Member',
+                                                                                cancelText: 'Batal',
+                                                                                type: 'success'
+                                                                            })
+                                                                            if (!confirmed) return
 
-                                                                        try {
-                                                                            await update(ref(db, `users/${usr.id}`), { member_status: 'verified' })
-                                                                            toast.success(`${usr.name} berhasil dijadikan Member!`)
-                                                                            fetchUsers()
-                                                                        } catch (error) {
-                                                                            toast.error('Gagal: ' + error.message)
-                                                                        }
-                                                                    }}
-                                                                >
-                                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                                    </svg>
-                                                                    Jadikan Member
-                                                                </button>
-                                                            ) : (
-                                                                <span style={{ color: '#10b981', fontSize: '0.85rem', fontWeight: '600' }}>
-                                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
-                                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                                    </svg>
-                                                                    Sudah Member
-                                                                </span>
-                                                            )}
+                                                                            try {
+                                                                                await update(ref(db, `users/${usr.id}`), { member_status: 'verified' })
+                                                                                toast.success(`${usr.name} berhasil dijadikan Member!`)
+                                                                                fetchUsers()
+                                                                            } catch (error) {
+                                                                                toast.error('Gagal: ' + error.message)
+                                                                            }
+                                                                        }}
+                                                                    >
+                                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '6px' }}>
+                                                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                                        </svg>
+                                                                        Jadikan Member
+                                                                    </button>
+                                                                ) : (
+                                                                    <div style={{ background: '#f0fdf4', border: '1px solid #10b981', color: '#10b981', padding: '0.35rem 0.5rem', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '600', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '6px' }}>
+                                                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                                        </svg>
+                                                                        Sudah Member
+                                                                    </div>
+                                                                )}
+                                                            </div>
                                                             <button
                                                                 className="btn btn-sm"
-                                                                style={{ background: '#ef4444', color: '#fff' }}
+                                                                style={{ background: '#ef4444', color: '#fff', padding: '0.35rem 0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                                                                 onClick={() => handleDeleteUser(usr)}
                                                                 title="Hapus Akun Permanen"
                                                             >
-                                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                                                     <polyline points="3 6 5 6 21 6"></polyline>
                                                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                                                 </svg>
@@ -895,8 +905,8 @@ function AdminDashboard() {
 function LoansTable() {
     const [loans, setLoans] = useState([])
     const [loading, setLoading] = useState(true)
-    const [hasMore, setHasMore] = useState(false)
-    const [loadingMore, setLoadingMore] = useState(false)
+    const getItemsPerPage = () => window.innerWidth <= 768 ? 5 : 10;
+    const [visibleCount, setVisibleCount] = useState(getItemsPerPage())
     const { toast, showConfirm } = useNotification()
 
     useEffect(() => {
@@ -1035,8 +1045,8 @@ function LoansTable() {
                         </tr>
                     </thead>
                     <tbody>
-                        {loans.length > 0 ? (
-                            loans.map(loan => {
+                        {loans.slice(0, visibleCount).length > 0 ? (
+                            loans.slice(0, visibleCount).map(loan => {
                                 const fine = calculateFine(loan.due_date)
                                 const isOverdue = fine > 0
                                 const renewalCount = loan.renewal_count || 0
@@ -1107,14 +1117,13 @@ function LoansTable() {
                 </table>
             </div>
 
-            {hasMore && (
+            {visibleCount < loans.length && (
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
                     <button
                         className="btn btn-outline"
-                        onClick={() => fetchLoans(true)}
-                        disabled={loadingMore}
+                        onClick={() => setVisibleCount(v => v + getItemsPerPage())}
                     >
-                        {loadingMore ? 'Memuat...' : 'Load More'}
+                        Load More
                     </button>
                 </div>
             )}
@@ -1126,8 +1135,8 @@ function LoansTable() {
 function KtpVerificationTable() {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
-    const [hasMore, setHasMore] = useState(false)
-    const [loadingMore, setLoadingMore] = useState(false)
+    const getItemsPerPage = () => window.innerWidth <= 768 ? 5 : 10;
+    const [visibleCount, setVisibleCount] = useState(getItemsPerPage())
     const [previewKtp, setPreviewKtp] = useState(null)
     const { toast, showConfirm } = useNotification()
 
@@ -1262,8 +1271,8 @@ function KtpVerificationTable() {
                 <tbody>
                     {loading ? (
                         <tr><td colSpan="5" className="text-center">Memuat data...</td></tr>
-                    ) : users.length > 0 ? (
-                        users.map(usr => (
+                    ) : users.slice(0, visibleCount).length > 0 ? (
+                        users.slice(0, visibleCount).map(usr => (
                             <tr key={usr.id}>
                                 <td>
                                     <div className="user-cell">
@@ -1318,14 +1327,13 @@ function KtpVerificationTable() {
                 </tbody>
             </table>
 
-            {hasMore && (
+            {visibleCount < users.length && (
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
                     <button
                         className="btn btn-outline"
-                        onClick={() => fetchPendingUsers(true)}
-                        disabled={loadingMore}
+                        onClick={() => setVisibleCount(v => v + getItemsPerPage())}
                     >
-                        {loadingMore ? 'Memuat...' : 'Load More'}
+                        Load More
                     </button>
                 </div>
             )}
@@ -1662,8 +1670,8 @@ function TagsManagement() {
 function DonationsTable() {
     const [donations, setDonations] = useState([])
     const [loading, setLoading] = useState(true)
-    const [hasMore, setHasMore] = useState(false)
-    const [loadingMore, setLoadingMore] = useState(false)
+    const getItemsPerPage = () => window.innerWidth <= 768 ? 5 : 10;
+    const [visibleCount, setVisibleCount] = useState(getItemsPerPage())
     const [selectedDonation, setSelectedDonation] = useState(null)
     const { toast, showConfirm } = useNotification()
 
@@ -1761,8 +1769,8 @@ function DonationsTable() {
                 <tbody>
                     {loading ? (
                         <tr><td colSpan="6" className="text-center">Memuat data...</td></tr>
-                    ) : donations.length > 0 ? (
-                        donations.map(donation => (
+                    ) : donations.slice(0, visibleCount).length > 0 ? (
+                        donations.slice(0, visibleCount).map(donation => (
                             <tr key={donation.id}>
                                 <td>
                                     <div style={{ fontWeight: '600', color: '#334155' }}>{donation.donor_name}</div>
@@ -1839,14 +1847,13 @@ function DonationsTable() {
                 </tbody>
             </table>
 
-            {hasMore && (
+            {visibleCount < donations.length && (
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
                     <button
                         className="btn btn-outline"
-                        onClick={() => fetchDonations(true)}
-                        disabled={loadingMore}
+                        onClick={() => setVisibleCount(v => v + getItemsPerPage())}
                     >
-                        {loadingMore ? 'Memuat...' : 'Load More'}
+                        Load More
                     </button>
                 </div>
             )}
@@ -1884,8 +1891,8 @@ function DonationsTable() {
 function FeedbackTable() {
     const [feedbacks, setFeedbacks] = useState([])
     const [loading, setLoading] = useState(true)
-    const [hasMore, setHasMore] = useState(false)
-    const [loadingMore, setLoadingMore] = useState(false)
+    const getItemsPerPage = () => window.innerWidth <= 768 ? 5 : 10;
+    const [visibleCount, setVisibleCount] = useState(getItemsPerPage())
     const [selectedFeedback, setSelectedFeedback] = useState(null)
     const { toast, showConfirm } = useNotification()
 
@@ -1960,8 +1967,8 @@ function FeedbackTable() {
                 <tbody>
                     {loading ? (
                         <tr><td colSpan="6" className="text-center">Memuat data...</td></tr>
-                    ) : feedbacks.length > 0 ? (
-                        feedbacks.map(fb => (
+                    ) : feedbacks.slice(0, visibleCount).length > 0 ? (
+                        feedbacks.slice(0, visibleCount).map(fb => (
                             <tr key={fb.id} style={{ background: fb.is_read ? 'white' : '#f0fdf4' }}>
                                 <td style={{ fontWeight: fb.is_read ? '400' : '600' }}>{fb.name}</td>
                                 <td>{fb.email}</td>
@@ -2029,14 +2036,13 @@ function FeedbackTable() {
                 </tbody>
             </table>
 
-            {hasMore && (
+            {visibleCount < feedbacks.length && (
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
                     <button
                         className="btn btn-outline"
-                        onClick={() => fetchFeedbacks(true)}
-                        disabled={loadingMore}
+                        onClick={() => setVisibleCount(v => v + getItemsPerPage())}
                     >
-                        {loadingMore ? 'Memuat...' : 'Load More'}
+                        Load More
                     </button>
                 </div>
             )}
@@ -2207,7 +2213,7 @@ function AdminInfoPage() {
                 'Melihat daftar KTP yang menunggu verifikasi',
                 'Melihat preview foto KTP',
                 'Menyetujui atau menolak pendaftaran anggota',
-                'Pengguna yang disetujui dapat melanjutkan ke pembayaran QRIS atau COD'
+                'Pengguna yang disetujui dapat melanjutkan ke pembayaran QRIS atau Bayar di Tempat'
             ],
             color: '#06b6d4'
         },

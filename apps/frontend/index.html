@@ -119,21 +119,41 @@
   <body>
     <!-- Hardcoded fallback for SEO crawlers (will be replaced by React) -->
     <div id="root">
-      <h1>Selamat Datang di Salahuddin Library</h1>
-      <p>Perpustakaan digital di Banda Aceh yang menyediakan katalog buku online, layanan peminjaman, program edukasi untuk anak-anak, dan donasi buku. Tempat belajar, berbagi ilmu, dan menumbuhkan cinta membaca untuk generasi masa depan.</p>
-      <h2>Program Kami</h2>
-      <ul>
-        <li>Children Read Out-Loud - Aktivitas membaca nyaring untuk anak</li>
-        <li>IT Class - Belajar Microsoft Office dan keterampilan digital</li>
-        <li>Story Telling Class - Belajar teknik bercerita yang menarik</li>
-        <li>Public Speaking Class - Menjadi public speaker profesional</li>
-      </ul>
-      <h2>Katalog Buku</h2>
-      <p>Temukan berbagai koleksi buku berkualitas untuk pengembangan diri dan pengetahuan di Salahuddin Library.</p>
-      <h2>Donasi Buku</h2>
-      <p>Berbagi ilmu melalui buku untuk generasi penerus bangsa. Buku Anda akan dibaca oleh puluhan anak-anak.</p>
-      <h2>Hubungi Kami</h2>
-      <p>Rumah YAAI (Yayasan Alfata Aceh Indonesia), Jl. Memori Lr. Setia, Lam Lagang, Kec. Banda Raya, Kota Banda Aceh, Aceh 23122, Indonesia.</p>
+      <style>
+        .initial-loader {
+          position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+          background: #f8fafc; display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 9999;
+          font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .spinner {
+          width: 48px; height: 48px; border: 4px solid #e2e8f0; border-top: 4px solid #2563eb;
+          border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      </style>
+      <div class="initial-loader">
+        <div class="spinner"></div>
+        <p style="color: #64748b; font-size: 0.95rem; font-weight: 600; letter-spacing: 0.5px;">Memuat Library...</p>
+      </div>
+      
+      <!-- SEO Fallback Content (Hidden Visually to prevent broken text layout) -->
+      <div style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;">
+        <h1>Selamat Datang di Salahuddin Library</h1>
+        <p>Perpustakaan digital di Banda Aceh yang menyediakan katalog buku online, layanan peminjaman, program edukasi untuk anak-anak, dan donasi buku. Tempat belajar, berbagi ilmu, dan menumbuhkan cinta membaca untuk generasi masa depan.</p>
+        <h2>Program Kami</h2>
+        <ul>
+          <li>Children Read Out-Loud - Aktivitas membaca nyaring untuk anak</li>
+          <li>IT Class - Belajar Microsoft Office dan keterampilan digital</li>
+          <li>Story Telling Class - Belajar teknik bercerita yang menarik</li>
+          <li>Public Speaking Class - Menjadi public speaker profesional</li>
+        </ul>
+        <h2>Katalog Buku</h2>
+        <p>Temukan berbagai koleksi buku berkualitas untuk pengembangan diri dan pengetahuan di Salahuddin Library.</p>
+        <h2>Donasi Buku</h2>
+        <p>Berbagi ilmu melalui buku untuk generasi penerus bangsa. Buku Anda akan dibaca oleh puluhan anak-anak.</p>
+        <h2>Hubungi Kami</h2>
+        <p>Rumah YAAI (Yayasan Alfata Aceh Indonesia), Jl. Memori Lr. Setia, Lam Lagang, Kec. Banda Raya, Kota Banda Aceh, Aceh 23122, Indonesia.</p>
+      </div>
     </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

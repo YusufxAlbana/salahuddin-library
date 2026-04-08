@@ -60,7 +60,7 @@ function Information() {
                                         </p>
                                         <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '0.9rem', color: '#374151' }}>
                                             <li style={{ marginBottom: '0.25rem' }}>• <strong>Transfer Online</strong> - Via Midtrans (segera hadir)</li>
-                                            <li style={{ marginBottom: '0.25rem' }}>• <strong>Bayar di Tempat (COD)</strong> - Datang ke Rumah YAAI (Yayasan Alfata Aceh Indonesia), G8M7+Q8H Belakang Mesjid As Shadaqah, Jl. Memori Lr. Setia, Lam Lagang, Kec. Banda Raya, Kota Banda Aceh.</li>
+                                            <li style={{ marginBottom: '0.25rem' }}>• <strong>Bayar di Tempat</strong> - Datang ke Rumah YAAI (Yayasan Alfata Aceh Indonesia), G8M7+Q8H Belakang Mesjid As Shadaqah, Jl. Memori Lr. Setia, Lam Lagang, Kec. Banda Raya, Kota Banda Aceh.</li>
                                             <li>• <strong>Konfirmasi Admin</strong> - Setelah bayar di tempat, admin akan mengaktifkan kartu anggota Anda.</li>
                                         </ul>
                                     </div>
@@ -166,7 +166,7 @@ function Information() {
                                         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                                     </svg>
                                 </span>
-                                <span className="summary-label">Max Buku</span>
+                                <span className="summary-label">Max pijam Buku</span>
                                 <span className="summary-value">3 Buku</span>
                             </div>
                             <div className="summary-item">

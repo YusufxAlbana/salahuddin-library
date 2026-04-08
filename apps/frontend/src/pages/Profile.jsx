@@ -10,7 +10,7 @@ import { useNotification } from '../components/Notification'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import imageCompression from 'browser-image-compression'
-import qrisImage from '../assets/qris.png'
+
 import '../App.css'
 
 // Member Upgrade Section Component
@@ -123,7 +123,7 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
             )
         } catch (err) {
             console.error('Payment error:', err)
-            setError('Pembayaran online tidak tersedia saat ini. Silakan gunakan opsi "Bayar di Tempat (COD)" di bawah.')
+            setError('Pembayaran online tidak tersedia saat ini. Silakan gunakan opsi "Bayar di Tempat" di bawah.')
             setLoading(false)
         }
     }
@@ -275,10 +275,16 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                             margin: '0 auto', maxWidth: '250px', padding: '1rem',
                             border: '1px solid #f1f5f9', borderRadius: '12px', background: '#fff'
                         }}>
-                            <img src={qrisImage} alt="QRIS Salahuddin Library" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                            <img src="/images/saweria.png" alt="QRIS Saweria Salahuddin Library" style={{ width: '100%', height: 'auto', display: 'block' }} />
                         </div>
-                        <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '1rem', lineHeight: '1.5' }}>
-                            Simpan bukti transfer dan klik tombol di bawah untuk konfirmasi ke Admin.
+                        <p style={{ fontSize: '0.85rem', color: '#dc2626', marginTop: '1rem', lineHeight: '1.5', fontWeight: '600' }}>
+                            PENTING: Pastikan Anda mengisi form EMAIL di Saweria dengan ({userEmail}) agar pembayaran otomatis terkonfirmasi!
+                        </p>
+                        <a href="https://saweria.co/widgets/qr?streamKey=6c5634eda91b9384f50c04399a75db00" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', marginTop: '0.75rem', padding: '0.5rem 1rem', background: '#f8fafc', color: '#3b82f6', textDecoration: 'none', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '500', border: '1px solid #e2e8f0', width: '100%', boxSizing: 'border-box' }}>
+                            🔗 Klik di sini jika tidak bisa scan QR
+                        </a>
+                        <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.75rem', lineHeight: '1.5' }}>
+                            Anda tidak perlu mengisi kolom pesan. Jika gagal otomatis, simpan bukti dan klik konfirmasi WhatsApp di bawah.
                         </p>
                     </div>
 
@@ -306,7 +312,7 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                         className="btn"
                         onClick={() => {
                             toast.info(
-                                'Kamu bisa bayar langsung (COD) dengan mendatangi alamat ini:\n\n' +
+                                'Kamu bisa bayar langsung di tempat dengan mendatangi alamat ini:\n\n' +
                                 'Rumah YAAI (Yayasan Alfata Aceh Indonesia)\n' +
                                 'G8M7+Q8H Belakang Mesjid As Shadaqah, Jl. Memori Lr. Setia, Lam Lagang, Kec. Banda Raya, Kota Banda Aceh, Aceh 23122, Indonesia.\n\n' +
                                 'Setelah bayar di tempat, Admin akan mengaktifkan kartu anggota Anda.'
@@ -323,7 +329,7 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                             <circle cx="12" cy="10" r="3"></circle>
                         </svg>
-                        Lihat Alamat (Untuk COD)
+                        Lihat Alamat (Bayar di Tempat)
                     </button>
                 </div>
             )}
