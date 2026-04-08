@@ -714,17 +714,26 @@ function Profile() {
                                 </button>
                             </div>
                         ) : (
-                            <form onSubmit={handleChangePassword} style={{ maxWidth: '400px' }}>
+                            <form onSubmit={handleChangePassword} style={{ maxWidth: '400px', width: '100%' }}>
                                 {passwordMessage.text && (
                                     <div style={{ padding: '0.75rem', marginBottom: '1rem', borderRadius: '8px', background: passwordMessage.type === 'error' ? '#fee2e2' : '#d1fae5', color: passwordMessage.type === 'error' ? '#dc2626' : '#047857', fontSize: '0.9rem' }}>
                                         {passwordMessage.text}
                                     </div>
                                 )}
-                                <div className="form-group"><label>Password Lama</label><input type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} placeholder="Masukkan password lama" /></div>
-                                <div className="form-group"><label>Password Baru</label><input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="Minimal 6 karakter" /></div>
-                                <div className="form-group"><label>Konfirmasi Password Baru</label><input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Ulangi password baru" /></div>
+                                <div style={{ marginBottom: '1.25rem' }}>
+                                    <label style={{ fontWeight: '600', color: '#334155', display: 'block', marginBottom: '0.25rem' }}>Password Lama</label>
+                                    <input type="password" style={{ width: '100%', padding: '0.875rem 1rem', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '1rem', outline: 'none', boxSizing: 'border-box' }} value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} placeholder="Masukkan password lama" />
+                                </div>
+                                <div style={{ marginBottom: '1.25rem' }}>
+                                    <label style={{ fontWeight: '600', color: '#334155', display: 'block', marginBottom: '0.25rem' }}>Password Baru</label>
+                                    <input type="password" style={{ width: '100%', padding: '0.875rem 1rem', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '1rem', outline: 'none', boxSizing: 'border-box' }} value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="Minimal 6 karakter" />
+                                </div>
+                                <div style={{ marginBottom: '1.5rem' }}>
+                                    <label style={{ fontWeight: '600', color: '#334155', display: 'block', marginBottom: '0.25rem' }}>Konfirmasi Password Baru</label>
+                                    <input type="password" style={{ width: '100%', padding: '0.875rem 1rem', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '1rem', outline: 'none', boxSizing: 'border-box' }} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Ulangi password baru" />
+                                </div>
                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                    <button type="submit" className="btn btn-primary" disabled={passwordLoading}>{passwordLoading ? 'Memproses...' : 'Ubah Password'}</button>
+                                    <button type="submit" className="btn btn-primary" disabled={passwordLoading} style={{ flex: 1 }}>{passwordLoading ? 'Memproses...' : 'Simpan Password'}</button>
                                     <button type="button" className="btn btn-outline" onClick={() => { setShowChangePassword(false); setPasswordMessage({ type: '', text: '' }) }}>Batal</button>
                                 </div>
                             </form>
