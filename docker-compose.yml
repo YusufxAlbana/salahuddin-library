@@ -1,0 +1,11 @@
+services:
+  web:
+    image: nginx:alpine
+    container_name: yusuf_web_dev
+    user: "0:0"
+    ports:
+      - "18109:80"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./:/usr/share/nginx/html:ro
+    restart: unless-stopped
