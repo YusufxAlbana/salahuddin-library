@@ -651,7 +651,7 @@ function App() {
                   </div>
                   <div>
                     <h4>Alamat</h4>
-                    <p>Jln. nirbaya 2 no. 289<br />Lambaro Skep, Kota Banda Aceh</p>
+                    <p>H89J+7CM Lambaro Skep<br />Kota Banda Aceh, Aceh</p>
                   </div>
                 </div>
                 <div className="contact-item">
@@ -692,14 +692,14 @@ function App() {
               {/* Google Maps Embed - Banda Aceh */}
               <div className="contact-map">
                 <iframe
-                  src="https://maps.google.com/maps?q=Jln.+Nirbaya+2+no.+289%2C+Lambaro+Skep%2C+Kota+Banda+Aceh&t=&z=17&ie=UTF8&iwloc=&output=embed"
+                  src="https://maps.google.com/maps?q=5.56822,95.33104&t=&z=17&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="200"
                   style={{ border: 0, borderRadius: '12px' }}
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Lokasi Salahuddin Library - Banda Aceh"
+                  title="Lokasi Salahuddin Library - Lambaro Skep"
                 ></iframe>
               </div>
 

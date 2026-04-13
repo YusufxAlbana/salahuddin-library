@@ -76,8 +76,8 @@ function Footer() {
                             <circle cx="12" cy="10" r="3"></circle>
                         </svg>
                         <div>
-                            <p><strong>Jln. nirbaya 2 no. 289</strong></p>
-                            <p>Lambaro Skep, Kota Banda Aceh</p>
+                            <p><strong>H89J+7CM Lambaro Skep</strong></p>
+                            <p>Kota Banda Aceh, Aceh</p>
                         </div>
                     </div>
                 </div>

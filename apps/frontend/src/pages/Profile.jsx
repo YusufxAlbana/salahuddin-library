@@ -233,12 +233,12 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
                     <button
                         className="btn"
                         onClick={() => {
-                            toast.info(
-                                'Kamu bisa bayar langsung di tempat dengan mendatangi alamat ini:\n\n' +
-                                'Rumah YAAI (Yayasan Alfata Aceh Indonesia)\n' +
-                                'G8M7+Q8H Belakang Mesjid As Shadaqah, Jl. Memori Lr. Setia, Lam Lagang, Kec. Banda Raya, Kota Banda Aceh, Aceh 23122, Indonesia.\n\n' +
-                                'Setelah bayar di tempat, Admin akan mengaktifkan kartu anggota Anda.'
-                            )
+                            const address = 'H89J+7CM Lambaro Skep, Kota Banda Aceh, Aceh';
+                            navigator.clipboard.writeText(address);
+                            toast.info('Alamat disalin! Membuka lokasi di Google Maps...');
+                            setTimeout(() => {
+                                window.open(`https://www.google.com/maps?q=5.56822,95.33104`, '_blank');
+                            }, 1000);
                         }}
                         style={{
                             width: '100%', padding: '1rem', fontSize: '0.95rem', background: '#f1f5f9',
