@@ -244,7 +244,7 @@ body {
   background: var(--white);
   color: var(--primary) !important;
   border: 2px solid var(--primary);
-  transform: translateY(-2px);
+  transform: scale(1.05);
   box-shadow: 0 4px 10px rgba(4, 120, 87, 0.2);
 }
 
@@ -272,10 +272,10 @@ body {
 }
 
 .nav-register-btn:hover {
-  background: var(--white);
-  color: var(--primary) !important;
-  border: 2px solid var(--primary);
-  transform: translateY(-2px);
+  background: var(--primary-light);
+  color: var(--white) !important;
+  border: 2px solid var(--primary-light);
+  transform: scale(1.05);
   box-shadow: 0 4px 15px rgba(4, 120, 87, 0.4);
 }
 
@@ -467,12 +467,11 @@ body {
 }
 
 .btn-primary:hover {
-  background: var(--white);
-  color: var(--primary);
-  border: 2px solid var(--primary);
+  background: var(--primary-light);
+  color: var(--white);
+  border: 2px solid transparent;
   box-shadow: 0 4px 15px rgba(4, 120, 87, 0.3);
-  transform: none;
-  /* No lift animation */
+  transform: scale(1.05);
 }
 
 .btn-secondary {
@@ -483,11 +482,11 @@ body {
 }
 
 .btn-secondary:hover {
-  background: var(--white);
-  color: var(--primary);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
   border: 2px solid var(--white);
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
-  transform: none;
+  transform: scale(1.05);
 }
 
 .scroll-indicator {
@@ -7144,12 +7143,14 @@ body {
 
   /* Fix Hover State for Mobile - Ensure visibility */
   .nav-login-btn:hover {
-    background: var(--primary) !important;
+    background: var(--primary-light) !important;
     color: var(--white) !important;
+    transform: scale(1.05) !important;
   }
 
   .nav-register-btn:hover {
-    opacity: 0.9 !important;
+    opacity: 1 !important;
+    transform: scale(1.05) !important;
   }
 }
 
