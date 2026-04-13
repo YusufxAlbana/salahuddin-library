@@ -1,0 +1,65 @@
+services:
+  # Frontend Service (React + Vite)
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile.dev
+    container_name: sal_lib_frontend_dev
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules # Agar node_modules container tidak tertimpa folder lokal
+    ports:
+      - "5173:5173"
+    networks:
+      - sal_lib_network_dev
+
+  # Backend Service (Node.js + Nodemon)
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.dev
+    container_name: sal_lib_backend_dev
+    env_file:
+      - ./apps/backend/.env
+    volumes:
+      - ./apps/backend:/app
+      - /app/node_modules
+    ports:
+      - "5000:5000"
+    networks:
+      - sal_lib_network_dev
+
+  # Web Gateway (Nginx)
+  web:
+    image: nginx:alpine
+    container_name: SAL_LIB_WEB_DEV
+    ports:
+      - "18115:80"
+    volumes:
+      - ./default.dev.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - sal_lib_network_dev
+
+  # Database (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: SAL_LIB_DB_DEV
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: salahuddin_library
+    ports:
+      - "3345:3306"
+    volumes:
+      - sal_lib_db_data_dev:/var/lib/mysql
+    networks:
+      - sal_lib_network_dev
+
+networks:
+  sal_lib_network_dev:
+    driver: bridge
+
+volumes:
+  sal_lib_db_data_dev:
