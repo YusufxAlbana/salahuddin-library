@@ -339,7 +339,7 @@ function Profile() {
 
             const allLoans = snapshot.val()
             const userLoans = Object.entries(allLoans)
-                .filter(([, loan]) => loan.user_id === id)
+                .filter(([, loan]) => loan.user_id === id && loan.status === 'borrowed')
                 .map(([loanId, loan]) => ({ id: loanId, ...loan }))
 
             // Fetch book info for each loan
@@ -629,11 +629,6 @@ function Profile() {
                                                 </div>
 
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
-                                                    {loan.status === 'borrowed' && (
-                                                        <button onClick={() => handleReturnBook(loan)} className="btn btn-sm" style={{ background: '#3b82f6', color: '#fff', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
-                                                            Kembalikan
-                                                        </button>
-                                                    )}
                                                     {canRenew && (
                                                         <button onClick={() => handleRenewLoan(loan.id)} className="btn btn-sm" style={{ background: '#047857', color: '#fff', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
                                                             Perpanjang

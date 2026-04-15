@@ -1022,19 +1022,25 @@ function LoansTable({ type = 'borrowed' }) {
         if (!confirm) return
 
         try {
+            // Update loan status first
             await update(ref(db, `loans/${loan.id}`), {
                 status: 'returned',
                 return_date: new Date().toISOString()
             })
 
             // Increment book stock
-            const bookSnap = await get(ref(db, `books/${loan.book_id}/stock`))
+            const bookStockRef = ref(db, `books/${loan.book_id}/stock`)
+            const bookSnap = await get(bookStockRef)
             const currentStock = bookSnap.exists() ? bookSnap.val() : 0
-            await set(ref(db, `books/${loan.book_id}/stock`), currentStock + 1)
+            
+            // Explicitly set the new stock
+            await set(bookStockRef, Number(currentStock) + 1)
 
-            toast.success('Buku berhasil dikembalikan.')
+            toast.success('Buku berhasil dikembalikan dan stok bertambah.')
             fetchLoans()
+            fetchStats() // Update dashboard stats too
         } catch (err) {
+            console.error('Error in handleReturnBook:', err)
             toast.error('Gagal: ' + err.message)
         }
     }
