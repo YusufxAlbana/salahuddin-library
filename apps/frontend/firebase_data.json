@@ -250,6 +250,24 @@
       "cover": "https://res.cloudinary.com/dyr6flyz3/image/upload/w_1024,c_limit,q_auto,f_auto/v1775011039/duywqikijrpwskbbqy01.jpg",
       "stock": 3,
       "created_at": "2025-12-23T07:29:49.80895+00:00"
+    },
+    "40": {
+      "id": 40,
+      "title": "The Alchemist",
+      "author": "Paulo Coelho",
+      "category": "novel",
+      "cover": "/images/the_alchemist_cover.png",
+      "stock": 3,
+      "created_at": "2026-04-15T09:10:00.000+00:00"
+    },
+    "41": {
+      "id": 41,
+      "title": "The 48 Laws of Power",
+      "author": "Robert Greene",
+      "category": "self-motivation",
+      "cover": "/images/48_laws_of_power_cover.png",
+      "stock": 2,
+      "created_at": "2026-04-15T09:10:00.000+00:00"
     }
   },
   "loans": {
@@ -471,6 +489,12 @@
       "2": true,
       "8": true,
       "15": true
+    },
+    "40": {
+      "1": true
+    },
+    "41": {
+      "10": true
     }
   },
   "donations": {

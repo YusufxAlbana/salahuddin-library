@@ -78,7 +78,9 @@ INSERT INTO `books` (`id`,`title`,`author`,`category`,`cover`,`stock`,`created_a
   (21, 'Mindset', 'Carol Dweck', 'self-motivation', 'https://res.cloudinary.com/dyr6flyz3/image/upload/w_1024,c_limit,q_auto,f_auto/v1775011042/bn58h5cjqxsh2jsq6aj3.jpg', 2, '2025-12-23 07:29:49'),
   (22, 'Rich Dad Poor Dad', 'Robert Kiyosaki', 'self-motivation', 'https://res.cloudinary.com/dyr6flyz3/image/upload/w_1024,c_limit,q_auto,f_auto/v1775011037/shbdxh2a4zmzmys8ghpn.jpg', 5, '2025-12-23 07:29:49'),
   (37, 'Sebuah Seni untuk Bersikap Bodo Amat', 'Mark Manson', 'konsep-hidup', 'https://res.cloudinary.com/dyr6flyz3/image/upload/w_1024,c_limit,q_auto,f_auto/v1775011038/zemdxdonbgiboisku17p.jpg', 3, '2025-12-23 07:29:49'),
-  (39, 'Man Search for Meaning', 'Viktor Frankl', 'konsep-hidup', 'https://res.cloudinary.com/dyr6flyz3/image/upload/w_1024,c_limit,q_auto,f_auto/v1775011039/duywqikijrpwskbbqy01.jpg', 3, '2025-12-23 07:29:49');
+  (39, 'Man Search for Meaning', 'Viktor Frankl', 'konsep-hidup', 'https://res.cloudinary.com/dyr6flyz3/image/upload/w_1024,c_limit,q_auto,f_auto/v1775011039/duywqikijrpwskbbqy01.jpg', 3, '2025-12-23 07:29:49'),
+  (40, 'The Alchemist', 'Paulo Coelho', 'novel', '/images/the_alchemist_cover.png', 3, '2026-04-15 09:10:00'),
+  (41, 'The 48 Laws of Power', 'Robert Greene', 'self-motivation', '/images/48_laws_of_power_cover.png', 2, '2026-04-15 09:10:00');
 
 -- -----------------------------------------------------------------------------
 -- Table: tags
@@ -135,7 +137,9 @@ INSERT INTO `book_tags` (`book_id`,`tag_id`) VALUES
   (37, 15),
   (39, 2),
   (39, 8),
-  (39, 15);
+  (39, 15),
+  (40, 1),
+  (41, 10);
 
 -- -----------------------------------------------------------------------------
 -- Table: loans
