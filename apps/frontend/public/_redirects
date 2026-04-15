@@ -1,0 +1,5 @@
+/*
+  This file is for Netlify redirection.
+  It ensures that all routes are handled by index.html for Single Page Applications (SPA).
+*/
+/*  /index.html  200

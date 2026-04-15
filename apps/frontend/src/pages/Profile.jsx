@@ -1,9 +1,8 @@
 import { Link, useNavigate, useParams, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { db, storage, auth } from '../config/firebase'
+import { db, auth } from '../config/firebase'
 import { ref, get, update } from 'firebase/database'
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { updatePassword, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'
 import { PaymentService } from '../services/payment'
 import { useNotification } from '../components/Notification'
@@ -16,17 +15,17 @@ import '../App.css'
 // Member Upgrade Section Component
 // Flow: 1. Upload KTP → 2. Wait Admin Approval → 3. Payment
 function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
+    const navigate = useNavigate()
     const getStep = () => {
         if (currentStatus === 'pending_approval' || currentStatus === 'approved') return 2
         return 1
     }
 
-    const [step, setStep] = useState(getStep())
+    const [step] = useState(getStep())
     const [ktpFile, setKtpFile] = useState(null)
     const [ktpPreview, setKtpPreview] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-    const [showUploadOptions, setShowUploadOptions] = useState(false)
     const { toast } = useNotification()
 
     const handleKtpChange = (e) => {
@@ -70,6 +69,7 @@ function MemberUpgradeSection({ userId, currentStatus, userEmail, userName }) {
             })
 
             toast.success('KTP berhasil diupload! Silakan lanjutkan ke pembayaran.')
+            navigate('/profile?tab=membership', { replace: true })
             window.location.reload()
         } catch (err) {
             console.error('KTP upload error:', err)
@@ -265,14 +265,7 @@ function Profile() {
     const { user, logout, loading: authLoading } = useAuth()
     const navigate = useNavigate()
     const { userId } = useParams()
-
-    if (authLoading) {
-        return <div className="text-center p-5">Memuat data pengguna...</div>
-    }
-
-    if (!user) {
-        return <Navigate to="/" replace />
-    }
+    const { toast } = useNotification()
 
     const [profileUser, setProfileUser] = useState(null)
     const [myLoans, setMyLoans] = useState([])
@@ -284,10 +277,9 @@ function Profile() {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [passwordLoading, setPasswordLoading] = useState(false)
     const [passwordMessage, setPasswordMessage] = useState({ type: '', text: '' })
-    const { toast } = useNotification()
 
     useEffect(() => {
-        if (!user) return
+        if (authLoading || !user) return
 
         const targetId = userId || user.id
 
@@ -306,7 +298,15 @@ function Profile() {
             fetchMyLoans(targetId)
         }
 
-    }, [user, userId, navigate])
+    }, [user, userId, navigate, authLoading, toast])
+
+    if (authLoading) {
+        return <div className="text-center p-5">Memuat data pengguna...</div>
+    }
+
+    if (!user) {
+        return <Navigate to="/" replace />
+    }
 
     const fetchUserProfile = async (id) => {
         try {
@@ -339,7 +339,7 @@ function Profile() {
 
             const allLoans = snapshot.val()
             const userLoans = Object.entries(allLoans)
-                .filter(([_, loan]) => loan.user_id === id)
+                .filter(([, loan]) => loan.user_id === id)
                 .map(([loanId, loan]) => ({ id: loanId, ...loan }))
 
             // Fetch book info for each loan

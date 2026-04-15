@@ -99,17 +99,6 @@ function Books() {
         }
     }
 
-    const getCategoryIcon = (catId) => {
-        switch (catId) {
-            case 'all': return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-            case 'novel': return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-            case 'education': return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-            case 'history': return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            case 'islamic': return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-            default: return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-        }
-    }
-
     const [visibleCount, setVisibleCount] = useState(10)
 
     // Reset pagination when filter changes
@@ -167,25 +156,43 @@ function Books() {
             {/* Categories */}
             <section className="books-categories">
                 <div className="section-container">
-                    <div className="categories-scroll">
-                        {/* Semua Button */}
-                        <button
-                            className={`category-btn ${activeCategory === 'all' ? 'active' : ''}`}
-                            onClick={() => setActiveCategory('all')}
-                        >
-                            Semua
-                        </button>
-
-                        {/* Categories from Database */}
-                        {categories.map(cat => (
+                    <div className="categories-wrapper">
+                        <div className="categories-scroll">
+                            {/* Semua Button */}
                             <button
-                                key={cat.id}
-                                className={`category-btn ${activeCategory === cat.name ? 'active' : ''}`}
-                                onClick={() => setActiveCategory(cat.name)}
+                                className={`category-btn ${activeCategory === 'all' ? 'active' : ''}`}
+                                onClick={() => setActiveCategory('all')}
                             >
-                                {cat.name}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                                Semua Buku
                             </button>
-                        ))}
+
+                            {/* Categories from Database */}
+                            {categories.map(cat => (
+                                <button
+                                    key={cat.id}
+                                    className={`category-btn ${activeCategory === cat.name ? 'active' : ''}`}
+                                    onClick={() => setActiveCategory(cat.name)}
+                                >
+                                    <span 
+                                        className="category-dot" 
+                                        style={{ background: cat.color || 'var(--secondary)' }}
+                                    ></span>
+                                    {cat.name}
+                                </button>
+                            ))}
+                        </div>
+                        {/* Reset Filter Button - Only show if not 'all' */}
+                        {activeCategory !== 'all' && (
+                            <button 
+                                className="reset-filter-btn"
+                                onClick={() => setActiveCategory('all')}
+                                title="Kembali ke Semua Buku"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                Reset
+                            </button>
+                        )}
                     </div>
                 </div>
             </section>

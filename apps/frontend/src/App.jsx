@@ -42,11 +42,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import { db } from './config/firebase'
-import { ref, push, set, get } from 'firebase/database'
+import { ref, push, set } from 'firebase/database'
 import { Capacitor } from '@capacitor/core'
 
 function App() {
-  const [programs, setPrograms] = useState(initialPrograms)
+  const [programs] = useState(initialPrograms)
   const [showMemberOfferModal, setShowMemberOfferModal] = useState(false)
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -80,6 +80,7 @@ function App() {
   // Donation form submit handler
   const handleDonationSubmit = async (e) => {
     e.preventDefault()
+    const form = e.target
     // Determine donor name: use profile name if logged in, otherwise get from form
     let donorName = ''
     if (user) {
