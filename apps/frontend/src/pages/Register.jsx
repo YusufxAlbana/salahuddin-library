@@ -6,7 +6,6 @@ import Navbar from '../components/Navbar'
 import '../App.css'
 
 function Register() {
-    const [emailSent, setEmailSent] = useState(false)
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -19,12 +18,12 @@ function Register() {
 
     // Redirect if already logged in
     useEffect(() => {
-        if (user && !hasRedirected.current && !emailSent) {
+        if (user && !hasRedirected.current) {
             hasRedirected.current = true
             toast.info('Anda sudah memiliki akun! Mengarahkan ke halaman profil...')
             navigate('/profile', { replace: true })
         }
-    }, [user, navigate, toast, emailSent])
+    }, [user, navigate, toast])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -54,15 +53,8 @@ function Register() {
         setLoading(false)
 
         if (result.success) {
-            if (result.session) {
-                // User logged in immediately (email verification disabled or auto-confirmed)
-                toast.success('Registrasi berhasil! Selamat datang di Salahuddin Library.')
-                navigate('/?showMemberOffer=true')
-            } else {
-                // User registered but session is null -> Email verification required
-                setEmailSent(true)
-                toast.success('Registrasi berhasil! Silakan cek email Anda untuk verifikasi.')
-            }
+            toast.success('Registrasi berhasil! Selamat datang di Salahuddin Library.')
+            navigate('/?showMemberOffer=true')
         } else {
             // Translate common Firebase Auth errors to Indonesian
             let errorMessage = result.error || 'Terjadi kesalahan pada server'
@@ -92,45 +84,8 @@ function Register() {
         transition: 'all 0.3s ease'
     }
 
-    // Success Email Sent State
-    if (emailSent) {
-        return (
-            <div className="app">
-                <Navbar />
-                <div className="auth-page">
-                    <div className="auth-container">
-                        <div className="auth-card" style={{ textAlign: 'center' }}>
-                            <div className="auth-header">
-                                <div className="auth-logo" style={{ marginBottom: '1.5rem' }}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                        <polyline points="22,6 12,13 2,6"></polyline>
-                                    </svg>
-                                </div>
-                                <h1>Verifikasi Email Anda</h1>
-                                <p style={{ fontSize: '1.125rem', color: '#4b5563', marginBottom: '1.5rem', lineHeight: '1.6' }}>
-                                    Kami telah mengirimkan link verifikasi ke <strong>{email}</strong>.
-                                    <br />
-                                    Silakan cek kotak masuk atau folder spam Anda.
-                                </p>
-                                <div style={{ background: '#ecfdf5', padding: '1rem', borderRadius: '8px', border: '1px solid #d1fae5', marginBottom: '1.5rem' }}>
-                                    <p style={{ margin: 0, fontSize: '0.875rem', color: '#047857' }}>
-                                        <strong>Penting:</strong> Anda perlu memverifikasi email sebelum dapat masuk.
-                                    </p>
-                                </div>
-                                <Link to="/login" className="btn btn-primary btn-full" style={{ borderRadius: '12px', textDecoration: 'none', display: 'inline-block' }}>
-                                    Kembali ke Halaman Login
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
     // Don't render form if user is logged in
-    if (user && !emailSent) {
+    if (user) {
         return (
             <div className="app">
                 <Navbar />

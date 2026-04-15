@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { db, auth } from '../config/firebase'
 import { ref, get, update } from 'firebase/database'
-import { updatePassword, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'
+import { updatePassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { PaymentService } from '../services/payment'
 import { useNotification } from '../components/Notification'
 import Navbar from '../components/Navbar'
@@ -265,7 +265,7 @@ function Profile() {
     const { user, logout, loading: authLoading } = useAuth()
     const navigate = useNavigate()
     const { userId } = useParams()
-    const { toast } = useNotification()
+    const { toast, showConfirm } = useNotification()
 
     const [profileUser, setProfileUser] = useState(null)
     const [myLoans, setMyLoans] = useState([])
@@ -400,6 +400,41 @@ function Profile() {
         }
     }
 
+    const handleReturnBook = async (loan) => {
+        const confirmed = await showConfirm({
+            title: 'Konfirmasi Pengembalian',
+            message: `Apakah Anda yakin ingin mengembalikan buku "${loan.books?.title}"?`,
+            confirmText: 'Ya, Kembalikan',
+            cancelText: 'Batal',
+            type: 'info'
+        })
+
+        if (!confirmed) return
+
+        try {
+            const loanRef = ref(db, `loans/${loan.id}`)
+            const now = new Date()
+
+            // Update loan status
+            await update(loanRef, {
+                status: 'returned',
+                return_date: now.toISOString()
+            })
+
+            // Increase book stock
+            const bookRef = ref(db, `books/${loan.book_id}/stock`)
+            const stockSnap = await get(bookRef)
+            const currentStock = stockSnap.val() || 0
+            await set(bookRef, currentStock + 1)
+
+            toast.success(`Buku "${loan.books?.title}" berhasil dikembalikan. Terima kasih!`)
+            fetchMyLoans(profileUser.id)
+        } catch (error) {
+            console.error('Error returning book:', error)
+            toast.error('Gagal mengembalikan buku: ' + error.message)
+        }
+    }
+
     const handlePayFine = async (loan, amount) => {
         const message = `Halo Admin Salahuddin Library! Saya ${user.name} ingin konfirmasi pembayaran denda keterlambatan buku "${loan.books?.title || 'Buku'}" sebesar Rp ${amount.toLocaleString('id-ID')}. Mohon instruksi untuk pembayarannya.`
         window.open(`https://wa.me/628116834477?text=${encodeURIComponent(message)}`, '_blank')
@@ -449,18 +484,6 @@ function Profile() {
             } else {
                 setPasswordMessage({ type: 'error', text: error.message })
             }
-        } finally {
-            setPasswordLoading(false)
-        }
-    }
-
-    const handleResetPassword = async () => {
-        setPasswordLoading(true)
-        try {
-            await sendPasswordResetEmail(auth, user.email)
-            toast.success(`Link reset password telah dikirim ke ${user.email}. Silakan cek inbox email Anda.`)
-        } catch (error) {
-            toast.error('Gagal mengirim email reset: ' + error.message)
         } finally {
             setPasswordLoading(false)
         }
@@ -552,6 +575,7 @@ function Profile() {
                                     <div>
                                         <strong style={{ display: 'block', marginBottom: '0.25rem' }}>Ketentuan Peminjaman:</strong>
                                         <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.25rem', lineHeight: 1.6 }}>
+                                            <li>Maksimal pinjam: <strong>3 buku</strong> sekaligus</li>
                                             <li>Periode peminjaman: <strong>5 hari</strong> per buku</li>
                                             <li>Perpanjangan hanya bisa dilakukan saat <strong>sisa 2 hari</strong></li>
                                             <li>Maksimal perpanjangan: <strong>3 kali</strong></li>
@@ -588,7 +612,7 @@ function Profile() {
                                                     <strong>{loan.books?.title || 'Unknown Book'}</strong>
                                                     <div style={{ fontSize: '0.85rem', color: '#6b7280', marginTop: '0.25rem' }}>
                                                         {loan.status === 'returned' ? (
-                                                            <span style={{ color: '#10b981' }}>✓ Dikembalikan</span>
+                                                            <span style={{ color: '#10b981' }}>✓ Dikembalikan pada {new Date(loan.return_date).toLocaleDateString('id-ID')}</span>
                                                         ) : isOverdue ? (
                                                             <span style={{ color: '#dc2626', fontWeight: '600' }}>⚠ Terlambat {Math.abs(daysLeft)} hari (Denda: Rp {fineAmount.toLocaleString('id-ID')})</span>
                                                         ) : (
@@ -602,6 +626,11 @@ function Profile() {
                                                     )}
                                                 </div>
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                                    {loan.status === 'borrowed' && (
+                                                        <button onClick={() => handleReturnBook(loan)} className="btn btn-sm" style={{ background: '#3b82f6', color: '#fff', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
+                                                            Kembalikan
+                                                        </button>
+                                                    )}
                                                     {canRenew && (
                                                         <button onClick={() => handleRenewLoan(loan.id)} className="btn btn-sm" style={{ background: '#047857', color: '#fff', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
                                                             Perpanjang
@@ -629,10 +658,6 @@ function Profile() {
                                 <button onClick={() => setShowChangePassword(true)} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                                     Ubah Password
-                                </button>
-                                <button onClick={handleResetPassword} className="btn btn-outline" disabled={passwordLoading} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                                    Reset via Email
                                 </button>
                             </div>
                         ) : (

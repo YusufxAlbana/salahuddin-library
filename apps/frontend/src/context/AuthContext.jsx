@@ -4,11 +4,7 @@ import {
     onAuthStateChanged,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
-    signOut,
-    updatePassword,
-    sendPasswordResetEmail,
-    EmailAuthProvider,
-    reauthenticateWithCredential
+    signOut
 } from 'firebase/auth'
 import { ref, get, set, update } from 'firebase/database'
 
@@ -30,6 +26,7 @@ export function AuthProvider({ children }) {
         })
 
         return () => unsubscribe()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const fetchUserProfile = async (firebaseUser) => {

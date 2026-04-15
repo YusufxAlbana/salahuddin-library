@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 
 import { db } from '../config/firebase'
-import { ref, get, update, set, push, runTransaction } from 'firebase/database'
+import { ref, get, set, push } from 'firebase/database'
 import { useAuth } from '../context/AuthContext'
 import { useNotification } from '../components/Notification'
 import Navbar from '../components/Navbar'
@@ -64,18 +64,29 @@ function BookDetail() {
         if (!confirmed) return
 
         try {
-            // Check if user already has this book borrowed
+            // Check current active loans count
             const loansRef = ref(db, 'loans')
             const loansSnap = await get(loansRef)
+            let activeLoansCount = 0
+            
             if (loansSnap.exists()) {
                 const loans = loansSnap.val()
-                const alreadyBorrowed = Object.values(loans).some(
-                    loan => loan.user_id === user.id && loan.book_id === bookId && loan.status === 'borrowed'
+                const userLoans = Object.values(loans).filter(
+                    loan => loan.user_id === user.id && loan.status === 'borrowed'
                 )
+                activeLoansCount = userLoans.length
+
+                // Check if already borrowed this specific book
+                const alreadyBorrowed = userLoans.some(loan => loan.book_id === bookId)
                 if (alreadyBorrowed) {
                     toast.warning('Anda sudah meminjam buku ini.')
                     return
                 }
+            }
+
+            if (activeLoansCount >= 3) {
+                toast.error('Gagal: Batas maksimal peminjaman adalah 3 buku. Silakan kembalikan buku yang sedang dipinjam terlebih dahulu.')
+                return
             }
 
             // Create loan
