@@ -1,6 +1,15 @@
+# Development Docker Compose for Salahuddin Library
+# Sections:
+# 1. sal_lib_front_end    - React + Vite frontend for browser UI and developer hot reload
+# 2. sal_lib_api_server   - Node.js backend with Express and Nodemon as API service
+# 3. sal_lib_web_gateway  - Nginx reverse proxy serving frontend and routing traffic
+# 4. sal_lib_db_storage   - MySQL database storing library data and user records
+
 services:
-  # Frontend Service (React + Vite)
-  frontend:
+  # Frontend Service
+  # Technology: React, Vite
+  # Function: Hosts the browser SPA, provides UI for library users, and syncs local code changes to the container.
+  sal_lib_front_end:
     build:
       context: ./apps/frontend
       dockerfile: Dockerfile.dev
@@ -13,8 +22,10 @@ services:
     networks:
       - sal_lib_network_dev
 
-  # Backend Service (Node.js + Nodemon)
-  backend:
+  # Backend API Service
+  # Technology: Node.js, Express, Nodemon
+  # Function: Provides REST APIs, authentication, database access, and business logic for the app.
+  sal_lib_api_server:
     build:
       context: ./apps/backend
       dockerfile: Dockerfile.dev
@@ -29,24 +40,28 @@ services:
     networks:
       - sal_lib_network_dev
 
-  # Web Gateway (Nginx)
-  web:
+  # Web Gateway Service
+  # Technology: Nginx
+  # Function: Acts as a reverse proxy for the frontend and backend, and serves static content via HTTP.
+  sal_lib_web_gateway:
     image: nginx:alpine
-    container_name: SAL_LIB_WEB_DEV
+    container_name: sal_lib_web_dev
     ports:
       - "18115:80"
     volumes:
       - ./default.dev.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - frontend
-      - backend
+      - sal_lib_front_end
+      - sal_lib_api_server
     networks:
       - sal_lib_network_dev
 
-  # Database (MySQL)
-  db:
+  # Database Service
+  # Technology: MySQL 8.0
+  # Function: Stores persistent library data, user accounts, and application state.
+  sal_lib_db_storage:
     image: mysql:8.0
-    container_name: SAL_LIB_DB_DEV
+    container_name: sal_lib_db_dev
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: salahuddin_library
