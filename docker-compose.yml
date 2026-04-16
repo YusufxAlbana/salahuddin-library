@@ -1,26 +1,43 @@
+
+
+name: sal_lib_prod
+
+# ============================================================================
+# SALAHUDDIN LIBRARY - Production Compose File
+# Deploy ke server: docker-compose up -d
+# ============================================================================
+
 services:
+
+  # =========================
+  # Web Gateway: Nginx
+  # =========================
   web:
     image: nginx:alpine
     container_name: SAL_LIB_WEB
-    user: "0:0"
+    user: "0:0"  # Run sebagai root untuk permission production
     ports:
-      - "18115:80"
+      - "18115:80"  # Akses production di http://server:18115
     volumes:
-      - ./default.conf:/etc/nginx/conf.d/default.conf
-      - ./apps/frontend/dist:/usr/share/nginx/html
-    restart: unless-stopped
+      - ./default.conf:/etc/nginx/conf.d/default.conf  # Config routing
+      - ./apps/frontend/dist:/usr/share/nginx/html  # Frontend build (static files)
+    restart: unless-stopped  # Auto-restart jika crash
 
+
+  # =========================
+  # Database: MySQL 8.0
+  # =========================
   db:
     image: mysql:8.0
     container_name: SAL_LIB_DB
-    restart: unless-stopped
+    restart: unless-stopped  # Critical service, auto-restart
     ports:
-      - "3345:3306"
+      - "3345:3306"  # MySQL port (internal/VPN access only)
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root  
       MYSQL_DATABASE: salahuddin_library
     volumes:
-      - sal_lib_db_data:/var/lib/mysql
+      - sal_lib_db_data:/var/lib/mysql  # Persist data, backup berkala!
 
 volumes:
   sal_lib_db_data:
