@@ -1,5 +1,4 @@
-# Development Docker Compose untuk Salahuddin Library
-# Nama project compose ini untuk development environment
+
 
 name: sal_lib_dev  # Nama unik project compose, digunakan untuk penamaan network dan volume otomatis
 
@@ -45,12 +44,6 @@ services:
   # ============================================================================
   # SAL_LIB_WEB_GATEWAY - Service Gateway Web (Nginx)
   # ============================================================================
-  # Teknologi:  Nginx Alpine (lightweight, fast web server)
-  # Fungsi:     Bertindak sebagai reverse proxy, mengarahkan request ke frontend atau backend,
-  #             serving static files, load balancing, dan handling SSL/TLS di production.
-  # Direktori:  ./default.dev.conf - Konfigurasi Nginx untuk routing rules dan server blocks.
-  # Port:       18115 (HTTP Public Interface)
-  # Dependencies: Bergantung pada sal_lib_front_end dan sal_lib_api_server untuk ready
   #
   sal_lib_web_gateway:
     image: nginx:alpine  # Image siap pakai Nginx Alpine versi terbaru (lightweight & fast)
