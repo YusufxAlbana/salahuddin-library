@@ -38,6 +38,7 @@ function AdminDashboard() {
     // Users Management State
     const [hasMoreUsers, setHasMoreUsers] = useState(true)
     const [loadingMoreUsers, setLoadingMoreUsers] = useState(false)
+    const [userSearchQuery, setUserSearchQuery] = useState('')
 
     // Dynamically limit to 5 for HP/Mobile, 10 for Desktop
     const getItemsPerPage = () => window.innerWidth <= 768 ? 5 : 10;
@@ -242,7 +243,7 @@ function AdminDashboard() {
         return null
     }
 
-    const fetchUsers = async (loadMore = false) => {
+    const fetchUsers = async (loadMore = false, searchQuery = userSearchQuery) => {
         if (loadMore) setLoadingMoreUsers(true)
         else setLoading(true)
 
@@ -254,6 +255,14 @@ function AdminDashboard() {
                 .map(([id, u]) => ({ id, ...u }))
                 .filter(u => u.role !== 'admin')
                 .sort((a, b) => new Date(b.join_date || 0) - new Date(a.join_date || 0))
+
+            if (searchQuery) {
+                const lowerQuery = searchQuery.toLowerCase()
+                allUsers = allUsers.filter(u => 
+                    u.name?.toLowerCase().includes(lowerQuery) || 
+                    u.email?.toLowerCase().includes(lowerQuery)
+                )
+            }
 
             const start = loadMore ? usersList.length : 0
             const pageUsers = allUsers.slice(start, start + itemsPerPage)
@@ -761,6 +770,54 @@ function AdminDashboard() {
                         {/* USERS TAB */}
                         {activeTab === 'users' && (
                             <div className="users-list-container">
+                                <div style={{ marginBottom: '1rem', width: '100%', display: 'flex', gap: '0.5rem', alignItems: 'stretch' }}>
+                                    <div style={{ position: 'relative', flex: 1 }}>
+                                        <input
+                                            type="text"
+                                            placeholder="Cari pengguna berdasarkan nama atau email..."
+                                            value={userSearchQuery}
+                                            onChange={(e) => {
+                                                const val = e.target.value
+                                                setUserSearchQuery(val)
+                                                // Live search
+                                                fetchUsers(false, val)
+                                            }}
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                padding: '0.75rem 1rem 0.75rem 2.5rem',
+                                                border: '1px solid #e5e7eb',
+                                                borderRadius: '8px',
+                                                fontSize: '0.95rem',
+                                                background: 'white',
+                                                color: '#111827'
+                                            }}
+                                        />
+                                        <div style={{
+                                            position: 'absolute',
+                                            left: '0.75rem',
+                                            top: 0,
+                                            bottom: 0,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}>
+                                            <svg
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="#9ca3af"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <circle cx="11" cy="11" r="8"></circle>
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="table-responsive">
                                     <table className="admin-table">
                                         <thead>
