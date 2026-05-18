@@ -3,7 +3,6 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { useNotification } from './components/Notification'
-import childrenReadImage from './assets/How-Reading-Aloud-Helps-Children.jpg'
 
 
 // Program data fallback (Dummy)
@@ -13,7 +12,7 @@ const initialPrograms = [
     title: 'Children Read Out-Loud',
     shortDesc: 'Sebuah aktivitas membaca nyaring untuk anak yang melibatkan kemampuan berkomunikasi seperti membaca dengan artikulasi yang jelas, intonasi yang tepat, dan kecepatan yang benar. Program ini membantu anak-anak mengembangkan kepercayaan diri dan kemampuan berbicara di depan umum sejak usia dini.',
     fullDesc: 'Sebuah aktivitas membaca nyaring untuk anak yang melibatkan kemampuan berkomunikasi seperti membaca dengan artikulasi, intonasi dan kecepatan yang benar. Program ini membantu anak-anak mengembangkan kepercayaan diri dalam berbicara di depan umum.',
-    image: childrenReadImage
+    image: '/images/How-Reading-Aloud-Helps-Children.jpg'
   },
   {
     id: 'it-class',
