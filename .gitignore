@@ -11,6 +11,8 @@ dist
 
 # Credentials - NEVER COMMIT
 sftp.json
+*firebase-adminsdk*.json
+firebase-adminsdk.json
 
 # OS
 .DS_Store

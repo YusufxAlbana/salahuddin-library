@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { db, storage } from '../config/firebase'
+import { auth, db, storage } from '../config/firebase'
 import { ref, get, set, update, remove, push } from 'firebase/database'
 import { ref as storageRef, deleteObject } from 'firebase/storage'
 import Navbar from '../components/Navbar'
@@ -1338,12 +1338,17 @@ function KtpVerificationTable() {
             await update(ref(db, `users/${userId}`), { member_status: 'approved' })
 
             // Call Backend Node.js API to send Email Notification
+            // Token Firebase dikirim di header Authorization agar endpoint aman
             if (userEmail && userName) {
                 try {
                     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+                    const idToken = await auth.currentUser?.getIdToken();
                     await fetch(`${apiUrl}/email/send-verification-email`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${idToken}`
+                        },
                         body: JSON.stringify({ email: userEmail, name: userName })
                     });
                 } catch (emailErr) {
@@ -1471,7 +1476,7 @@ function KtpVerificationTable() {
                                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                                         <button
                                             className="btn btn-sm"
-                                            onClick={() => handleApprove(usr.id)}
+                                            onClick={() => handleApprove(usr.id, usr.email, usr.name)}
                                             style={{ background: '#10b981', color: 'white', fontSize: '0.75rem' }}
                                         >
                                             Setujui

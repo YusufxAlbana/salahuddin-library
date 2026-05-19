@@ -15,36 +15,6 @@ Salahuddin Library adalah aplikasi perpustakaan digital. Aplikasi ini mempermuda
 
 Bayangkan sistem aplikasi ini seperti **kantor perpustakaan fisik modern** yang memiliki beberapa staf dengan tugasnya masing-masing:
 
-```mermaid
-graph TD
-    subgraph Klien ["📱 Tampilan Pengguna"]
-        Pintu["1. Pintu Depan Aplikasi (HP & Web) <br/> Tempat pengguna mencari buku & foto KTP"]
-    end
-
-    subgraph Firebase ["🔥 Sistem Buku Besar Google"]
-        BukuCatat["2. Buku Catatan Digital <br/> Menyimpan daftar buku & riwayat pinjam secara realtime"]
-        Gembok["Sistem Keamanan & Kunci <br/> Menjaga agar akun & password pengguna aman"]
-    end
-
-    subgraph Cloudinary ["☁️ Gudang Gambar Pintar"]
-        GudangFoto["3. Gudang Foto Digital <br/> Tempat menyimpan foto sampul buku & foto KTP"]
-    end
-
-    subgraph Backend ["🖥️ Asisten Belakang Layar"]
-        TukangPos["4. Tukang Pos Otomatis <br/> Mengirim email selamat ke anggota baru"]
-    end
-
-    subgraph WA ["💬 Tombol Chat WhatsApp"]
-        WhatsApp["5. Penghubung WhatsApp Admin <br/> Untuk urusan denda & biaya daftar"]
-    end
-
-    Pintu ===>|Mencocokkan Kunci Akun| Gembok
-    Pintu ===>|Membaca & Menulis Riwayat| BukuCatat
-    Pintu ===>|Mengirim & Menampilkan Gambar| GudangFoto
-    Pintu ===>|Memerintahkan Kirim Email| TukangPos
-    Pintu ===>|Menghubungkan Obrolan| WhatsApp
-```
-
 ### Penjelasan Bagian Utama (Menggunakan Analogi):
 
 1. **Pintu Depan Aplikasi (Tampilan HP & Web):**
