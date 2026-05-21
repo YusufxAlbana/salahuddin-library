@@ -19,9 +19,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-const emailRoutes = require('./src/modules/email/email.routes');
+const emailRoutes  = require('./src/modules/email/email.routes');
+const uploadRoutes = require('./src/modules/upload/upload.routes');
 
-app.use('/api/email', emailRoutes);
+app.use('/api/email',  emailRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

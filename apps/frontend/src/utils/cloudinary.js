@@ -1,7 +1,10 @@
+import { auth } from '../config/firebase';
+
 /**
- * Converts a Cloudinary URL to an optimized webp format with auto quality.
- * This significantly reduces image file sizes for faster loading (SEO boost).
- * Example:
+ * Mengoptimalkan URL Cloudinary ke format WebP dengan kualitas otomatis.
+ * Tidak perlu credentials — hanya transformasi string URL.
+ *
+ * Contoh:
  *   Input:  https://res.cloudinary.com/dyr6flyz3/image/upload/v123/photo.jpg
  *   Output: https://res.cloudinary.com/dyr6flyz3/image/upload/f_webp,q_auto/v123/photo.jpg
  */
@@ -10,50 +13,48 @@ export const optimizeCloudinaryUrl = (url, options = {}) => {
 
     const { width, height, quality = 'auto', format = 'webp' } = options;
 
-    // Build transformation string
     let transforms = [`f_${format}`, `q_${quality}`];
     if (width) transforms.push(`w_${width}`);
     if (height) transforms.push(`h_${height}`);
 
     const transformStr = transforms.join(',');
-
-    // Insert transformation after /upload/
     return url.replace('/upload/', `/upload/${transformStr}/`);
 };
 
+/**
+ * Upload gambar ke Cloudinary melalui Backend API (AMAN).
+ *
+ * Credentials Cloudinary TIDAK ada di frontend — semua disimpan di server.
+ * Frontend hanya mengirim file + Firebase Auth token ke backend,
+ * lalu backend yang mengurus upload ke Cloudinary.
+ */
 export const uploadToCloudinary = async (file) => {
-    const cloudName = 'dyr6flyz3';
-    const apiKey = '738723584289923';
-    const apiSecret = '6NNM_iTnggMsNiaarmolfUQJhG0';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-    const timestamp = Math.round((new Date).getTime() / 1000);
-
-    // Generate signature: SHA-1 of `timestamp=${timestamp}${apiSecret}`
-    const encodeUtf8 = (str) => new TextEncoder().encode(str);
-    const data = encodeUtf8(`timestamp=${timestamp}${apiSecret}`);
-    
-    // Use Web Crypto API
-    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const signature = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    // Ambil Firebase ID token agar endpoint backend terlindungi
+    const idToken = await auth.currentUser?.getIdToken();
+    if (!idToken) {
+        throw new Error('Harus login terlebih dahulu untuk mengupload gambar.');
+    }
 
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('api_key', apiKey);
-    formData.append('timestamp', timestamp);
-    formData.append('signature', signature);
 
-    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+    const response = await fetch(`${apiUrl}/upload/image`, {
         method: 'POST',
-        body: formData
+        headers: {
+            'Authorization': `Bearer ${idToken}`,
+            // Jangan set Content-Type — biarkan browser set boundary multipart/form-data
+        },
+        body: formData,
     });
 
     const result = await response.json();
-    if (result.secure_url) {
-        // Return optimized webp URL for better performance
-        return optimizeCloudinaryUrl(result.secure_url);
-    } else {
-        throw new Error(result.error?.message || 'Cloudinary upload failed');
-    }
-};
 
+    if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Gagal mengupload gambar.');
+    }
+
+    // Kembalikan URL yang sudah dioptimasi ke WebP
+    return optimizeCloudinaryUrl(result.url);
+};
