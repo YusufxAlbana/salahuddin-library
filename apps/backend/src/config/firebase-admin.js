@@ -1,15 +1,31 @@
 const admin = require('firebase-admin');
-const path = require('path');
 
-// Inisialisasi Firebase Admin SDK menggunakan Service Account
-// File JSON ini TIDAK boleh di-commit ke Git (sudah ada di .gitignore)
+/**
+ * Inisialisasi Firebase Admin SDK
+ *
+ * Di local: baca dari file firebase-adminsdk.json
+ * Di Vercel (production): baca dari environment variable FIREBASE_SERVICE_ACCOUNT_JSON
+ *
+ * Cara set di Vercel:
+ *   Settings → Environment Variables → FIREBASE_SERVICE_ACCOUNT_JSON
+ *   Value: isi seluruh isi file firebase-adminsdk.json (copy paste as-is)
+ */
 if (!admin.apps.length) {
-    const serviceAccountPath = path.join(__dirname, '../../firebase-adminsdk.json');
-    const serviceAccount = require(serviceAccountPath);
+    let credential;
 
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-    });
+    if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+        // Production (Vercel): baca dari env var
+        const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+        credential = admin.credential.cert(serviceAccount);
+    } else {
+        // Local development: baca dari file JSON
+        const path = require('path');
+        const serviceAccountPath = path.join(__dirname, '../../firebase-adminsdk.json');
+        const serviceAccount = require(serviceAccountPath);
+        credential = admin.credential.cert(serviceAccount);
+    }
+
+    admin.initializeApp({ credential });
 }
 
 module.exports = admin;
